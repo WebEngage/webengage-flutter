@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>WEGLicenseCode</key>
-	<string>~13410522d</string>
+	<string>YOUR-WEBENGAGE-LICENSE-CODE</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
 	<key>CFBundleDevelopmentRegion</key>

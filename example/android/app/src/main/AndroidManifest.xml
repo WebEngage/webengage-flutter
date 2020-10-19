@@ -15,7 +15,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <meta-data android:name="com.webengage.sdk.android.key" android:value="~13410522d" />
+        <meta-data android:name="com.webengage.sdk.android.key" android:value="YOUR-WEBENGAGE-LICENSE-CODE" />
 
         <meta-data android:name="com.webengage.sdk.android.debug" android:value="true" />
 
