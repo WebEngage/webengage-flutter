@@ -1,0 +1,31 @@
+PODS:
+  - Flutter (1.0.0)
+  - WebEngage (5.0.2):
+    - WebEngage/Xcode11 (= 5.0.2)
+  - WebEngage/Xcode11 (5.0.2)
+  - webengage_plugin (0.0.1):
+    - Flutter
+    - WebEngage
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - webengage_plugin (from `.symlinks/plugins/webengage_plugin/ios`)
+
+SPEC REPOS:
+  trunk:
+    - WebEngage
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  webengage_plugin:
+    :path: ".symlinks/plugins/webengage_plugin/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  WebEngage: b8f322ebfdd08c9cd56aec038f9d3c29c018335d
+  webengage_plugin: 1a377a5acfa288990a0b9f7e19ee6810ce5baf66
+
+PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
+
+COCOAPODS: 1.9.3

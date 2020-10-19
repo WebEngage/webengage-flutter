@@ -1,0 +1,26 @@
+name: webengage_plugin
+description: WebEngage Flutter plugin.
+version: 0.0.1
+author: Ashwin Dinesh
+homepage: https://webengage.com/
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.20.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.webengage.webengage_plugin
+        pluginClass: WebEngagePlugin
+      ios:
+        pluginClass: WebEngagePlugin
