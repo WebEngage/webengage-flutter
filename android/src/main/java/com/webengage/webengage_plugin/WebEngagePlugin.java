@@ -1,26 +1,47 @@
 package com.webengage.webengage_plugin;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.webengage.sdk.android.Channel;
 import com.webengage.sdk.android.WebEngage;
+import com.webengage.sdk.android.actions.render.PushNotificationData;
+import com.webengage.sdk.android.callbacks.PushNotificationCallbacks;
 import com.webengage.sdk.android.utils.Gender;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry;
 
-public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler {
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_INITIALISE;
+
+public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, PushNotificationCallbacks,ActivityAware {
   private static final String TAG = "WebEngagePlugin";
 
-  private MethodChannel channel;
+  private static MethodChannel channel;
   private Context context;
-
+  Activity activity;
+  private static boolean isInitialised;
+  private static final Map<String, Map<String, Object>> messageQueue =
+          Collections.synchronizedMap(new LinkedHashMap<String, Map<String, Object>>());
   public WebEngagePlugin() {
     Log.w(TAG, "Constructor called on thread: " + Thread.currentThread().getName());
   }
@@ -31,6 +52,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "webengage_plugin");
     channel.setMethodCallHandler(this);
     this.context = flutterPluginBinding.getApplicationContext();
+    //WebEngage.registerPushNotificationCallback(this);
   }
 
   @Override
@@ -110,12 +132,30 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler {
         trackScreen(call, result);
         break;
       }
+      case METHOD_NAME_INITIALISE: {
+        onInitialised();
+        break;
+      }
     }
 
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
     } else {
       result.notImplemented();
+    }
+  }
+
+  private void onInitialised() {
+    Log.v("webengage" , " onInitialised() : MoEngage Flutter plugin initialised.");
+    Log.v("webengage" ,  " onInitialised() : Message queue: " + messageQueue);
+    isInitialised = true;
+    synchronized (messageQueue) {
+      // Handle all the messages received before the Dart isolate was
+      // initialized, then clear the queue.
+      for (Map.Entry<String, Map<String, Object>> entry : messageQueue.entrySet()) {
+        sendCallback(entry.getKey(), entry.getValue());
+      }
+      messageQueue.clear();
     }
   }
 
@@ -217,5 +257,127 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler {
   @Override
   public void onDetachedFromEngine(FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
+  }
+
+  @Override
+  public PushNotificationData onPushNotificationReceived(Context context, PushNotificationData pushNotificationData) {
+    Log.d("webengage","invokeMethodOnUiThread");
+   // invokeMethodOnUiThread("pushClickedPayloadReceived", pushNotificationData);
+    return pushNotificationData;
+  }
+  public static void registerWith(PluginRegistry.Registrar registrar) {
+    Log.d("webengage","registerWithcalled");
+
+    WebEngagePlugin plugin = new WebEngagePlugin();
+    plugin.setupPlugin(registrar.context(), null, registrar);
+  }
+  static void sendOrQueueCallback(String methodName, Map<String, Object> message) {
+    if (isInitialised) {
+      Log.v("Webengage" , " sendOrQueueCallback() : Flutter Engine initialised will send message");
+      sendCallback(methodName, message);
+    } else {
+      Log.v("Webengage", " sendOrQueueCallback() : Flutter Engine not initialised adding message to "
+              + "queue");
+      messageQueue.put(methodName, message);
+    }
+  }
+  static void  sendCallback(final String methodName, final Map<String, Object> message){
+    final Map<String, Object> messagePayload = new HashMap<>();
+    messagePayload.put(Constants.PARAM_PLATFORM, Constants.PARAM_PLATFORM_VALUE);
+    messagePayload.put(Constants.PARAM_PAYLOAD, message);
+    new Handler(Looper.getMainLooper()).post(new Runnable() {
+      @Override public void run() {
+        channel.invokeMethod(methodName, messagePayload);
+      }
+    });
+  }
+  private void setupPlugin(Context context, BinaryMessenger messenger, PluginRegistry.Registrar registrar) {
+    Log.d("webengage","setupPlugincalled");
+
+    if (registrar != null) {
+      //V1 setup
+      this.channel = new MethodChannel(registrar.messenger(), "webengage_plugin");
+      this.activity = ((Activity) registrar.activeContext());
+    } else {
+      //V2 setup
+      this.channel = new MethodChannel(messenger, "webengage_plugin");
+    }
+    this.channel.setMethodCallHandler(this);
+    this.context = context.getApplicationContext();
+    WebEngage.registerPushNotificationCallback(this);
+
+  }
+
+  private void invokeMethodOnUiThread(String methodName, PushNotificationData pushNotificationData) {
+    Log.d("webengage","invokeMethodOnUiThread");
+
+    final MethodChannel channel = this.channel;
+    runOnMainThread(() -> channel.invokeMethod(methodName, bundleToMap(pushNotificationData.getCustomData())));
+  }
+  static Map<String, Object> bundleToMap(Bundle extras) {
+    Map<String, Object> map = new HashMap<>();
+
+    Set<String> ks = extras.keySet();
+    for (String key : ks) {
+      map.put(key, extras.get(key));
+    }
+    return map;
+  }
+  private void runOnMainThread(final Runnable runnable) {
+    if (activity != null) {
+      activity.runOnUiThread(runnable);
+    } else {
+      try {
+        ((Activity) context).runOnUiThread(runnable);
+      } catch (Exception e) {
+        Log.e(TAG, "Exception while running on main thread - ");
+        e.printStackTrace();
+      }
+    }
+
+
+  }
+
+  @Override
+  public void onPushNotificationShown(Context context, PushNotificationData pushNotificationData) {
+
+  }
+
+  @Override
+  public boolean onPushNotificationClicked(Context context, PushNotificationData pushNotificationData) {
+
+    return false;
+  }
+
+  @Override
+  public void onPushNotificationDismissed(Context context, PushNotificationData pushNotificationData) {
+
+  }
+
+  @Override
+  public boolean onPushNotificationActionClicked(Context context, PushNotificationData pushNotificationData, String s) {
+    return false;
+  }
+
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+    activity = binding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    activity = null;
+
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+    activity = binding.getActivity();
+
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    activity = null;
   }
 }
