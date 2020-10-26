@@ -39,7 +39,6 @@ public class MainApplication extends FlutterApplication  {
                 WebEngage.get().setRegistrationID(token);
             }
         });
-        WebengageInitializer.initialize(this,webEngageConfig);
 //        WebEngage.registerInAppNotificationCallback(new InAppNotificationCallbacks() {
 //            @Override
 //            public InAppNotificationData onInAppNotificationPrepared(Context context, InAppNotificationData inAppNotificationData) {

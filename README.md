@@ -42,7 +42,6 @@ public class MainApplication extends FlutterApplication {
                 .setDebugMode(true) // only in development mode
                 .build();
         WebengageInitializer.initialize(this,webEngageConfig);
-        registerActivityLifecycleCallbacks(new WebEngageActivityLifeCycleCallbacks(this));
         ...
     }
     ...
