@@ -9,20 +9,17 @@ import com.webengage.sdk.android.callbacks.PushNotificationCallbacks;
 public class FlutterPushMessageCallback implements PushNotificationCallbacks {
     @Override
     public PushNotificationData onPushNotificationReceived(Context context, PushNotificationData pushNotificationData) {
-        Log.d("webengae","pluginonPushNotificationReceived");
 
         return pushNotificationData;
     }
 
     @Override
     public void onPushNotificationShown(Context context, PushNotificationData pushNotificationData) {
-        Log.d("webengae","pluginonPushNotificationShown");
 
     }
 
     @Override
     public boolean onPushNotificationClicked(Context context, PushNotificationData pushNotificationData) {
-        Log.d("webengae","pluginonPushNotificationClicked");
         WebEngagePlugin.sendOrQueueCallback(Constants.METHOD_NAME_ON_PUSH_CLICK,
                 Utils.bundleToMap(pushNotificationData.getCustomData()));
         return false;

@@ -21,23 +21,10 @@ dependencies:
 **1. Initialize WebEngage**
 
 ### For Android
-
-1. Add WebEngage configurations in `<your-project>/android/app/src/main/AndroidManifest.xml` file.
-```xml
-<manifest ...>
-    <application
-        ...
-        android:name=".MainApplication"
-        android:allowBackup="false">
-
-        <meta-data android:name="com.webengage.sdk.android.key" android:value="YOUR-WEBENGAGE-LICENSE-CODE" />
-
-        <meta-data android:name="com.webengage.sdk.android.debug" android:value="true" />
-        ...
-    </application>
-</manifest>
+1. Initialize WebEngage in main.dart in initState();
+```dart
+WebEngagePlugin _webEngagePlugin = new WebEngagePlugin();
 ```
-
 2.  Initialize WebEngage Android SDK in your `<your-project>/android/app/src/main/java/<your-package-path>/MainApplication.java` class.
 ```java
 ...
@@ -48,6 +35,13 @@ public class MainApplication extends FlutterApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+         WebEngageConfig webEngageConfig = new WebEngageConfig.Builder()
+                .setWebEngageKey("YOUR_LICENCSE_CODE")
+                .setAutoGCMRegistrationFlag(false)
+                .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
+                .setDebugMode(true) // only in development mode
+                .build();
+        WebengageInitializer.initialize(this,webEngageConfig);
         registerActivityLifecycleCallbacks(new WebEngageActivityLifeCycleCallbacks(this));
         ...
     }
@@ -147,14 +141,97 @@ import 'package:webengage_plugin/webengage_plugin.dart';
 
 ### Push Notifications For Android
 
-TODO
+1. Add below dependencies in app-level build gradle
+```groovy
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging:20.2.1'
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+```
+2. Firebase tokens can be passed to WebEngage using FirebaseMessagingService
+ ```java 
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.webengage.sdk.android.WebEngage;
+
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+        WebEngage.get().setRegistrationID(s);
+    }
+}
+```
+It is also recommended that you pass Firebase token to WebEngage from onCreate of your Application class as shown below. This will ensure that changes in user’s Firebase token are communicated to WebEngage.
+```java 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.webengage.sdk.android.WebEngage;
+
+public class MyApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String token = instanceIdResult.getToken();
+                WebEngage.get().setRegistrationID(token);
+            }
+        });
+    }
+}
+```
+3. Pass Messages to WebEngage
+Create a class that extends FirebaseMessagingService and pass messages to WebEngage.
+All incoming messages from WebEngage will contain key source with the value as webengage.
+```java 
+package your.application.package;
+
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
+import com.webengage.sdk.android.WebEngage;
+
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
+  @Override
+  public void onMessageReceived(RemoteMessage remoteMessage) {
+    Map<String, String> data = remoteMessage.getData();
+    if(data != null) {
+      if(data.containsKey("source") && "webengage".equals(data.get("source"))) {
+        WebEngage.get().receive(data);
+      }
+    }
+  }
+}
+```
+Next, register the service to the application element of your AndroidManifest.xml as follows.
+```xml
+<service
+    android:name=".MyFirebaseMessagingService">
+    <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+    </intent-filter>
+</service>
+```
+
 
 ### Push Notifications For iOS
 
 TODO
 
-### Push Notification Callbacks
-
+### Push Notification Callbacks 
+1. Add Below Method in main.dart
+```dart
+  void _onPushClick(Map<String, dynamic> message) {
+    print("This is a push click callback from native to flutter. Payload " +
+        message.toString());
+  }
+```
+2.Call below code in initState in main.dart
+```dart
+    _webEngagePlugin.setUpPushCallbacks(_onPushClick);
+```
 TODO
 
 ## In-app Notifications

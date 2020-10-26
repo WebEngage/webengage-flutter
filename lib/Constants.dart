@@ -1,2 +1,17 @@
 const String callbackOnPushClick = "onPushClick";
 const String methodInitialise = "initialise";
+const String METHOD_NAME_SET_USER_LOGIN = "userLogin";
+const String METHOD_NAME_SET_USER_LOGOUT = "userLogout";
+const String METHOD_NAME_SET_USER_FIRST_NAME = "setUserFirstName";
+const String METHOD_NAME_SET_USER_LAST_NAME = "setUserLastName";
+const String METHOD_NAME_SET_USER_EMAIL = "setUserEmail";
+const String METHOD_NAME_SET_USER_HASHED_EMAIL = "setUserHashedEmail";
+const String METHOD_NAME_SET_USER_PHONE = "setUserPhone";
+const String METHOD_NAME_SET_USER_HASHED_PHONE = "setUserHashedPhone";
+const String METHOD_NAME_SET_USER_COMPANY = "setUserCompany";
+const String METHOD_NAME_SET_USER_BIRTHDATE = "setUserBirthDate";
+const String METHOD_NAME_SET_USER_GENDER = "setUserGender";
+const String METHOD_NAME_SET_USER_OPT_IN = "setUserOptIn";
+const String METHOD_NAME_SET_USER_LOCATION = "setUserLocation";
+const String METHOD_NAME_TRACK_EVENT = "trackEvent";
+const String METHOD_NAME_TRACK_SCREEN = "trackScreen";

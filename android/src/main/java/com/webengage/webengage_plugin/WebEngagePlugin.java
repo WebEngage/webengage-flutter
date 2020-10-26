@@ -32,8 +32,23 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 
 import static com.webengage.webengage_plugin.Constants.METHOD_NAME_INITIALISE;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_BIRTHDATE;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_COMPANY;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_EMAIL;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_FIRST_NAME;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_GENDER;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_HASHED_EMAIL;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_HASHED_PHONE;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_LAST_NAME;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_LOCATION;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_LOGIN;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_LOGOUT;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_OPT_IN;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_SET_USER_PHONE;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_TRACK_EVENT;
+import static com.webengage.webengage_plugin.Constants.METHOD_NAME_TRACK_SCREEN;
 
-public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, PushNotificationCallbacks,ActivityAware {
+public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler,ActivityAware {
   private static final String TAG = "WebEngagePlugin";
 
   private static MethodChannel channel;
@@ -58,77 +73,77 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, PushNo
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     switch (call.method) {
-      case "userLogin": {
+      case METHOD_NAME_SET_USER_LOGIN: {
         userLogin(call, result);
         break;
       }
 
-      case "userLogout": {
+      case METHOD_NAME_SET_USER_LOGOUT: {
         userLogout();
         break;
       }
 
-      case "setUserFirstName": {
+      case METHOD_NAME_SET_USER_FIRST_NAME: {
         setUserFirstName(call, result);
         break;
       }
 
-      case "setUserLastName": {
+      case METHOD_NAME_SET_USER_LAST_NAME: {
         setUserLastName(call, result);
         break;
       }
 
-      case "setUserEmail": {
+      case METHOD_NAME_SET_USER_EMAIL: {
         setUserEmail(call, result);
         break;
       }
 
-      case "setUserHashedEmail": {
+      case METHOD_NAME_SET_USER_HASHED_EMAIL: {
         setUserHashedEmail(call, result);
         break;
       }
 
-      case "setUserPhone": {
+      case METHOD_NAME_SET_USER_PHONE: {
         setUserPhone(call, result);
         break;
       }
 
-      case "setUserHashedPhone": {
+      case METHOD_NAME_SET_USER_HASHED_PHONE: {
         setUserHashedPhone(call, result);
         break;
       }
 
-      case "setUserCompany": {
+      case METHOD_NAME_SET_USER_COMPANY: {
         setUserCompany(call, result);
         break;
       }
 
-      case "setUserBirthDate": {
+      case METHOD_NAME_SET_USER_BIRTHDATE: {
         setUserBirthDate(call, result);
         break;
       }
 
-      case "setUserGender": {
+      case METHOD_NAME_SET_USER_GENDER: {
         setUserGender(call, result);
         break;
       }
 
-      case "setUserOptIn": {
+      case METHOD_NAME_SET_USER_OPT_IN: {
         setUserOptIn(call, result);
         break;
       }
 
-      case "setUserLocation": {
+      case METHOD_NAME_SET_USER_LOCATION: {
         setUserLocation(call, result);
         break;
       }
 
-      case "trackEvent": {
+      case METHOD_NAME_TRACK_EVENT: {
         trackEvent(call, result);
         break;
       }
 
-      case "trackScreen": {
+      case METHOD_NAME_TRACK_SCREEN: {
         trackScreen(call, result);
         break;
       }
@@ -259,18 +274,32 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, PushNo
     channel.setMethodCallHandler(null);
   }
 
-  @Override
-  public PushNotificationData onPushNotificationReceived(Context context, PushNotificationData pushNotificationData) {
-    Log.d("webengage","invokeMethodOnUiThread");
-   // invokeMethodOnUiThread("pushClickedPayloadReceived", pushNotificationData);
-    return pushNotificationData;
-  }
+
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    Log.d("webengage","registerWithcalled");
 
     WebEngagePlugin plugin = new WebEngagePlugin();
     plugin.setupPlugin(registrar.context(), null, registrar);
   }
+  private void setupPlugin(Context context, BinaryMessenger messenger, PluginRegistry.Registrar registrar) {
+
+    if (registrar != null) {
+      //V1 setup
+      this.channel = new MethodChannel(registrar.messenger(), "webengage_plugin");
+      this.activity = ((Activity) registrar.activeContext());
+    } else {
+      //V2 setup
+      this.channel = new MethodChannel(messenger, "webengage_plugin");
+    }
+    this.channel.setMethodCallHandler(this);
+    this.context = context.getApplicationContext();
+
+  }
+private void invokeMethodOnUiThread(String methodName, PushNotificationData pushNotificationData) {
+
+  final MethodChannel channel = this.channel;
+  runOnMainThread(() -> channel.invokeMethod(methodName, bundleToMap(pushNotificationData.getCustomData())));
+}
+
   static void sendOrQueueCallback(String methodName, Map<String, Object> message) {
     if (isInitialised) {
       Log.v("Webengage" , " sendOrQueueCallback() : Flutter Engine initialised will send message");
@@ -291,29 +320,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, PushNo
       }
     });
   }
-  private void setupPlugin(Context context, BinaryMessenger messenger, PluginRegistry.Registrar registrar) {
-    Log.d("webengage","setupPlugincalled");
 
-    if (registrar != null) {
-      //V1 setup
-      this.channel = new MethodChannel(registrar.messenger(), "webengage_plugin");
-      this.activity = ((Activity) registrar.activeContext());
-    } else {
-      //V2 setup
-      this.channel = new MethodChannel(messenger, "webengage_plugin");
-    }
-    this.channel.setMethodCallHandler(this);
-    this.context = context.getApplicationContext();
-    WebEngage.registerPushNotificationCallback(this);
-
-  }
-
-  private void invokeMethodOnUiThread(String methodName, PushNotificationData pushNotificationData) {
-    Log.d("webengage","invokeMethodOnUiThread");
-
-    final MethodChannel channel = this.channel;
-    runOnMainThread(() -> channel.invokeMethod(methodName, bundleToMap(pushNotificationData.getCustomData())));
-  }
   static Map<String, Object> bundleToMap(Bundle extras) {
     Map<String, Object> map = new HashMap<>();
 
@@ -338,26 +345,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, PushNo
 
   }
 
-  @Override
-  public void onPushNotificationShown(Context context, PushNotificationData pushNotificationData) {
 
-  }
-
-  @Override
-  public boolean onPushNotificationClicked(Context context, PushNotificationData pushNotificationData) {
-
-    return false;
-  }
-
-  @Override
-  public void onPushNotificationDismissed(Context context, PushNotificationData pushNotificationData) {
-
-  }
-
-  @Override
-  public boolean onPushNotificationActionClicked(Context context, PushNotificationData pushNotificationData, String s) {
-    return false;
-  }
 
   @Override
   public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {

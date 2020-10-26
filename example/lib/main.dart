@@ -25,16 +25,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
     _webEngagePlugin = new WebEngagePlugin();
-    // _webEngagePlugin.setCleverTapPushClickedPayloadReceivedHandler(pushClickedPayloadReceived);
     _webEngagePlugin.setUpPushCallbacks(_onPushClick);
   }
-  void pushClickedPayloadReceived(Map<String, dynamic> map) {
-    print("pushClickedPayloadReceived called");
-    // this.setState(() async {
-    //   var data = jsonEncode(map);
-    //   print("on Push Click Payload = " + data.toString());
-    // });
-  }
+
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion;

@@ -17,12 +17,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <meta-data
-            android:name="com.webengage.sdk.android.key"
-            android:value="d3a4a436" />
-        <meta-data
-            android:name="com.webengage.sdk.android.debug"
-            android:value="true" />
+
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
