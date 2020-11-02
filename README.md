@@ -123,6 +123,22 @@ import 'package:webengage_plugin/webengage_plugin.dart';
 
     // Set user location
     WebEngagePlugin.setUserLocation(19.25, 72.45);
+
+    // Set User Attribute with  String value
+    WebEngagePlugin.setUserAttribute("twitterusename", "saurav12994");
+
+    // Set User Attribute with  Boolean value
+    WebEngagePlugin.setUserAttribute("Subscribed to email", true);
+
+    // Set User Attribute with  Integer value
+    WebEngagePlugin.setUserAttribute("Points earned", 2626);
+
+    // Set User Attribute with  Double value
+    WebEngagePlugin.setUserAttribute("Dollar Spent", 123.44);
+
+    // Set User Attribute with  Map value
+    var details = {'Usrname':'tom','Passiword':'pass@123'};
+    WebEngagePlugin.setUserAttributes(details);
 ```
 
 ## Track Events
@@ -231,7 +247,7 @@ TODO
 ```dart
     _webEngagePlugin.setUpPushCallbacks(_onPushClick);
 ```
-TODO
+
 
 ## In-app Notifications
 
@@ -248,4 +264,29 @@ import 'package:webengage_plugin/webengage_plugin.dart';
 
 ### In-app Notification Callbacks
 
-TODO
+1. Add Below Method in main.dart
+```dart
+ void _onInAppPrepared(Map<String, dynamic> message) {
+    print("This is a inapp Prepated callback from native to flutter. Payload " +
+        message.toString());
+  }
+  void _onInAppClick(Map<String, dynamic> message,String s) {
+    print("This is a inapp click callback from native to flutter. Payload " +
+        message.toString());
+
+  }
+
+  void _onInAppShown(Map<String, dynamic> message) {
+    print("This is a callback on inapp shown from native to flutter. Payload " +
+        message.toString());
+  }
+
+  void _onInAppDismiss(Map<String, dynamic> message) {
+    print("This is a callback on inapp dismiss from native to flutter. Payload " +
+        message.toString());
+  }
+```
+2.Call below code in initState in main.dart
+```dart
+    _webEngagePlugin.setUpInAppCallbacks(_onInAppClick, _onInAppShown, _onInAppDismiss,_onInAppPrepared);
+```
