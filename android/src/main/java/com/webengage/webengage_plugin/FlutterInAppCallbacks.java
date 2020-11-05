@@ -7,6 +7,8 @@ import com.webengage.sdk.android.callbacks.InAppNotificationCallbacks;
 
 import java.util.Map;
 
+import static com.webengage.webengage_plugin.Constants.SELECTED_ACTION_ID;
+
 public class FlutterInAppCallbacks implements InAppNotificationCallbacks {
     @Override
     public InAppNotificationData onInAppNotificationPrepared(Context context, InAppNotificationData inAppNotificationData) {
