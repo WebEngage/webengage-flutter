@@ -18,6 +18,7 @@ public interface Constants {
         String METHOD_NAME_SET_USER_GENDER = "setUserGender";
         String METHOD_NAME_SET_USER_OPT_IN = "setUserOptIn";
         String METHOD_NAME_SET_USER_LOCATION = "setUserLocation";
+        String METHOD_NAME_SET_USER_ATTRIBUTE = "setUserAttribute";
         String METHOD_NAME_SET_USER_STRING_ATTRIBUTE = "setUserStringAttribute";
         String METHOD_NAME_SET_USER_INT_ATTRIBUTE = "setUserIntAttribute";
         String METHOD_NAME_SET_USER_DOUBLE_ATTRIBUTE = "setUserDoubleAttribute";
@@ -31,6 +32,7 @@ public interface Constants {
 
 
     String METHOD_NAME_ON_PUSH_CLICK = "onPushClick";
+    String METHOD_NAME_ON_PUSH_ACTION_CLICK = "onPushActionClick";
     String METHOD_NAME_ON_INAPP_SHOWN = "onInAppShown";
     String METHOD_NAME_ON_INAPP_CLICKED = "onInAppClick";
     String METHOD_NAME_ON_INAPP_DISMISS = "onInAppDismiss";
@@ -56,6 +58,7 @@ public interface Constants {
     String IN_APP = "in_app";
     String EMAIL = "email";
     String WHATSAPP = "whatsapp";
+    String SELECTED_ACTION_ID = "selectedActionId";
 
 
 }

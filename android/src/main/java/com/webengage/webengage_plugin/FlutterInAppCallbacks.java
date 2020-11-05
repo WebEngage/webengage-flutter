@@ -24,7 +24,7 @@ public class FlutterInAppCallbacks implements InAppNotificationCallbacks {
     @Override
     public boolean onInAppNotificationClicked(Context context, InAppNotificationData inAppNotificationData, String s) {
         Map<String, Object> map = Utils.jsonObjectToMap(inAppNotificationData.getData());
-        map.put("selectedActionId", s);
+        map.put(SELECTED_ACTION_ID, s);
         WebEngagePlugin.sendOrQueueCallback(Constants.METHOD_NAME_ON_INAPP_CLICKED, map);
         return false;
     }

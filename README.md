@@ -233,21 +233,33 @@ Next, register the service to the application element of your AndroidManifest.xm
 
 ### Push Notifications For iOS
 
-TODO
 
 ### Push Notification Callbacks 
-1. Add Below Method in main.dart
+
+1. Add Below code in AppDelegate.h file
+
+```
+  #import <WebEngagePlugin.h>
+  
+  @property (nonatomic, strong) WebEngagePlugin *bridge;
+```
+2. Add Below code in AppDelegate.m file
+
+``` 
+    self.bridge = [WebEngagePlugin new];
+    //For setting push click callback set pushNotificationDelegate after webengage SDK is initialised
+    
+    [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
+    [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
+```
+
+3. Add Below Method in main.dart
 ```dart
   void _onPushClick(Map<String, dynamic> message) {
     print("This is a push click callback from native to flutter. Payload " +
         message.toString());
   }
 ```
-2.Call below code in initState in main.dart
-```dart
-    _webEngagePlugin.setUpPushCallbacks(_onPushClick);
-```
-
 
 ## In-app Notifications
 
@@ -264,7 +276,22 @@ import 'package:webengage_plugin/webengage_plugin.dart';
 
 ### In-app Notification Callbacks
 
-1. Add Below Method in main.dart
+1. Add Below code in AppDelegate.h file
+
+```
+  #import <WebEngagePlugin.h>
+  
+  @property (nonatomic, strong) WebEngagePlugin *bridge;
+```
+2. Add Below code in AppDelegate.m file
+
+``` 
+    self.bridge = [WebEngagePlugin new];
+    //For setting in-app click callback set notificationDelegate while initialising WebEngage SDK
+    
+    [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
+```
+3. Add Below Method in main.dart
 ```dart
  void _onInAppPrepared(Map<String, dynamic> message) {
     print("This is a inapp Prepated callback from native to flutter. Payload " +
@@ -285,8 +312,4 @@ import 'package:webengage_plugin/webengage_plugin.dart';
     print("This is a callback on inapp dismiss from native to flutter. Payload " +
         message.toString());
   }
-```
-2.Call below code in initState in main.dart
-```dart
-    _webEngagePlugin.setUpInAppCallbacks(_onInAppClick, _onInAppShown, _onInAppDismiss,_onInAppPrepared);
-```
+````

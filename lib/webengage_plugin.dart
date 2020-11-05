@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'Constants.dart';
+import 'dart:io' show Platform;
 
 typedef void MessageHandler(Map<String, dynamic> message);
 typedef void MessageHandlerInAppClick(Map<String, dynamic> message, String s);
+typedef void MessageHandlerPushClick(Map<String, dynamic> message, String s);
 
 class WebEngagePlugin {
   static const MethodChannel _channel = const MethodChannel('webengage_plugin');
@@ -20,7 +22,8 @@ class WebEngagePlugin {
     _channel.invokeMethod(methodInitialise);
   }
 
-  MessageHandler _onPushClick;
+  MessageHandlerPushClick _onPushClick;
+  MessageHandlerPushClick _onPushActionClick;
   MessageHandlerInAppClick _onInAppClick;
   MessageHandler _onInAppShown;
   MessageHandler _onInAppDismiss;
@@ -31,10 +34,10 @@ class WebEngagePlugin {
     return version;
   }
 
-  void setUpPushCallbacks(MessageHandler onPushClick) {
-    print("_onPushClick != null initialised");
-
+  void setUpPushCallbacks(MessageHandlerPushClick onPushClick,
+      MessageHandlerPushClick onPushActionClick) {
     _onPushClick = onPushClick;
+    _onPushActionClick = onPushActionClick;
   }
 
   void setUpInAppCallbacks(
@@ -120,38 +123,8 @@ class WebEngagePlugin {
 
   static Future<void> setUserAttribute(
       String attributeName, dynamic userAttributeValue) async {
-    // return await _channel.invokeMethod(
-    //     METHOD_NAME_SET_USER_ATTRIBUTE, {'attributeName': attributeName, 'attributes': attributes});
-    if (attributeName.isEmpty) {
-      if (userAttributeValue is Map) {
-        return await _channel.invokeMethod(METHOD_NAME_SET_USER_MAP_ATTRIBUTE,
-            {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
-      }
-      return;
-    }
-
-    if (userAttributeValue is String) {
-      return await _channel.invokeMethod(METHOD_NAME_SET_USER_STRING_ATTRIBUTE,
-          {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
-    } else if (userAttributeValue is int) {
-      return await _channel.invokeMethod(METHOD_NAME_SET_USER_INT_ATTRIBUTE,
-          {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
-    } else if (userAttributeValue is double) {
-      return await _channel.invokeMethod(METHOD_NAME_SET_USER_DOUBLE_ATTRIBUTE,
-          {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
-    } else if (userAttributeValue is bool) {
-      return await _channel.invokeMethod(METHOD_NAME_SET_USER_BOOL_ATTRIBUTE,
-          {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
-    } else if (userAttributeValue is DateTime) {
-      return await _channel.invokeMethod(METHOD_NAME_SET_USER_DATE_ATTRIBUTE,
-          {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
-    } else if (userAttributeValue is List) {
-      return await _channel.invokeMethod(METHOD_NAME_SET_USER_LIST_ATTRIBUTE,
-          {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
-    } else {
-      print(
-          "Only String, Numbers and Bool values supported as User Attributes");
-    }
+    return await _channel.invokeMethod(METHOD_NAME_SET_USER_ATTRIBUTE,
+        {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
   }
 
   static Future<void> trackScreen(String eventName,
@@ -161,39 +134,61 @@ class WebEngagePlugin {
   }
 
   Future _platformCallHandler(MethodCall call) async {
-    print("_platformCallHandler call");
-
     print("_platformCallHandler call ${call.method} ${call.arguments}");
     if (call.method == callbackOnPushClick && _onPushClick != null) {
-      print("Received callback in dart. Payload" + call.toString());
-
-      _onPushClick(call.arguments.cast<String, dynamic>());
+      Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
+      if (Platform.isAndroid) {
+        String deeplink = message[PAYLOAD][URI];
+        _onPushClick(call.arguments.cast<String, dynamic>(), deeplink);
+      } else {
+        String deeplink = message[DEEPLINK];
+        _onPushClick(call.arguments.cast<String, dynamic>(), deeplink);
+      }
+    }
+    if (call.method == callbackOnPushActionClick &&
+        _onPushActionClick != null) {
+      Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
+      if (Platform.isAndroid) {
+        String deeplink = message[PAYLOAD][URI];
+        _onPushActionClick(call.arguments.cast<String, dynamic>(), deeplink);
+      } else {
+        String deeplink = message[DEEPLINK];
+        _onPushActionClick(call.arguments.cast<String, dynamic>(), deeplink);
+      }
     }
     if (call.method == callbackOnInAppClicked && _onInAppClick != null) {
-      print("Received callback in dart. PayloadcallbackOnInAppClicked" +
-          call.toString());
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
-      print("Received callback in dart. message" + message.toString());
-
-      String s = message["payload"]["selectedActionId"];
-      print("Received callback in dart. selectedActionId" + s.toString());
-
-      _onInAppClick(call.arguments.cast<String, dynamic>(), s);
+      if (Platform.isAndroid) {
+        String selectedActionId = message[PAYLOAD][SELECTED_ACTION_ID];
+        _onInAppClick(message[PAYLOAD], selectedActionId);
+      } else {
+        String selectedActionId = message[SELECTED_ACTION_ID];
+        _onInAppClick(call.arguments.cast<String, dynamic>(), selectedActionId);
+      }
     }
     if (call.method == callbackOnInAppShown && _onInAppShown != null) {
-      print("Received callback in dart. Payload" + call.toString());
-
-      _onInAppShown(call.arguments.cast<String, dynamic>());
+      Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
+      if (Platform.isAndroid) {
+        _onInAppShown(message[PAYLOAD]);
+      } else {
+        _onInAppShown(call.arguments.cast<String, dynamic>());
+      }
     }
     if (call.method == callbackOnInAppDismissed && _onInAppDismiss != null) {
-      print("Received callback in dart. Payload" + call.toString());
-
-      _onInAppDismiss(call.arguments.cast<String, dynamic>());
+      Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
+      if (Platform.isAndroid) {
+        _onInAppDismiss(message[PAYLOAD]);
+      } else {
+        _onInAppDismiss(call.arguments.cast<String, dynamic>());
+      }
     }
     if (call.method == callbackOnInAppPrepared && _onInAppPrepared != null) {
-      print("Received callback in dart. Payload" + call.toString());
-
-      _onInAppPrepared(call.arguments.cast<String, dynamic>());
+      Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
+      if (Platform.isAndroid) {
+        _onInAppPrepared(message[PAYLOAD]);
+      } else {
+        _onInAppPrepared(call.arguments.cast<String, dynamic>());
+      }
     }
   }
 }

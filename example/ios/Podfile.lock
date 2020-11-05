@@ -1,29 +1,39 @@
 PODS:
   - Flutter (1.0.0)
-  - WebEngage (5.0.2):
-    - WebEngage/Xcode11 (= 5.0.2)
-  - WebEngage/Xcode11 (5.0.2)
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - Toast (4.0.0)
+  - WebEngage (5.2.2):
+    - WebEngage/Xcode11 (= 5.2.2)
+  - WebEngage/Xcode11 (5.2.2)
   - webengage_plugin (0.0.1):
     - Flutter
     - WebEngage
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - webengage_plugin (from `.symlinks/plugins/webengage_plugin/ios`)
 
 SPEC REPOS:
   trunk:
+    - Toast
     - WebEngage
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   webengage_plugin:
     :path: ".symlinks/plugins/webengage_plugin/ios"
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  WebEngage: b8f322ebfdd08c9cd56aec038f9d3c29c018335d
+  fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  WebEngage: 6c80460690bed7587b84c9a7a15b52b46f28ec33
   webengage_plugin: 1a377a5acfa288990a0b9f7e19ee6810ce5baf66
 
 PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d

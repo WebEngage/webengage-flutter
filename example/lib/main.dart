@@ -19,10 +19,22 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   WebEngagePlugin _webEngagePlugin;
+  String os;
 
-  void _onPushClick(Map<String, dynamic> message) {
+  void _onPushClick(Map<String, dynamic> message, String s) {
     print("This is a push click callback from native to flutter. Payload " +
         message.toString());
+    print("This is a push click callback from native to flutter. Payload " +
+        s.toString());
+  }
+
+  void _onPushActionClick(Map<String, dynamic> message, String s) {
+    print(
+        "This is a Push action click callback from native to flutter. Payload " +
+            message.toString());
+    print(
+        "This is a Push action click callback from native to flutter. SelectedId " +
+            s.toString());
   }
 
   void _onInAppPrepared(Map<String, dynamic> message) {
@@ -51,7 +63,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
     _webEngagePlugin = new WebEngagePlugin();
-    _webEngagePlugin.setUpPushCallbacks(_onPushClick);
+    _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
   }

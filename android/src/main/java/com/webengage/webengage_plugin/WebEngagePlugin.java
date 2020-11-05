@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
 import com.webengage.sdk.android.Channel;
@@ -157,6 +158,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 onInitialised();
                 break;
             }
+            case METHOD_NAME_SET_USER_ATTRIBUTE: {
+                setUserAttribute(call, result);
+                break;
+            }
             case METHOD_NAME_SET_USER_STRING_ATTRIBUTE: {
                 setUserStringAttribute(call, result);
                 break;
@@ -199,6 +204,37 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         WebEngage.get().user().setAttributes(attributes);
     }
 
+    private void setUserAttribute(MethodCall call, Result result) {
+        if (call.argument(ATTRIBUTES) instanceof String) {
+            String attributeName = call.argument(ATTRIBUTE_NAME);
+            String attributes = call.argument(ATTRIBUTES);
+            WebEngage.get().user().setAttribute(attributeName, attributes);
+        } else if (call.argument(ATTRIBUTES) instanceof Integer) {
+            String attributeName = call.argument(ATTRIBUTE_NAME);
+            int attributes = call.argument(ATTRIBUTES);
+            WebEngage.get().user().setAttribute(attributeName, attributes);
+        } else if (call.argument(ATTRIBUTES) instanceof Double || call.argument(ATTRIBUTES) instanceof Float) {
+            String attributeName = call.argument(ATTRIBUTE_NAME);
+            double attributes = call.argument(ATTRIBUTES);
+            WebEngage.get().user().setAttribute(attributeName, attributes);
+        } else if (call.argument(ATTRIBUTES) instanceof Date) {
+            String attributeName = call.argument(ATTRIBUTE_NAME);
+            Date attributes = call.argument(ATTRIBUTES);
+            WebEngage.get().user().setAttribute(attributeName, attributes);
+        } else if (call.argument(ATTRIBUTES) instanceof List) {
+            String attributeName = call.argument(ATTRIBUTE_NAME);
+            List<? extends Object> attributes = call.argument(ATTRIBUTES);
+            WebEngage.get().user().setAttribute(attributeName, attributes);
+        } else if (call.argument(ATTRIBUTES) instanceof Boolean) {
+            String attributeName = call.argument(ATTRIBUTE_NAME);
+            Boolean attributes = call.argument(ATTRIBUTES);
+            WebEngage.get().user().setAttribute(attributeName, attributes);
+        } else {
+            Log.d("webengage", "No other type supported");
+        }
+
+    }
+
     private void setUserListAttribute(MethodCall call, Result result) {
         String attributeName = call.argument(ATTRIBUTE_NAME);
         List<? extends Object> attributes = call.argument(ATTRIBUTES);
@@ -236,8 +272,6 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
     private void onInitialised() {
-        Log.v("webengage", " onInitialised() : WebEngage Flutter plugin initialised.");
-        Log.v("webengage", " onInitialised() : Message queue: " + messageQueue);
         isInitialised = true;
         synchronized (messageQueue) {
             // Handle all the messages received before the Dart isolate was
@@ -384,11 +418,8 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     static void sendOrQueueCallback(String methodName, Map<String, Object> message) {
         if (isInitialised) {
-            Log.v("Webengage", " sendOrQueueCallback() : Flutter Engine initialised will send message");
             sendCallback(methodName, message);
         } else {
-            Log.v("Webengage", " sendOrQueueCallback() : Flutter Engine not initialised adding message to "
-                    + "queue");
             messageQueue.put(methodName, message);
         }
     }
