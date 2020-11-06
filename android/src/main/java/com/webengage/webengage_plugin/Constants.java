@@ -1,7 +1,7 @@
 package com.webengage.webengage_plugin;
 
 public interface Constants {
-     String WEBENGAGE_PLUGIN = "webengage_plugin";
+     String WEBENGAGE_PLUGIN = "webengage_flutter";
 
     interface MethodName {
         String METHOD_NAME_INITIALISE = "initialise";

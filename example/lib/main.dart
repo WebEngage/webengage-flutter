@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:webengage_plugin/webengage_plugin.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
 import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
 import 'package:fluttertoast/fluttertoast.dart';

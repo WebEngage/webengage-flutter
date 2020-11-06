@@ -11,7 +11,7 @@ typedef void MessageHandlerInAppClick(Map<String, dynamic> message, String s);
 typedef void MessageHandlerPushClick(Map<String, dynamic> message, String s);
 
 class WebEngagePlugin {
-  static const MethodChannel _channel = const MethodChannel('webengage_plugin');
+  static const MethodChannel _channel = const MethodChannel('webengage_flutter');
   static final WebEngagePlugin _webengagePlugin =
       new WebEngagePlugin._internal();
 
