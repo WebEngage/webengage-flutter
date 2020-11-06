@@ -1,10 +1,10 @@
 # WebEngage Flutter SDK
 
-For more information checkout our [website](https://webengage.com/) and [documentation](https://knowledgebase.webengage.com/docs).
+For more information checkout our [website](https://webengage.com/) and [documentation](https://docs.webengage.com/docs).
 
 ## Installation
 
-**1. Add WebEngage Flutter Plugin**
+**Add WebEngage Flutter Plugin**
 
 - Add webengage_plugin in your `pubspec.yaml` file.
 ```yml
@@ -16,8 +16,6 @@ dependencies:
 - Run flutter packages get to install the SDK
 
 ## Initialization
-
-**1. Initialize WebEngage**
 
 ### Android
 1. Initialize WebEngage in main.dart in initState();
@@ -45,6 +43,82 @@ public class MainApplication extends FlutterApplication {
     }
     ...
 }
+```
+
+#### Push Notifications
+
+1. Add below dependencies in app-level build gradle
+```groovy
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging:20.2.1'
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+```
+2. Firebase tokens can be passed to WebEngage using FirebaseMessagingService
+ ```java
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.webengage.sdk.android.WebEngage;
+
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+        WebEngage.get().setRegistrationID(s);
+    }
+}
+```
+It is also recommended that you pass Firebase token to WebEngage from onCreate of your Application class as shown below. This will ensure that changes in user’s Firebase token are communicated to WebEngage.
+```java
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.webengage.sdk.android.WebEngage;
+
+public class MyApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String token = instanceIdResult.getToken();
+                WebEngage.get().setRegistrationID(token);
+            }
+        });
+    }
+}
+```
+3. Pass Messages to WebEngage
+Create a class that extends FirebaseMessagingService and pass messages to WebEngage.
+All incoming messages from WebEngage will contain key source with the value as webengage.
+```java
+package your.application.package;
+
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
+import com.webengage.sdk.android.WebEngage;
+
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
+  @Override
+  public void onMessageReceived(RemoteMessage remoteMessage) {
+    Map<String, String> data = remoteMessage.getData();
+    if(data != null) {
+      if(data.containsKey("source") && "webengage".equals(data.get("source"))) {
+        WebEngage.get().receive(data);
+      }
+    }
+  }
+}
+```
+Next, register the service to the application element of your AndroidManifest.xml as follows.
+```xml
+<service
+    android:name=".MyFirebaseMessagingService">
+    <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+    </intent-filter>
+</service>
 ```
 
 ### iOS
@@ -77,6 +151,34 @@ public class MainApplication extends FlutterApplication {
 }
 
 @end
+```
+
+#### Push Notifications
+**Push Notification Callbacks**
+
+1. Add Below code in AppDelegate.h file
+
+```
+  #import <WebEngagePlugin.h>
+  
+  @property (nonatomic, strong) WebEngagePlugin *bridge;
+```
+2. Add Below code in AppDelegate.m file
+
+```
+    self.bridge = [WebEngagePlugin new];
+    //For setting push click callback set pushNotificationDelegate after webengage SDK is initialised
+    
+    [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
+    [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
+```
+
+3. Add Below Method in main.dart
+```dart
+  void _onPushClick(Map<String, dynamic> message) {
+    print("This is a push click callback from native to flutter. Payload " +
+        message.toString());
+  }
 ```
 
 ## Track Users
@@ -151,115 +253,6 @@ import 'package:webengage_plugin/webengage_plugin.dart';
       WebEngagePlugin.trackEvent('Order Placed', {'Amount': 808.48});
 ```
 
-## Push Notifications
-
-### Push Notifications For Android
-
-1. Add below dependencies in app-level build gradle
-```groovy
-    implementation platform('com.google.firebase:firebase-bom:25.12.0')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging:20.2.1'
-    implementation 'com.google.android.gms:play-services-ads:15.0.1'
-```
-2. Firebase tokens can be passed to WebEngage using FirebaseMessagingService
- ```java 
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.webengage.sdk.android.WebEngage;
-
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    @Override
-    public void onNewToken(String s) {
-        super.onNewToken(s);
-        WebEngage.get().setRegistrationID(s);
-    }
-}
-```
-It is also recommended that you pass Firebase token to WebEngage from onCreate of your Application class as shown below. This will ensure that changes in user’s Firebase token are communicated to WebEngage.
-```java 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.webengage.sdk.android.WebEngage;
-
-public class MyApplication extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String token = instanceIdResult.getToken();
-                WebEngage.get().setRegistrationID(token);
-            }
-        });
-    }
-}
-```
-3. Pass Messages to WebEngage
-Create a class that extends FirebaseMessagingService and pass messages to WebEngage.
-All incoming messages from WebEngage will contain key source with the value as webengage.
-```java 
-package your.application.package;
-
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.RemoteMessage;
-import com.webengage.sdk.android.WebEngage;
-
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
-  @Override
-  public void onMessageReceived(RemoteMessage remoteMessage) {
-    Map<String, String> data = remoteMessage.getData();
-    if(data != null) {
-      if(data.containsKey("source") && "webengage".equals(data.get("source"))) {
-        WebEngage.get().receive(data);
-      }
-    }
-  }
-}
-```
-Next, register the service to the application element of your AndroidManifest.xml as follows.
-```xml
-<service
-    android:name=".MyFirebaseMessagingService">
-    <intent-filter>
-        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-    </intent-filter>
-</service>
-```
-
-
-### Push Notifications For iOS
-
-
-### Push Notification Callbacks 
-
-1. Add Below code in AppDelegate.h file
-
-```
-  #import <WebEngagePlugin.h>
-  
-  @property (nonatomic, strong) WebEngagePlugin *bridge;
-```
-2. Add Below code in AppDelegate.m file
-
-``` 
-    self.bridge = [WebEngagePlugin new];
-    //For setting push click callback set pushNotificationDelegate after webengage SDK is initialised
-    
-    [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
-    [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
-```
-
-3. Add Below Method in main.dart
-```dart
-  void _onPushClick(Map<String, dynamic> message) {
-    print("This is a push click callback from native to flutter. Payload " +
-        message.toString());
-  }
-```
-
 ## In-app Notifications
 
 ### Track Screens
@@ -312,3 +305,11 @@ import 'package:webengage_plugin/webengage_plugin.dart';
         message.toString());
   }
 ````
+
+
+## More Info
+- Checkout the [Sample main.dart](https://github.com/WebEngage/webengage-flutter/blob/development_flutter_sdk/example/lib/main.dart) for the sample application.
+- Checkout the [developer documentation](https://docs.webengage.com/docs)
+
+## Questions
+Reach out to our [Support Team](https://webengage.com/) for further assistance.
