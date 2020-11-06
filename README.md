@@ -179,6 +179,19 @@ Next, register the service to the application element of your AndroidManifest.xm
     print("This is a push click callback from native to flutter. Payload " +
         message.toString());
   }
+ void _onPushActionClick(Map<String, dynamic> message, String s) {
+    print(
+        "This is a Push action click callback from native to flutter. Payload " +
+            message.toString());
+    print(
+        "This is a Push action click callback from native to flutter. SelectedId " +
+            s.toString());
+  }
+```
+
+4. Add Below code inside initmethod() in main.dart
+```dart
+    _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
 ```
 
 ## Track Users
@@ -305,6 +318,11 @@ import 'package:webengage_plugin/webengage_plugin.dart';
         message.toString());
   }
 ````
+4. Add Below code inside initmethod() in main.dart
+```dart
+_webEngagePlugin.setUpInAppCallbacks(
+        _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+```
 
 
 ## More Info

@@ -139,7 +139,7 @@ class WebEngagePlugin {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
         String deeplink = message[PAYLOAD][URI];
-        _onPushClick(call.arguments.cast<String, dynamic>(), deeplink);
+        _onPushClick(message[PAYLOAD], deeplink);
       } else {
         String deeplink = message[DEEPLINK];
         _onPushClick(call.arguments.cast<String, dynamic>(), deeplink);
@@ -150,7 +150,7 @@ class WebEngagePlugin {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
         String deeplink = message[PAYLOAD][URI];
-        _onPushActionClick(call.arguments.cast<String, dynamic>(), deeplink);
+        _onPushActionClick(message[PAYLOAD], deeplink);
       } else {
         String deeplink = message[DEEPLINK];
         _onPushActionClick(call.arguments.cast<String, dynamic>(), deeplink);
@@ -160,7 +160,8 @@ class WebEngagePlugin {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
         String selectedActionId = message[PAYLOAD][SELECTED_ACTION_ID];
-        _onInAppClick(message[PAYLOAD], selectedActionId);
+        Map<String, dynamic> newPayload = message[PAYLOAD].cast<String, dynamic>();
+        _onInAppClick(newPayload, selectedActionId);
       } else {
         String selectedActionId = message[SELECTED_ACTION_ID];
         _onInAppClick(call.arguments.cast<String, dynamic>(), selectedActionId);
@@ -169,7 +170,8 @@ class WebEngagePlugin {
     if (call.method == callbackOnInAppShown && _onInAppShown != null) {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
-        _onInAppShown(message[PAYLOAD]);
+        Map<String, dynamic> newPayload = message[PAYLOAD].cast<String, dynamic>();
+        _onInAppShown(newPayload);
       } else {
         _onInAppShown(call.arguments.cast<String, dynamic>());
       }
@@ -177,15 +179,18 @@ class WebEngagePlugin {
     if (call.method == callbackOnInAppDismissed && _onInAppDismiss != null) {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
-        _onInAppDismiss(message[PAYLOAD]);
+        Map<String, dynamic> newPayload = message[PAYLOAD].cast<String, dynamic>();
+        _onInAppDismiss(newPayload);
       } else {
         _onInAppDismiss(call.arguments.cast<String, dynamic>());
       }
     }
     if (call.method == callbackOnInAppPrepared && _onInAppPrepared != null) {
+
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
-        _onInAppPrepared(message[PAYLOAD]);
+        Map<String, dynamic> newPayload = message[PAYLOAD].cast<String, dynamic>();
+        _onInAppPrepared(newPayload);
       } else {
         _onInAppPrepared(call.arguments.cast<String, dynamic>());
       }
