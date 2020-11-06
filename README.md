@@ -1,26 +1,25 @@
+# WebEngage Flutter SDK
 
-# WebEngage Flutter
-
-WebEngage Flutter Plugin.
+For more information checkout our [website](https://webengage.com/) and [documentation](https://knowledgebase.webengage.com/docs).
 
 ## Installation
 
 **1. Add WebEngage Flutter Plugin**
 
-Add webengage_plugin in your `pubspec.yaml` file.
-
+- Add webengage_plugin in your `pubspec.yaml` file.
 ```yml
 dependencies:
   webengage_plugin:
     git:
       url: https://github.com/WebEngage/webengage-flutter.git
 ```
+- Run flutter packages get to install the SDK
 
 ## Initialization
 
 **1. Initialize WebEngage**
 
-### For Android
+### Android
 1. Initialize WebEngage in main.dart in initState();
 ```dart
 WebEngagePlugin _webEngagePlugin = new WebEngagePlugin();
@@ -48,7 +47,7 @@ public class MainApplication extends FlutterApplication {
 }
 ```
 
-### For iOS
+### iOS
 
 1. Add WebEngage configurations `<your-project>/ios/<YourApp>/Info.plist` file.
 ```
