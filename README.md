@@ -9,8 +9,7 @@ For more information checkout our [website](https://webengage.com/) and [documen
 - Add webengage_plugin in your `pubspec.yaml` file.
 ```yml
 dependencies:
-  webengage_plugin:
-clevertap_plugin: 1.0.0
+webengage_plugin: 1.0.0
 ```
 - Run `flutter packages get` to install the SDK
 
