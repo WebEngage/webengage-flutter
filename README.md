@@ -6,10 +6,10 @@ For more information checkout our [website](https://webengage.com/) and [documen
 
 **Add WebEngage Flutter Plugin**
 
-- Add webengage_flutter in your `pubspec.yaml` file.
+- Add webengage_plugin in your `pubspec.yaml` file.
 ```yml
 dependencies:
-webengage_flutter: 1.0.1
+webengage_plugin: 1.0.1
 ```
 - Run `flutter packages get` to install the SDK
 
@@ -199,7 +199,7 @@ Next, register the service to the application element of your AndroidManifest.xm
 ## Track Users
 
 ```dart
-import 'package:webengage_flutter/webengage_flutter.dart';
+import 'package:webengage_plugin/webengage_plugin.dart';
 ...
     // User login
     WebEngagePlugin.userLogin('3254');
@@ -259,7 +259,7 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 
 ## Track Events
 ```dart
-import 'package:webengage_flutter/webengage_flutter.dart';
+import 'package:webengage_plugin/webengage_plugin.dart';
 ...
     // Track simple event
       WebEngagePlugin.trackEvent('Added to Cart');
@@ -272,7 +272,7 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 
 ### Track Screens
 ```dart
-import 'package:webengage_flutter/webengage_flutter.dart';
+import 'package:webengage_plugin/webengage_plugin.dart';
 ...
     // Track screen
     WebEngagePlugin.trackScreen('Home Page');
