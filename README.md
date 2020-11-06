@@ -13,7 +13,7 @@ dependencies:
     git:
       url: https://github.com/WebEngage/webengage-flutter.git
 ```
-- Run flutter packages get to install the SDK
+- Run `flutter packages get` to install the SDK
 
 ## Initialization
 
