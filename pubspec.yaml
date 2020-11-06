@@ -1,7 +1,7 @@
 name: webengage_plugin
 description: WebEngage Flutter plugin.
-version: 0.0.1
-author: Ashwin Dinesh
+version: 1.0.0
+author: WebEngage
 homepage: https://webengage.com/
 
 environment:

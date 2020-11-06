@@ -10,8 +10,7 @@ For more information checkout our [website](https://webengage.com/) and [documen
 ```yml
 dependencies:
   webengage_plugin:
-    git:
-      url: https://github.com/WebEngage/webengage-flutter.git
+clevertap_plugin: 1.0.0
 ```
 - Run `flutter packages get` to install the SDK
 
