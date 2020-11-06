@@ -1,12 +1,7 @@
 package com.webengage.webengage_plugin_example;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 
-//import com.android.installreferrer.api.InstallReferrerClient;
-import androidx.core.app.JobIntentService;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

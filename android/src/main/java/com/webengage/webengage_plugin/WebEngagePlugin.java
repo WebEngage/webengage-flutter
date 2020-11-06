@@ -34,50 +34,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 
-import static com.webengage.webengage_plugin.Constants.ARGS.ATTRIBUTES;
-import static com.webengage.webengage_plugin.Constants.ARGS.ATTRIBUTE_NAME;
-import static com.webengage.webengage_plugin.Constants.ARGS.CHANNEL;
-import static com.webengage.webengage_plugin.Constants.ARGS.EMAIL;
-import static com.webengage.webengage_plugin.Constants.ARGS.EVENT_NAME;
-import static com.webengage.webengage_plugin.Constants.ARGS.FEMALE;
-import static com.webengage.webengage_plugin.Constants.ARGS.IN_APP;
-import static com.webengage.webengage_plugin.Constants.ARGS.LAT;
-import static com.webengage.webengage_plugin.Constants.ARGS.LNG;
-import static com.webengage.webengage_plugin.Constants.ARGS.MALE;
-import static com.webengage.webengage_plugin.Constants.ARGS.OPTIN;
-import static com.webengage.webengage_plugin.Constants.ARGS.OTHER;
-import static com.webengage.webengage_plugin.Constants.ARGS.PUSH;
-import static com.webengage.webengage_plugin.Constants.ARGS.SCREEN_DATA;
-import static com.webengage.webengage_plugin.Constants.ARGS.SCREEN_NAME;
-import static com.webengage.webengage_plugin.Constants.ARGS.SMS;
-import static com.webengage.webengage_plugin.Constants.ARGS.WHATSAPP;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_INITIALISE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_ATTRIBUTE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_BIRTHDATE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_BOOL_ATTRIBUTE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_COMPANY;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_DATE_ATTRIBUTE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_DOUBLE_ATTRIBUTE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_EMAIL;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_FIRST_NAME;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_GENDER;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_HASHED_EMAIL;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_HASHED_PHONE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_INT_ATTRIBUTE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_LAST_NAME;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_LIST_ATTRIBUTE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_LOCATION;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_LOGIN;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_LOGOUT;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_MAP_ATTRIBUTE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_OPT_IN;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_PHONE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_SET_USER_STRING_ATTRIBUTE;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_TRACK_EVENT;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_TRACK_SCREEN;
-import static com.webengage.webengage_plugin.Constants.PARAM.PARAM_PAYLOAD;
-import static com.webengage.webengage_plugin.Constants.PARAM.PARAM_PLATFORM;
-import static com.webengage.webengage_plugin.Constants.PARAM.PARAM_PLATFORM_VALUE;
+import static com.webengage.webengage_plugin.Constants.ARGS.*;
+import static com.webengage.webengage_plugin.Constants.MethodName.*;
+import static com.webengage.webengage_plugin.Constants.PARAM.*;
 import static com.webengage.webengage_plugin.Constants.WEBENGAGE_PLUGIN;
 
 
@@ -101,7 +60,6 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), WEBENGAGE_PLUGIN);
         channel.setMethodCallHandler(this);
         this.context = flutterPluginBinding.getApplicationContext();
-        //WebEngage.registerPushNotificationCallback(this);
     }
 
     @Override

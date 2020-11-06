@@ -12,7 +12,6 @@ public class EmbeddingV1Activity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      // WebEngagePlugin.registerWith(registrarFor("com.webengage.webengage_plugin"));
 
     }
 }

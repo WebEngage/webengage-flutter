@@ -26,7 +26,7 @@ public class MainApplication extends FlutterApplication  {
         super.onCreate();
              Log.d("webengage","MainApplicationstarts");
         WebEngageConfig webEngageConfig = new WebEngageConfig.Builder()
-                .setWebEngageKey("YOUR_LICENCSE_CODE")
+                .setWebEngageKey("d3a4a436")
                 .setAutoGCMRegistrationFlag(false)
                 .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
                 .setDebugMode(true) // only in development mode
@@ -39,57 +39,6 @@ public class MainApplication extends FlutterApplication  {
                 WebEngage.get().setRegistrationID(token);
             }
         });
-//        WebEngage.registerInAppNotificationCallback(new InAppNotificationCallbacks() {
-//            @Override
-//            public InAppNotificationData onInAppNotificationPrepared(Context context, InAppNotificationData inAppNotificationData) {
-//                return null;
-//            }
-//
-//            @Override
-//            public void onInAppNotificationShown(Context context, InAppNotificationData inAppNotificationData) {
-//
-//            }
-//
-//            @Override
-//            public boolean onInAppNotificationClicked(Context context, InAppNotificationData inAppNotificationData, String s) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onInAppNotificationDismissed(Context context, InAppNotificationData inAppNotificationData) {
-//
-//            }
-//        });
-//        WebEngage.registerPushNotificationCallback(new PushNotificationCallbacks() {
-//            @Override
-//            public PushNotificationData onPushNotificationReceived(Context context, PushNotificationData pushNotificationData) {
-//                Log.d("webengage","applicationonPushNotificationReceived");
-//                return pushNotificationData;
-//            }
-//
-//            @Override
-//            public void onPushNotificationShown(Context context, PushNotificationData pushNotificationData) {
-//
-//            }
-//
-//            @Override
-//            public boolean onPushNotificationClicked(Context context, PushNotificationData pushNotificationData) {
-//                Log.d("webengage","applicationonPushNotificationClicked");
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public void onPushNotificationDismissed(Context context, PushNotificationData pushNotificationData) {
-//
-//            }
-//
-//            @Override
-//            public boolean onPushNotificationActionClicked(Context context, PushNotificationData pushNotificationData, String s) {
-//                return false;
-//            }
-//        });
-//
 }
 
 

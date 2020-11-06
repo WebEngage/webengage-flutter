@@ -8,10 +8,7 @@ import com.webengage.sdk.android.callbacks.InAppNotificationCallbacks;
 import java.util.Map;
 
 import static com.webengage.webengage_plugin.Constants.ARGS.SELECTED_ACTION_ID;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_ON_INAPP_CLICKED;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_ON_INAPP_DISMISS;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_ON_INAPP_PREPARED;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_ON_INAPP_SHOWN;
+import static com.webengage.webengage_plugin.Constants.MethodName.*;
 
 
 public class FlutterInAppCallbacks implements InAppNotificationCallbacks {

@@ -12,8 +12,7 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_ON_PUSH_ACTION_CLICK;
-import static com.webengage.webengage_plugin.Constants.MethodName.METHOD_NAME_ON_PUSH_CLICK;
+import static com.webengage.webengage_plugin.Constants.MethodName.*;
 import static com.webengage.webengage_plugin.Utils.bundleToMap;
 
 public class FlutterPushMessageCallback implements PushNotificationCallbacks {

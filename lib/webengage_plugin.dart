@@ -139,7 +139,8 @@ class WebEngagePlugin {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
         String deeplink = message[PAYLOAD][URI];
-        _onPushClick(message[PAYLOAD], deeplink);
+        Map<String, dynamic> newPayload = message[PAYLOAD].cast<String, dynamic>();
+        _onPushClick(newPayload, deeplink);
       } else {
         String deeplink = message[DEEPLINK];
         _onPushClick(call.arguments.cast<String, dynamic>(), deeplink);
@@ -150,7 +151,8 @@ class WebEngagePlugin {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
         String deeplink = message[PAYLOAD][URI];
-        _onPushActionClick(message[PAYLOAD], deeplink);
+        Map<String, dynamic> newPayload = message[PAYLOAD].cast<String, dynamic>();
+        _onPushActionClick(newPayload, deeplink);
       } else {
         String deeplink = message[DEEPLINK];
         _onPushActionClick(call.arguments.cast<String, dynamic>(), deeplink);
