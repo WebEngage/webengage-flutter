@@ -52,7 +52,11 @@ public class MainApplication extends FlutterApplication {
     implementation 'com.google.firebase:firebase-messaging:20.2.1'
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
 ```
-2. Firebase tokens can be passed to WebEngage using FirebaseMessagingService
+2. Add the following to your dependencies section in project/build.gradle
+```groovy
+        classpath 'com.google.gms:google-services:4.3.4'
+```
+3. Firebase tokens can be passed to WebEngage using FirebaseMessagingService
  ```java
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.webengage.sdk.android.WebEngage;
@@ -87,7 +91,7 @@ public class MainApplication extends FlutterApplication {
     }
 }
 ```
-3. Pass Messages to WebEngage
+4. Pass Messages to WebEngage
 Create a class that extends FirebaseMessagingService and pass messages to WebEngage.
 All incoming messages from WebEngage will contain key source with the value as webengage.
 ```java
