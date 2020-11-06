@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onInAppPrepared(Map<String, dynamic> message) {
-    print("This is a inapp click callback from native to flutter. Payload " +
+    print("This is a inapp prepared callback from native to flutter. Payload " +
         message.toString());
   }
 
