@@ -72,7 +72,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.webengage.sdk.android.WebEngage;
 
-public class MyApplication extends Application {
+public class MainApplication extends FlutterApplication {
     @Override
     public void onCreate() {
         super.onCreate();
