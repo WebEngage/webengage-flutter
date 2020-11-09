@@ -333,3 +333,5 @@ _webEngagePlugin.setUpInAppCallbacks(
 
 ## Questions?
 Reach out to our [Support Team](https://webengage.com/) for further assistance.
+
+## Plugin info
