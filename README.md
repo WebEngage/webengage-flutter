@@ -335,3 +335,4 @@ _webEngagePlugin.setUpInAppCallbacks(
 Reach out to our [Support Team](https://webengage.com/) for further assistance.
 
 ## Plugin info
+[WebEngage Flutter SDK](https://pub.dev/packages/webengage_flutter)
