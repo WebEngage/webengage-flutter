@@ -64,6 +64,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
+        if (call.method.equals("getPlatformVersion")) {
+            result.success("Android " + android.os.Build.VERSION.RELEASE);
+            return;
+        }
         switch (call.method) {
             case METHOD_NAME_SET_USER_LOGIN: {
                 userLogin(call, result);
@@ -175,13 +179,12 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 setUserListAttribute(call, result);
                 break;
             }
+            default:
+                result.notImplemented();
+                return;
         }
 
-        if (call.method.equals("getPlatformVersion")) {
-            result.success("Android " + android.os.Build.VERSION.RELEASE);
-        } else {
-            result.notImplemented();
-        }
+        result.success(true);
     }
 
     private void setUserMapAttribute(MethodCall call, Result result) {
