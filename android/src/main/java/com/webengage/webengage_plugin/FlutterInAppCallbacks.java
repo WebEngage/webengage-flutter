@@ -12,6 +12,16 @@ import static com.webengage.webengage_plugin.Constants.MethodName.*;
 
 
 public class FlutterInAppCallbacks implements InAppNotificationCallbacks {
+    boolean overrideClickAction;
+
+    FlutterInAppCallbacks() {
+        this.overrideClickAction = false;
+    }
+
+    FlutterInAppCallbacks(boolean overrideClickAction) {
+        this.overrideClickAction = overrideClickAction;
+    }
+
     @Override
     public InAppNotificationData onInAppNotificationPrepared(Context context, InAppNotificationData inAppNotificationData) {
         WebEngagePlugin.sendOrQueueCallback(METHOD_NAME_ON_INAPP_PREPARED,
@@ -30,7 +40,7 @@ public class FlutterInAppCallbacks implements InAppNotificationCallbacks {
         Map<String, Object> map = Utils.jsonObjectToMap(inAppNotificationData.getData());
         map.put(SELECTED_ACTION_ID, s);
         WebEngagePlugin.sendOrQueueCallback(METHOD_NAME_ON_INAPP_CLICKED, map);
-        return false;
+        return overrideClickAction;
     }
 
     @Override
