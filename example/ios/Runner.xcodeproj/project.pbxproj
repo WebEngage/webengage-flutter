@@ -384,7 +384,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.webengage.webengagePluginExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.flutterWebEngage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -518,7 +518,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.webengage.webengagePluginExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.flutterWebEngage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -547,7 +547,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.webengage.webengagePluginExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.flutterWebEngage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

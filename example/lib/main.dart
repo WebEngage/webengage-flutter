@@ -66,7 +66,11 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+    _webEngagePlugin.pushStream.listen((event) {
+      print("pushStream: " + event);
+     });
   }
+
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {

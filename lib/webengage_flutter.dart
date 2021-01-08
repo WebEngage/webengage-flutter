@@ -29,6 +29,14 @@ class WebEngagePlugin {
   MessageHandler _onInAppDismiss;
   MessageHandler _onInAppPrepared;
 
+  final StreamController<String> _pushCallbackStream = new StreamController<String>();
+  Stream<String> get pushStream {
+    return _pushCallbackStream.stream;
+  }
+  Sink get pushSink {
+    return _pushCallbackStream.sink;
+  }
+
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
     return version;
@@ -134,28 +142,31 @@ class WebEngagePlugin {
   }
 
   Future _platformCallHandler(MethodCall call) async {
-    print("_platformCallHandler call ${call.method} ${call.arguments}");
-    if (call.method == callbackOnPushClick && _onPushClick != null) {
+    print("_platformCallHandler call ${call.method} ${call.arguments} + ${_onPushClick}");
+    if (call.method == callbackOnPushClick) {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
         String deeplink = message[PAYLOAD][URI];
         Map<String, dynamic> newPayload = message[PAYLOAD].cast<String, dynamic>();
-        _onPushClick(newPayload, deeplink);
+        _pushCallbackStream.sink.add(deeplink);
+       //_onPushClick(newPayload, deeplink);
       } else {
         String deeplink = message[DEEPLINK];
-        _onPushClick(call.arguments.cast<String, dynamic>(), deeplink);
+        _pushCallbackStream.sink.add(deeplink);
+       // _onPushClick(call.arguments.cast<String, dynamic>(), deeplink);
       }
     }
-    if (call.method == callbackOnPushActionClick &&
-        _onPushActionClick != null) {
+    if (call.method == callbackOnPushActionClick) {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
         String deeplink = message[PAYLOAD][URI];
         Map<String, dynamic> newPayload = message[PAYLOAD].cast<String, dynamic>();
-        _onPushActionClick(newPayload, deeplink);
+       // _onPushActionClick(newPayload, deeplink);
+        _pushCallbackStream.sink.add(deeplink);
       } else {
         String deeplink = message[DEEPLINK];
-        _onPushActionClick(call.arguments.cast<String, dynamic>(), deeplink);
+       // _onPushActionClick(call.arguments.cast<String, dynamic>(), deeplink);
+        _pushCallbackStream.sink.add(deeplink);
       }
     }
     if (call.method == callbackOnInAppClicked && _onInAppClick != null) {
