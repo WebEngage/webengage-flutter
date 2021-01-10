@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
-import 'package:fluttertoast/fluttertoast.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -24,8 +24,13 @@ class _MyAppState extends State<MyApp> {
   void _onPushClick(Map<String, dynamic> message, String s) {
     print("This is a push click callback from native to flutter. Payload " +
         message.toString());
-    print("This is a push click callback from native to flutter. Payload " +
-        s.toString());
+    showDialog(context: context, child:
+    new AlertDialog(
+      title: new Text("My Super title"),
+      content: new Text("This is a push click callback from native to flutter. Payload " +
+          message.toString()),
+    )
+    );
   }
 
   void _onPushActionClick(Map<String, dynamic> message, String s) {
@@ -66,9 +71,7 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
-    _webEngagePlugin.pushStream.listen((event) {
-      print("pushStream: " + event);
-     });
+    listenToPushCallbacks();
   }
 
 
@@ -354,13 +357,31 @@ class _MyAppState extends State<MyApp> {
   }
 
   void showToast(String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    // Fluttertoast.showToast(
+    //     msg: msg,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: Colors.red,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _webEngagePlugin.pushSink.close();
+    _webEngagePlugin.pushActionSink.close();
+    super.dispose();
+  }
+
+  void listenToPushCallbacks() {
+    _webEngagePlugin.pushStream.listen((event) {
+        print("pushStream: "+event.toString());
+    });
+
+    _webEngagePlugin.pushActionStream.listen((event) {
+      print("pushActionStream:"+event.toString());
+    });
   }
 }
