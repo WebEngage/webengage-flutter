@@ -369,7 +369,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _webEngagePlugin.pushSink.close();
     _webEngagePlugin.pushActionSink.close();
     super.dispose();

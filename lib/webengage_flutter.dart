@@ -173,13 +173,13 @@ class WebEngagePlugin {
         pushPayload.payload = newPayload;
         if (call.method == callbackOnPushClick) {
           _pushClickStream.sink.add(pushPayload);
-          //Deprecated will be removed in future builds
+          //TODO Deprecated will be removed in future builds
           if (null != _onPushClick) {
             _onPushClick(newPayload, deepLink);
           }
         } else if (call.method == callbackOnPushActionClick) {
           _pushActionClickStream.sink.add(pushPayload);
-          //Deprecated will be removed in future builds
+          //TODO Deprecated will be removed in future builds
           if (null != callbackOnPushActionClick) {
             _onPushActionClick(newPayload, deepLink);
           }
