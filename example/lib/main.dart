@@ -6,7 +6,6 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
 
-
 void main() {
   runApp(MyApp());
 }
@@ -24,13 +23,14 @@ class _MyAppState extends State<MyApp> {
   void _onPushClick(Map<String, dynamic> message, String s) {
     print("This is a push click callback from native to flutter. Payload " +
         message.toString());
-    showDialog(context: context, child:
-    new AlertDialog(
-      title: new Text("My Super title"),
-      content: new Text("This is a push click callback from native to flutter. Payload " +
-          message.toString()),
-    )
-    );
+    showDialog(
+        context: context,
+        child: new AlertDialog(
+          title: new Text("My Super title"),
+          content: new Text(
+              "This is a push click callback from native to flutter. Payload " +
+                  message.toString()),
+        ));
   }
 
   void _onPushActionClick(Map<String, dynamic> message, String s) {
@@ -73,7 +73,6 @@ class _MyAppState extends State<MyApp> {
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
     listenToPushCallbacks();
   }
-
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
@@ -375,12 +374,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   void listenToPushCallbacks() {
+    //Push click stream listener
     _webEngagePlugin.pushStream.listen((event) {
-        print("pushStream: "+event.toString());
+      String deepLink = event.deepLink;
+      Map<String, dynamic> messagePayload = event.payload;
     });
 
+    //Push action click listener
     _webEngagePlugin.pushActionStream.listen((event) {
-      print("pushActionStream:"+event.toString());
+      print("pushActionStream:" + event.toString());
+      String deepLink = event.deepLink;
+      Map<String, dynamic> messagePayload = event.payload;
     });
   }
 }
