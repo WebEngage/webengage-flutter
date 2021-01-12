@@ -14,7 +14,6 @@ int const DATE_FORMAT_LENGTH = 24;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-
     if ([METHOD_NAME_GET_PLATFORM_VERSION isEqualToString:call.method]) {
         result([PARAM_PLATFORM_VALUE stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
     } else if ([METHOD_NAME_SET_USER_LOGIN isEqualToString:call.method]) {
@@ -51,7 +50,9 @@ int const DATE_FORMAT_LENGTH = 24;
         [self setUserAttribute:call withResult:result];
     }else if ([METHOD_NAME_SET_USER_MAP_ATTRIBUTE isEqualToString:call.method]) {
         [self setUserAttributes:call withResult:result];
-    }else {
+    } else if ([METHOD_NAME_INITIALISE isEqualToString:call.method]) {
+
+    } else {
         result(FlutterMethodNotImplemented);
     }
 }
