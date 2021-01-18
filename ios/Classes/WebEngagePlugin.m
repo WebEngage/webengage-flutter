@@ -13,7 +13,7 @@ int const DATE_FORMAT_LENGTH = 24;
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+- (void) handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     if ([METHOD_NAME_GET_PLATFORM_VERSION isEqualToString:call.method]) {
         result([PARAM_PLATFORM_VALUE stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
     } else if ([METHOD_NAME_SET_USER_LOGIN isEqualToString:call.method]) {
@@ -51,6 +51,7 @@ int const DATE_FORMAT_LENGTH = 24;
     }else if ([METHOD_NAME_SET_USER_MAP_ATTRIBUTE isEqualToString:call.method]) {
         [self setUserAttributes:call withResult:result];
     } else if ([METHOD_NAME_INITIALISE isEqualToString:call.method]) {
+        NSLog(@"METHOD_NAME_INITIALISE");
 
     } else {
         result(FlutterMethodNotImplemented);
@@ -247,4 +248,10 @@ int const DATE_FORMAT_LENGTH = 24;
     [inAppNotificationData setObject:actionId forKey:@"selectedActionId"];
     [channel invokeMethod:METHOD_NAME_ON_INAPP_CLICKED arguments:inAppNotificationData];
 }
+
+- (void)trackDeeplinkURLCallback:(NSString *)redirectLocationURL {
+   // NSLog(@"trackDeeplinkURLCallback %@", redirectLocationURL);
+    [channel invokeMethod:METHOD_TRACK_DEEPLINK_URL arguments:redirectLocationURL];
+}
+
 @end

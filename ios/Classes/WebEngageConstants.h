@@ -57,4 +57,6 @@
 #define EMAIL @"email"
 #define WHATSAPP @"whatsapp"
 
+#define METHOD_TRACK_DEEPLINK_URL@"onTrackDeeplinkURL"
+
 #endif /* WebEngageConstants_h */

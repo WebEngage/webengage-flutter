@@ -23,14 +23,6 @@ class _MyAppState extends State<MyApp> {
   void _onPushClick(Map<String, dynamic> message, String s) {
     print("This is a push click callback from native to flutter. Payload " +
         message.toString());
-    showDialog(
-        context: context,
-        child: new AlertDialog(
-          title: new Text("My Super title"),
-          content: new Text(
-              "This is a push click callback from native to flutter. Payload " +
-                  message.toString()),
-        ));
   }
 
   void _onPushActionClick(Map<String, dynamic> message, String s) {
@@ -72,6 +64,7 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
     listenToPushCallbacks();
+    listenToTrackDeeplink();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -163,7 +156,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     return MaterialApp(
+      navigatorKey: navigatorKey,
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Plugin example app'),
@@ -353,6 +348,7 @@ class _MyAppState extends State<MyApp> {
             ],
           )),
     );
+
   }
 
   void showToast(String msg) {
@@ -378,6 +374,8 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.pushStream.listen((event) {
       String deepLink = event.deepLink;
       Map<String, dynamic> messagePayload = event.payload;
+      showDialogWithMessage("Push click callback: " + event.toString());
+
     });
 
     //Push action click listener
@@ -385,6 +383,30 @@ class _MyAppState extends State<MyApp> {
       print("pushActionStream:" + event.toString());
       String deepLink = event.deepLink;
       Map<String, dynamic> messagePayload = event.payload;
+      showDialogWithMessage("PushAction click callback: " + event.toString());
     });
+  }
+
+  void listenToTrackDeeplink() {
+    _webEngagePlugin.trackDeeplinkStream.listen((event) {
+      print("trackDeeplinkStream: " + event);
+      showDialogWithMessage("Track deeplink url callback: " + event);
+    });
+  }
+  final navigatorKey = GlobalKey<NavigatorState>();
+  void showDialogWithMessage(String msg) {
+    showDialog(
+        context: navigatorKey.currentState.overlay.context,
+        builder: (BuildContext context) {
+          return Dialog(
+            insetPadding: EdgeInsets.all(5.0),
+            child: Text(
+            msg,
+            style: TextStyle(
+
+            )),
+          );
+        });
+
   }
 }

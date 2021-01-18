@@ -42,8 +42,7 @@ class WebEngagePlugin {
   Sink get pushSink {
     return _pushClickStream.sink;
   }
-  //
-
+  //Push Action click
   final StreamController<PushPayload> _pushActionClickStream =
   new StreamController<PushPayload>();
 
@@ -55,6 +54,17 @@ class WebEngagePlugin {
     return _pushActionClickStream.sink;
   }
 
+  //
+  final StreamController<String> _trackDeeplinkURLStream =
+  new StreamController<String>();
+
+  Stream<String> get trackDeeplinkStream {
+    return _trackDeeplinkURLStream.stream;
+  }
+
+  Sink get trackDeeplinkURLStreamSink {
+    return _trackDeeplinkURLStream.sink;
+  }
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
     return version;
@@ -211,6 +221,7 @@ class WebEngagePlugin {
         _onInAppClick(call.arguments.cast<String, dynamic>(), selectedActionId);
       }
     }
+
     if (call.method == callbackOnInAppShown && _onInAppShown != null) {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
@@ -221,6 +232,7 @@ class WebEngagePlugin {
         _onInAppShown(call.arguments.cast<String, dynamic>());
       }
     }
+
     if (call.method == callbackOnInAppDismissed && _onInAppDismiss != null) {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
@@ -231,6 +243,7 @@ class WebEngagePlugin {
         _onInAppDismiss(call.arguments.cast<String, dynamic>());
       }
     }
+
     if (call.method == callbackOnInAppPrepared && _onInAppPrepared != null) {
       Map<String, dynamic> message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
@@ -240,6 +253,11 @@ class WebEngagePlugin {
       } else {
         _onInAppPrepared(call.arguments.cast<String, dynamic>());
       }
+    }
+
+    if (call.method == METHOD_TRACK_DEEPLINK_URL) {
+      String locationLink = call.arguments;
+      _trackDeeplinkURLStream.sink.add(locationLink);
     }
   }
 }
