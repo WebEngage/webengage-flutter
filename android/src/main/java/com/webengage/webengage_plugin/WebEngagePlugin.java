@@ -67,113 +67,113 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         switch (call.method) {
             case METHOD_NAME_SET_USER_LOGIN: {
                 userLogin(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_LOGOUT: {
                 userLogout();
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_FIRST_NAME: {
                 setUserFirstName(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_LAST_NAME: {
                 setUserLastName(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_EMAIL: {
                 setUserEmail(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_HASHED_EMAIL: {
                 setUserHashedEmail(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_PHONE: {
                 setUserPhone(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_HASHED_PHONE: {
                 setUserHashedPhone(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_COMPANY: {
                 setUserCompany(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_BIRTHDATE: {
                 setUserBirthDate(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_GENDER: {
                 setUserGender(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_OPT_IN: {
                 setUserOptIn(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_SET_USER_LOCATION: {
                 setUserLocation(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_TRACK_EVENT: {
                 trackEvent(call, result);
-                break;
+                return;
             }
 
             case METHOD_NAME_TRACK_SCREEN: {
                 trackScreen(call, result);
-                break;
+                return;
             }
             case METHOD_NAME_INITIALISE: {
                 onInitialised();
-                break;
+                return;
             }
             case METHOD_NAME_SET_USER_ATTRIBUTE: {
                 setUserAttribute(call, result);
-                break;
+                return;
             }
             case METHOD_NAME_SET_USER_STRING_ATTRIBUTE: {
                 setUserStringAttribute(call, result);
-                break;
+                return;
             }
             case METHOD_NAME_SET_USER_INT_ATTRIBUTE: {
                 setUserIntAttribute(call, result);
-                break;
+                return;
             }
             case METHOD_NAME_SET_USER_DOUBLE_ATTRIBUTE: {
                 setUserDoubleAttribute(call, result);
-                break;
+                return;
             }
             case METHOD_NAME_SET_USER_BOOL_ATTRIBUTE: {
                 setUserBoolAttribute(call, result);
-                break;
+                return;
             }
             case METHOD_NAME_SET_USER_DATE_ATTRIBUTE: {
                 setUserDateAttribute(call, result);
-                break;
+                return;
             }
             case METHOD_NAME_SET_USER_MAP_ATTRIBUTE: {
                 setUserMapAttribute(call, result);
-                break;
+                return;
             }
             case METHOD_NAME_SET_USER_LIST_ATTRIBUTE: {
                 setUserListAttribute(call, result);
-                break;
+                return;
             }
         }
 
