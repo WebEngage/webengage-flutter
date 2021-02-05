@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(MyApp());
@@ -343,6 +344,16 @@ class _MyAppState extends State<MyApp> {
 
                   WebEngagePlugin.setUserAttributes(details);
                   showToast("Usrname':'tom','Passiword':'pass@123");
+                },
+              ),
+              new ListTile(
+                title: Text("Track Date"),
+                onTap: () {
+
+                  final DateTime now = DateTime.now();
+                  final DateFormat formatter = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                  WebEngagePlugin.trackEvent('Register', {'Registered On': formatter.format(now)});
+                  showToast("Track ${formatter.format(now)}");
                 },
               ),
             ],

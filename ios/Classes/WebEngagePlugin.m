@@ -52,7 +52,6 @@ int const DATE_FORMAT_LENGTH = 24;
         [self setUserAttributes:call withResult:result];
     } else if ([METHOD_NAME_INITIALISE isEqualToString:call.method]) {
         NSLog(@"METHOD_NAME_INITIALISE");
-
     } else {
         result(FlutterMethodNotImplemented);
     }

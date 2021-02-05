@@ -50,10 +50,6 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     private static final Map<String, Map<String, Object>> messageQueue =
             Collections.synchronizedMap(new LinkedHashMap<String, Map<String, Object>>());
 
-    public WebEngagePlugin() {
-        Log.w(TAG, "Constructor called on thread: " + Thread.currentThread().getName());
-    }
-
     @Override
     public void onAttachedToEngine(FlutterPluginBinding flutterPluginBinding) {
         Log.w(TAG, "onAttachedToEngine on thread: " + Thread.currentThread().getName());
@@ -65,123 +61,128 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     @Override
     public void onMethodCall(MethodCall call, Result result) {
         switch (call.method) {
-            case METHOD_NAME_SET_USER_LOGIN: {
+            case METHOD_NAME_SET_USER_LOGIN:
                 userLogin(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_LOGOUT: {
+
+            case METHOD_NAME_SET_USER_LOGOUT:
                 userLogout();
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_FIRST_NAME: {
+
+            case METHOD_NAME_SET_USER_FIRST_NAME:
                 setUserFirstName(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_LAST_NAME: {
+
+            case METHOD_NAME_SET_USER_LAST_NAME:
                 setUserLastName(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_EMAIL: {
+
+            case METHOD_NAME_SET_USER_EMAIL:
                 setUserEmail(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_HASHED_EMAIL: {
+
+            case METHOD_NAME_SET_USER_HASHED_EMAIL:
                 setUserHashedEmail(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_PHONE: {
+
+            case METHOD_NAME_SET_USER_PHONE:
                 setUserPhone(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_HASHED_PHONE: {
+
+            case METHOD_NAME_SET_USER_HASHED_PHONE:
                 setUserHashedPhone(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_COMPANY: {
+            case METHOD_NAME_SET_USER_COMPANY:
                 setUserCompany(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_BIRTHDATE: {
+
+            case METHOD_NAME_SET_USER_BIRTHDATE:
                 setUserBirthDate(call, result);
                 break;
-            }
 
-            case METHOD_NAME_SET_USER_GENDER: {
+
+            case METHOD_NAME_SET_USER_GENDER:
                 setUserGender(call, result);
                 break;
-            }
+
 
             case METHOD_NAME_SET_USER_OPT_IN: {
                 setUserOptIn(call, result);
                 break;
             }
 
-            case METHOD_NAME_SET_USER_LOCATION: {
+            case METHOD_NAME_SET_USER_LOCATION:
                 setUserLocation(call, result);
                 break;
-            }
 
-            case METHOD_NAME_TRACK_EVENT: {
+
+            case METHOD_NAME_TRACK_EVENT:
                 trackEvent(call, result);
                 break;
-            }
 
-            case METHOD_NAME_TRACK_SCREEN: {
+
+            case METHOD_NAME_TRACK_SCREEN:
                 trackScreen(call, result);
                 break;
-            }
-            case METHOD_NAME_INITIALISE: {
+
+            case METHOD_NAME_INITIALISE:
                 onInitialised();
                 break;
-            }
-            case METHOD_NAME_SET_USER_ATTRIBUTE: {
+
+            case METHOD_NAME_SET_USER_ATTRIBUTE:
                 setUserAttribute(call, result);
                 break;
-            }
-            case METHOD_NAME_SET_USER_STRING_ATTRIBUTE: {
+
+            case METHOD_NAME_SET_USER_STRING_ATTRIBUTE:
                 setUserStringAttribute(call, result);
                 break;
-            }
-            case METHOD_NAME_SET_USER_INT_ATTRIBUTE: {
+
+            case METHOD_NAME_SET_USER_INT_ATTRIBUTE:
                 setUserIntAttribute(call, result);
                 break;
-            }
-            case METHOD_NAME_SET_USER_DOUBLE_ATTRIBUTE: {
+
+            case METHOD_NAME_SET_USER_DOUBLE_ATTRIBUTE:
                 setUserDoubleAttribute(call, result);
                 break;
-            }
-            case METHOD_NAME_SET_USER_BOOL_ATTRIBUTE: {
+
+            case METHOD_NAME_SET_USER_BOOL_ATTRIBUTE:
                 setUserBoolAttribute(call, result);
                 break;
-            }
-            case METHOD_NAME_SET_USER_DATE_ATTRIBUTE: {
+
+            case METHOD_NAME_SET_USER_DATE_ATTRIBUTE:
                 setUserDateAttribute(call, result);
                 break;
-            }
-            case METHOD_NAME_SET_USER_MAP_ATTRIBUTE: {
+
+            case METHOD_NAME_SET_USER_MAP_ATTRIBUTE:
                 setUserMapAttribute(call, result);
                 break;
-            }
-            case METHOD_NAME_SET_USER_LIST_ATTRIBUTE: {
+
+            case METHOD_NAME_SET_USER_LIST_ATTRIBUTE:
                 setUserListAttribute(call, result);
                 break;
-            }
+
+            case "getPlatformVersion":
+                result.success("Android " + android.os.Build.VERSION.RELEASE);
+                break;
+            default:
+                result.notImplemented();
+
         }
 
-        if (call.method.equals("getPlatformVersion")) {
-            result.success("Android " + android.os.Build.VERSION.RELEASE);
-        } else {
-            result.notImplemented();
-        }
+//        if (call.method.equals("getPlatformVersion")) {
+//            result.success("Android " + android.os.Build.VERSION.RELEASE);
+//        } else {
+//            result.notImplemented();
+//        }
     }
 
     private void setUserMapAttribute(MethodCall call, Result result) {
@@ -374,29 +375,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
 
-    public static void registerWith(PluginRegistry.Registrar registrar) {
-
-        WebEngagePlugin plugin = new WebEngagePlugin();
-        plugin.setupPlugin(registrar.context(), null, registrar);
-    }
-
-    private void setupPlugin(Context context, BinaryMessenger messenger, PluginRegistry.Registrar registrar) {
-
-        if (registrar != null) {
-            //V1 setup
-            this.channel = new MethodChannel(registrar.messenger(), WEBENGAGE_PLUGIN);
-            this.activity = ((Activity) registrar.activeContext());
-        } else {
-            //V2 setup
-            this.channel = new MethodChannel(messenger, WEBENGAGE_PLUGIN);
-        }
-        this.channel.setMethodCallHandler(this);
-        this.context = context.getApplicationContext();
-
-    }
-
     private void invokeMethodOnUiThread(String methodName, PushNotificationData pushNotificationData) {
-
         final MethodChannel channel = this.channel;
         runOnMainThread(() -> channel.invokeMethod(methodName, bundleToMap(pushNotificationData.getCustomData())));
     }
