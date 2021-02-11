@@ -60,12 +60,16 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
+    initWebEngage();
+  }
+
+  void initWebEngage() {
     _webEngagePlugin = new WebEngagePlugin();
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
-    listenToPushCallbacks();
-    listenToTrackDeeplink();
+    subscribeToPushCallbacks();
+    subscribeToTrackDeeplink();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -380,7 +384,7 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  void listenToPushCallbacks() {
+  void subscribeToPushCallbacks() {
     //Push click stream listener
     _webEngagePlugin.pushStream.listen((event) {
       String deepLink = event.deepLink;
@@ -398,12 +402,13 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void listenToTrackDeeplink() {
+  void subscribeToTrackDeeplink() {
     _webEngagePlugin.trackDeeplinkStream.listen((event) {
       print("trackDeeplinkStream: " + event);
       showDialogWithMessage("Track deeplink url callback: " + event);
     });
   }
+
   final navigatorKey = GlobalKey<NavigatorState>();
   void showDialogWithMessage(String msg) {
     showDialog(
@@ -411,11 +416,21 @@ class _MyAppState extends State<MyApp> {
         builder: (BuildContext context) {
           return Dialog(
             insetPadding: EdgeInsets.all(5.0),
-            child: Text(
-            msg,
-            style: TextStyle(
-
-            )),
+            child: new Container(
+              // padding: new EdgeInsets.all(10.0),
+              decoration: new BoxDecoration(
+                color: Colors.white,
+              ),
+              child: new Text(
+                msg,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                  fontFamily: 'helvetica_neue_light',
+                ),
+                textAlign: TextAlign.center,
+              ),
+            )
           );
         });
 
