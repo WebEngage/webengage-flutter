@@ -181,27 +181,64 @@ Next, register the service to the application element of your AndroidManifest.xm
     [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
 ```
 
-3. Add Below Method in main.dart
+3. Add below subscribeToPushCallbacks() method in main.dart and call it from initMethod()
 ```dart
-  void _onPushClick(Map<String, dynamic> message) {
-    print("This is a push click callback from native to flutter. Payload " +
-        message.toString());
-  }
- void _onPushActionClick(Map<String, dynamic> message, String s) {
-    print(
-        "This is a Push action click callback from native to flutter. Payload " +
-            message.toString());
-    print(
-        "This is a Push action click callback from native to flutter. SelectedId " +
-            s.toString());
+  void subscribeToPushCallbacks() {
+      //Push click stream listener
+      _webEngagePlugin.pushStream.listen((event) {
+        String deepLink = event.deepLink;
+        Map<String, dynamic> messagePayload = event.payload;
+      });
+
+      //Push action click listener
+      _webEngagePlugin.pushActionStream.listen((event) {
+        print("pushActionStream:" + event.toString());
+        String deepLink = event.deepLink;
+        Map<String, dynamic> messagePayload = event.payload;
+      });
   }
 ```
 
-4. Add Below code inside initmethod() in main.dart
+4. Add below code in dispose() of the main.dart
 ```dart
-    _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
+  //Close the streams in dispose()
+  @override
+  void dispose() {
+    _webEngagePlugin.pushSink.close();
+    _webEngagePlugin.pushActionSink.close();
+    super.dispose();
+  }
 ```
 
+**Universal Link**
+1. Add Below code in AppDelegate.m file
+```
+  - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
+  [[[WebEngage sharedInstance] deeplinkManager] getAndTrackDeeplink:userActivity.webpageURL callbackBlock:^(id location){
+    [self.bridge trackDeeplinkURLCallback:location];
+  }];
+  return YES;
+}
+```
+
+2. Add below subscribeToTrackUniversalLink() method in main.dart and call it from initMethod()
+```
+ void subscribeToTrackUniversalLink() {
+    _webEngagePlugin.trackDeeplinkStream.listen((location) {
+      print("trackDeeplinkStream: " + location);
+    });
+  }
+```
+
+3. Add below code in dispose() of the main.dart
+```dart
+  //Close the streams in dispose()
+  @override
+  void dispose() {
+    _webEngagePlugin.trackDeeplinkURLStreamSink.close();
+    super.dispose();
+  }
+```
 ## Track Users
 
 ```dart

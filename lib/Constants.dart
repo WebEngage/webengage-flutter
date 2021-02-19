@@ -45,3 +45,4 @@ const String DEEPLINK = "deeplink";
 const String PAYLOAD = "payload";
 const String URI = "uri";
 const String SELECTED_ACTION_ID = "selectedActionId";
+const String METHOD_TRACK_DEEPLINK_URL = "onTrackDeeplinkURL";

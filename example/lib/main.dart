@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,8 +24,6 @@ class _MyAppState extends State<MyApp> {
   void _onPushClick(Map<String, dynamic> message, String s) {
     print("This is a push click callback from native to flutter. Payload " +
         message.toString());
-    print("This is a push click callback from native to flutter. Payload " +
-        s.toString());
   }
 
   void _onPushActionClick(Map<String, dynamic> message, String s) {
@@ -62,10 +60,16 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
+    initWebEngage();
+  }
+
+  void initWebEngage() {
     _webEngagePlugin = new WebEngagePlugin();
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+    subscribeToPushCallbacks();
+    subscribeToTrackDeeplink();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -157,7 +161,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     return MaterialApp(
+      navigatorKey: navigatorKey,
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Plugin example app'),
@@ -344,19 +350,90 @@ class _MyAppState extends State<MyApp> {
                   showToast("Usrname':'tom','Passiword':'pass@123");
                 },
               ),
+              new ListTile(
+                title: Text("Track Date"),
+                onTap: () {
+
+                  final DateTime now = DateTime.now();
+                  final DateFormat formatter = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                  WebEngagePlugin.trackEvent('Register', {'Registered On': formatter.format(now)});
+                  showToast("Track ${formatter.format(now)}");
+                },
+              ),
             ],
           )),
     );
+
   }
 
   void showToast(String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    // Fluttertoast.showToast(
+    //     msg: msg,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: Colors.red,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
+  }
+
+  @override
+  void dispose() {
+    _webEngagePlugin.pushSink.close();
+    _webEngagePlugin.pushActionSink.close();
+    _webEngagePlugin.trackDeeplinkURLStreamSink.close();
+    super.dispose();
+  }
+
+  void subscribeToPushCallbacks() {
+    //Push click stream listener
+    _webEngagePlugin.pushStream.listen((event) {
+      String deepLink = event.deepLink;
+      Map<String, dynamic> messagePayload = event.payload;
+      showDialogWithMessage("Push click callback: " + event.toString());
+
+    });
+
+    //Push action click listener
+    _webEngagePlugin.pushActionStream.listen((event) {
+      print("pushActionStream:" + event.toString());
+      String deepLink = event.deepLink;
+      Map<String, dynamic> messagePayload = event.payload;
+      showDialogWithMessage("PushAction click callback: " + event.toString());
+    });
+  }
+
+  void subscribeToTrackDeeplink() {
+    _webEngagePlugin.trackDeeplinkStream.listen((location) {
+      print("trackDeeplinkStream: " + location);
+      showDialogWithMessage("Track deeplink url callback: " + location);
+    });
+  }
+
+  final navigatorKey = GlobalKey<NavigatorState>();
+  void showDialogWithMessage(String msg) {
+    showDialog(
+        context: navigatorKey.currentState.overlay.context,
+        builder: (BuildContext context) {
+          return Dialog(
+            insetPadding: EdgeInsets.all(5.0),
+            child: new Container(
+              // padding: new EdgeInsets.all(10.0),
+              decoration: new BoxDecoration(
+                color: Colors.white,
+              ),
+              child: new Text(
+                msg,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                  fontFamily: 'helvetica_neue_light',
+                ),
+                textAlign: TextAlign.center,
+              ),
+            )
+          );
+        });
+
   }
 }
