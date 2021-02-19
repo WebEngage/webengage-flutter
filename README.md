@@ -175,9 +175,9 @@ Next, register the service to the application element of your AndroidManifest.xm
     [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
 ```
 
-3. Add below listenToPushCallbacks() method in main.dart and call it from initMethod()
+3. Add below subscribeToPushCallbacks() method in main.dart and call it from initMethod()
 ```dart
-  void listenToPushCallbacks() {
+  void subscribeToPushCallbacks() {
       //Push click stream listener
       _webEngagePlugin.pushStream.listen((event) {
         String deepLink = event.deepLink;
@@ -204,6 +204,35 @@ Next, register the service to the application element of your AndroidManifest.xm
   }
 ```
 
+**Universal Link**
+1. Add Below code in AppDelegate.m file
+```
+  - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
+  [[[WebEngage sharedInstance] deeplinkManager] getAndTrackDeeplink:userActivity.webpageURL callbackBlock:^(id location){
+    [self.bridge trackDeeplinkURLCallback:location];
+  }];
+  return YES;
+}
+```
+
+2. Add below subscribeToTrackUniversalLink() method in main.dart and call it from initMethod()
+```
+ void subscribeToTrackUniversalLink() {
+    _webEngagePlugin.trackDeeplinkStream.listen((location) {
+      print("trackDeeplinkStream: " + location);
+    });
+  }
+```
+
+3. Add below code in dispose() of the main.dart
+```dart
+  //Close the streams in dispose()
+  @override
+  void dispose() {
+    _webEngagePlugin.trackDeeplinkURLStreamSink.close();
+    super.dispose();
+  }
+```
 ## Track Users
 
 ```dart
