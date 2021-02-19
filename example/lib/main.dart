@@ -381,6 +381,7 @@ class _MyAppState extends State<MyApp> {
   void dispose() {
     _webEngagePlugin.pushSink.close();
     _webEngagePlugin.pushActionSink.close();
+    _webEngagePlugin.trackDeeplinkURLStreamSink.close();
     super.dispose();
   }
 
@@ -403,9 +404,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void subscribeToTrackDeeplink() {
-    _webEngagePlugin.trackDeeplinkStream.listen((event) {
-      print("trackDeeplinkStream: " + event);
-      showDialogWithMessage("Track deeplink url callback: " + event);
+    _webEngagePlugin.trackDeeplinkStream.listen((location) {
+      print("trackDeeplinkStream: " + location);
+      showDialogWithMessage("Track deeplink url callback: " + location);
     });
   }
 
