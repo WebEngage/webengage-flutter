@@ -53,7 +53,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>WEGLicenseCode</key>
-	<string>d3a4a436</string>
+	<string>WEBENGAGE_LICENCE_KEY</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
 </dict>
