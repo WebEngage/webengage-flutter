@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:webengage_flutter/PushPayload.dart';
-
 import 'Constants.dart';
 import 'dart:io' show Platform;
+import 'PushPayload.dart';
 
 typedef void MessageHandler(Map<String, dynamic> message);
 typedef void MessageHandlerInAppClick(Map<String, dynamic> message, String s);
@@ -24,12 +22,12 @@ class WebEngagePlugin {
     _channel.invokeMethod(methodInitialise);
   }
 
-  MessageHandlerPushClick _onPushClick;
-  MessageHandlerPushClick _onPushActionClick;
-  MessageHandlerInAppClick _onInAppClick;
-  MessageHandler _onInAppShown;
-  MessageHandler _onInAppDismiss;
-  MessageHandler _onInAppPrepared;
+  MessageHandlerPushClick? _onPushClick;
+  MessageHandlerPushClick? _onPushActionClick;
+  MessageHandlerInAppClick? _onInAppClick;
+  MessageHandler? _onInAppShown;
+  MessageHandler? _onInAppDismiss;
+  MessageHandler? _onInAppPrepared;
 
   //Push Stream
   final StreamController<PushPayload> _pushClickStream =
@@ -148,7 +146,7 @@ class WebEngagePlugin {
   }
 
   static Future<void> trackEvent(String eventName,
-      [Map<String, dynamic> attributes]) async {
+      [Map<String, dynamic>? attributes]) async {
     return await _channel.invokeMethod(METHOD_NAME_TRACK_EVENT,
         {EVENT_NAME: eventName, ATTRIBUTES: attributes});
   }
@@ -165,7 +163,7 @@ class WebEngagePlugin {
   }
 
   static Future<void> trackScreen(String eventName,
-      [Map<String, dynamic> screenData]) async {
+      [Map<String, dynamic>? screenData]) async {
     return await _channel.invokeMethod(METHOD_NAME_TRACK_SCREEN,
         {SCREEN_NAME: eventName, SCREEN_DATA: screenData});
   }
@@ -185,13 +183,13 @@ class WebEngagePlugin {
           _pushClickStream.sink.add(pushPayload);
           //TODO Deprecated will be removed in future builds
           if (null != _onPushClick) {
-            _onPushClick(newPayload, deepLink);
+            _onPushClick!(newPayload, deepLink);
           }
         } else if (call.method == callbackOnPushActionClick) {
           _pushActionClickStream.sink.add(pushPayload);
           //TODO Deprecated will be removed in future builds
           if (null != callbackOnPushActionClick) {
-            _onPushActionClick(newPayload, deepLink);
+            _onPushActionClick!(newPayload, deepLink);
           }
         }
       } else {
@@ -215,10 +213,10 @@ class WebEngagePlugin {
         String selectedActionId = message[PAYLOAD][SELECTED_ACTION_ID];
         Map<String, dynamic> newPayload =
             message[PAYLOAD].cast<String, dynamic>();
-        _onInAppClick(newPayload, selectedActionId);
+        _onInAppClick!(newPayload, selectedActionId);
       } else {
         String selectedActionId = message[SELECTED_ACTION_ID];
-        _onInAppClick(call.arguments.cast<String, dynamic>(), selectedActionId);
+        _onInAppClick!(call.arguments.cast<String, dynamic>(), selectedActionId);
       }
     }
 
@@ -227,9 +225,9 @@ class WebEngagePlugin {
       if (Platform.isAndroid) {
         Map<String, dynamic> newPayload =
             message[PAYLOAD].cast<String, dynamic>();
-        _onInAppShown(newPayload);
+        _onInAppShown!(newPayload);
       } else {
-        _onInAppShown(call.arguments.cast<String, dynamic>());
+        _onInAppShown!(call.arguments.cast<String, dynamic>());
       }
     }
 
@@ -238,9 +236,9 @@ class WebEngagePlugin {
       if (Platform.isAndroid) {
         Map<String, dynamic> newPayload =
             message[PAYLOAD].cast<String, dynamic>();
-        _onInAppDismiss(newPayload);
+        _onInAppDismiss!(newPayload);
       } else {
-        _onInAppDismiss(call.arguments.cast<String, dynamic>());
+        _onInAppDismiss!(call.arguments.cast<String, dynamic>());
       }
     }
 
@@ -249,9 +247,9 @@ class WebEngagePlugin {
       if (Platform.isAndroid) {
         Map<String, dynamic> newPayload =
             message[PAYLOAD].cast<String, dynamic>();
-        _onInAppPrepared(newPayload);
+        _onInAppPrepared!(newPayload);
       } else {
-        _onInAppPrepared(call.arguments.cast<String, dynamic>());
+        _onInAppPrepared!(call.arguments.cast<String, dynamic>());
       }
     }
 
