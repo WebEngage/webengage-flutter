@@ -1,6 +1,6 @@
 class PushPayload {
-  String deepLink;
-  Map<String, dynamic> payload;
+  String? deepLink;
+  Map<String, dynamic>? payload;
   @override
   String toString() {
     // TODO: implement toString
