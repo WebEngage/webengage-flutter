@@ -405,7 +405,7 @@ class _MyAppState extends State<MyApp> {
   void subscribeToTrackDeeplink() {
     _webEngagePlugin.trackDeeplinkStream.listen((location) {
       print("trackDeeplinkStream: " + location!);
-      showDialogWithMessage("Track deeplink url callback: " + location!);
+      showDialogWithMessage("Track deeplink url callback: " + location);
     });
   }
 
@@ -413,7 +413,7 @@ class _MyAppState extends State<MyApp> {
 
   void showDialogWithMessage(String msg) {
     showDialog(
-        context: navigatorKey.currentState!.overlay!.context!,
+        context: navigatorKey.currentState!.overlay!.context,
         builder: (BuildContext context) {
           return Dialog(
               insetPadding: EdgeInsets.all(5.0),
