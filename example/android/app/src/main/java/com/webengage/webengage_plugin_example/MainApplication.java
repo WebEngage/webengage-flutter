@@ -18,7 +18,9 @@ import com.webengage.sdk.android.callbacks.PushNotificationCallbacks;
 import com.webengage.sdk.android.utils.Provider;
 import com.webengage.webengage_plugin.WebEngagePlugin;
 import com.webengage.webengage_plugin.WebengageInitializer;
-
+import com.webengage.sdk.android.WebEngageConfig;
+import com.webengage.sdk.android.WebEngage;
+import com.webengage.sdk.android.WebEngageActivityLifeCycleCallbacks;
 import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;
 
@@ -42,6 +44,4 @@ public class MainApplication extends FlutterApplication {
             }
         });
     }
-
-
 }
