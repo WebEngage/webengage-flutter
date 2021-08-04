@@ -388,9 +388,9 @@ class _MyAppState extends State<MyApp> {
   void subscribeToPushCallbacks() async {
     //Push click stream listener
     _webEngagePlugin.pushStream.listen((event) {
-      String deepLink = event.deepLink!;
+      String? deepLink = event.deepLink;
       Map<String, dynamic> messagePayload = event.payload!;
-      showDialogWithMessage("Push click callback: " + event.toString());
+      showDialogWithMessage("Push click callback: " + event.toString() );
     });
 
     //Push action click listener
@@ -404,8 +404,7 @@ class _MyAppState extends State<MyApp> {
 
   void subscribeToTrackDeeplink() {
     _webEngagePlugin.trackDeeplinkStream.listen((location) {
-      print("trackDeeplinkStream: " + location!);
-      showDialogWithMessage("Track deeplink url callback: " + location);
+      //Location URL
     });
   }
 

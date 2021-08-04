@@ -43,6 +43,7 @@ class WebEngagePlugin {
     return _pushClickStream.sink;
   }
   //Push Action click
+  // ignore: close_sinks
   final StreamController<PushPayload> _pushActionClickStream =
   new StreamController<PushPayload>();
 
