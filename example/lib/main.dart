@@ -18,15 +18,15 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  WebEngagePlugin _webEngagePlugin;
-  String os;
+  late WebEngagePlugin _webEngagePlugin;
+  late String os;
 
-  void _onPushClick(Map<String, dynamic> message, String s) {
+  void _onPushClick(Map<String, dynamic>? message, String? s) {
     print("This is a push click callback from native to flutter. Payload " +
         message.toString());
   }
 
-  void _onPushActionClick(Map<String, dynamic> message, String s) {
+  void _onPushActionClick(Map<String, dynamic>? message, String? s) {
     print(
         "This is a Push action click callback from native to flutter. Payload " +
             message.toString());
@@ -35,22 +35,22 @@ class _MyAppState extends State<MyApp> {
             s.toString());
   }
 
-  void _onInAppPrepared(Map<String, dynamic> message) {
+  void _onInAppPrepared(Map<String, dynamic>? message) {
     print("This is a inapp prepared callback from native to flutter. Payload " +
         message.toString());
   }
 
-  void _onInAppClick(Map<String, dynamic> message, String s) {
+  void _onInAppClick(Map<String, dynamic>? message, String? s) {
     print("This is a inapp click callback from native to flutter. Payload " +
         message.toString());
   }
 
-  void _onInAppShown(Map<String, dynamic> message) {
+  void _onInAppShown(Map<String, dynamic>? message) {
     print("This is a callback on inapp shown from native to flutter. Payload " +
         message.toString());
   }
 
-  void _onInAppDismiss(Map<String, dynamic> message) {
+  void _onInAppDismiss(Map<String, dynamic>? message) {
     print(
         "This is a callback on inapp dismiss from native to flutter. Payload " +
             message.toString());
@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
+    String? platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       platformVersion = await WebEngagePlugin.platformVersion;
@@ -88,7 +88,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _platformVersion = platformVersion;
+      _platformVersion = platformVersion!;
 
       // User login
       //   WebEngagePlugin.userLogin('saurav1237493cf');
@@ -353,17 +353,17 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Track Date"),
                 onTap: () {
-
                   final DateTime now = DateTime.now();
-                  final DateFormat formatter = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                  WebEngagePlugin.trackEvent('Register', {'Registered On': formatter.format(now)});
+                  final DateFormat formatter =
+                      DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                  WebEngagePlugin.trackEvent(
+                      'Register', {'Registered On': formatter.format(now)});
                   showToast("Track ${formatter.format(now)}");
                 },
               ),
             ],
           )),
     );
-
   }
 
   void showToast(String msg) {
@@ -385,55 +385,52 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  void subscribeToPushCallbacks() {
+  void subscribeToPushCallbacks() async {
     //Push click stream listener
     _webEngagePlugin.pushStream.listen((event) {
-      String deepLink = event.deepLink;
-      Map<String, dynamic> messagePayload = event.payload;
-      showDialogWithMessage("Push click callback: " + event.toString());
-
+      String? deepLink = event.deepLink;
+      Map<String, dynamic> messagePayload = event.payload!;
+      showDialogWithMessage("Push click callback: " + event.toString() );
     });
 
     //Push action click listener
     _webEngagePlugin.pushActionStream.listen((event) {
       print("pushActionStream:" + event.toString());
-      String deepLink = event.deepLink;
-      Map<String, dynamic> messagePayload = event.payload;
+      String? deepLink = event.deepLink;
+      Map<String, dynamic>? messagePayload = event.payload;
       showDialogWithMessage("PushAction click callback: " + event.toString());
     });
   }
 
   void subscribeToTrackDeeplink() {
     _webEngagePlugin.trackDeeplinkStream.listen((location) {
-      print("trackDeeplinkStream: " + location);
-      showDialogWithMessage("Track deeplink url callback: " + location);
+      //Location URL
     });
   }
 
   final navigatorKey = GlobalKey<NavigatorState>();
+
   void showDialogWithMessage(String msg) {
     showDialog(
-        context: navigatorKey.currentState.overlay.context,
+        context: navigatorKey.currentState!.overlay!.context,
         builder: (BuildContext context) {
           return Dialog(
-            insetPadding: EdgeInsets.all(5.0),
-            child: new Container(
-              // padding: new EdgeInsets.all(10.0),
-              decoration: new BoxDecoration(
-                color: Colors.white,
-              ),
-              child: new Text(
-                msg,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.0,
-                  fontFamily: 'helvetica_neue_light',
+              insetPadding: EdgeInsets.all(5.0),
+              child: new Container(
+                // padding: new EdgeInsets.all(10.0),
+                decoration: new BoxDecoration(
+                  color: Colors.white,
                 ),
-                textAlign: TextAlign.center,
-              ),
-            )
-          );
+                child: new Text(
+                  msg,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                    fontFamily: 'helvetica_neue_light',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ));
         });
-
   }
 }
