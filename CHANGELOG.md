@@ -13,3 +13,6 @@
 ### Version 1.0.2 (Februrary 11, 2021)
 * Improvements for handling Push callbacks in killed state.
 * Support for universal link (iOS)
+
+### Version 1.0.3 (August 10, 2021)
+* Support for Flutter 2.2 (Null Safety)
