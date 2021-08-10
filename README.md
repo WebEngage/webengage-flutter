@@ -9,7 +9,7 @@ For more information checkout our [website](https://webengage.com/) and [documen
 - Add webengage_flutter in your `pubspec.yaml` file.
 ```yml
 dependencies:
-webengage_flutter: 1.0.2
+webengage_flutter: 1.0.3
 ```
 - Run `flutter packages get` to install the SDK
 
