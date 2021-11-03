@@ -129,123 +129,165 @@ Next, register the service to the application element of your AndroidManifest.xm
 </service>
 ```
 
-### iOS
+## iOS
 
 1. Add WebEngage configurations `<your-project>/ios/<YourApp>/Info.plist` file.
-```
-<dict>
-	<key>WEGLicenseCode</key>
-	<string>YOUR-WEBENGAGE-LICENSE-CODE</string>
-
-	<key>WEGLogLevel</key>
-	<string>VERBOSE</string>
-    ...
-</dict>
-```
-
-2. Initialize WebEngage iOS SDK in `<your-project>/ios/<YourApp>/AppDelegate.m` file.
-```objectivec
-#import <WebEngage/WebEngage.h>
-...
-
-@implementation AppDelegate
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary * launchOptions {
-    ...
-  
-    [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+    ```swift
+    <dict>
+        <key>WEGLicenseCode</key>
+        <string>YOUR-WEBENGAGE-LICENSE-CODE</string>
     
-  return [super application:application didFinishLaunchingWithOptions:launchOptions];
-}
+        <key>WEGLogLevel</key>
+        <string>VERBOSE</string>
+        ...
+    </dict>
+    ```
+2. Initialize WebEngage SDK by adding the following code snippet:
+    + Import the WebEngage header in your AppDelegate file
+        ###### Objective-C
+        
+        ```objc
+            #import <WebEngage/WebEngage.h>
+        ```
+        ###### Swift
+        
+         ```swift
+            import WebEngage
+            import webengage_flutter
+        ```
 
-@end
-```
+    + In your `didFinishLaunchingWithOptions:` method notify the WebEngage Flutter SDK of application
+        ###### Objective-C
+        
+        ```objc
+            [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+        ```
+        ###### Swift
+        
+        ```swift
+            WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        ```
 
-#### Push Notifications
+
+
+
+### Push Notifications
 **Push Notification Callbacks**
 
-1. Add Below code in AppDelegate.h file
+1. Add push callback in iOS
+    ###### Objective-C
+    + Add Below code in AppDelegate.h file
 
-```
-  #import <WebEngagePlugin.h>
-  
-  @property (nonatomic, strong) WebEngagePlugin *bridge;
-```
-2. Add Below code in AppDelegate.m file
-
-```
-    self.bridge = [WebEngagePlugin new];
-    //For setting push click callback set pushNotificationDelegate after webengage SDK is initialised
+        ```objc
+          #import <WebEngagePlugin.h>
+          
+          @property (nonatomic, strong) WebEngagePlugin *bridge;
+        ```
+    + Add Below code in AppDelegate.m file
     
-    [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
-    [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
-```
+        ```objc
+            self.bridge = [WebEngagePlugin new];
+            //For setting push click callback set pushNotificationDelegate after webengage SDK is initialised
+            
+            [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+            [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
+        ```
+    ###### Swift
+    + Add Below code in AppDelegate.swift file
+        ```swift
+        var bridge:WebEngagePlugin? = nil
+        ...
+        //Initialize SDK
+        WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+        // Push notification delegates
+        WebEngage.sharedInstance().pushNotificationDelegate = self.bridge
+        ```
+    
 
-3. Add below subscribeToPushCallbacks() method in main.dart and call it from initMethod()
-```dart
-  void subscribeToPushCallbacks() {
-      //Push click stream listener
-      _webEngagePlugin.pushStream.listen((event) {
-        String deepLink = event.deepLink;
-        Map<String, dynamic> messagePayload = event.payload;
-      });
-
-      //Push action click listener
-      _webEngagePlugin.pushActionStream.listen((event) {
-        print("pushActionStream:" + event.toString());
-        String deepLink = event.deepLink;
-        Map<String, dynamic> messagePayload = event.payload;
-      });
-  }
-```
-
-4. Add below code in dispose() of the main.dart
-```dart
-  //Close the streams in dispose()
-  @override
-  void dispose() {
-    _webEngagePlugin.pushSink.close();
-    _webEngagePlugin.pushActionSink.close();
-    super.dispose();
-  }
-```
-
-**Universal Link**
-1. Add Below code in AppDelegate.m file
-```
-  - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
-  [[[WebEngage sharedInstance] deeplinkManager] getAndTrackDeeplink:userActivity.webpageURL callbackBlock:^(id location){
-    [self.bridge trackDeeplinkURLCallback:location];
-  }];
-  return YES;
-}
-```
-
-2. Add below subscribeToTrackUniversalLink() method in main.dart and call it from initMethod()
-```
- void subscribeToTrackUniversalLink() {
-    _webEngagePlugin.trackDeeplinkStream.listen((location) {
-      print("trackDeeplinkStream: " + location);
-    });
-  }
-```
+2. Add below subscribeToPushCallbacks() method in main.dart and call it from initMethod()
+    ```dart
+      void subscribeToPushCallbacks() {
+          //Push click stream listener
+          _webEngagePlugin.pushStream.listen((event) {
+            String deepLink = event.deepLink;
+            Map<String, dynamic> messagePayload = event.payload;
+          });
+    
+          //Push action click listener
+          _webEngagePlugin.pushActionStream.listen((event) {
+            print("pushActionStream:" + event.toString());
+            String deepLink = event.deepLink;
+            Map<String, dynamic> messagePayload = event.payload;
+          });
+      }
+    ```
 
 3. Add below code in dispose() of the main.dart
-```dart
-  //Close the streams in dispose()
-  @override
-  void dispose() {
-    _webEngagePlugin.trackDeeplinkURLStreamSink.close();
-    super.dispose();
-  }
-```
-## Track Users
+    ```dart
+      //Close the streams in dispose()
+      @override
+      void dispose() {
+        _webEngagePlugin.pushSink.close();
+        _webEngagePlugin.pushActionSink.close();
+        super.dispose();
+      }
+    ```
 
+**Universal Link**
+1. Add native code
+    
+    + Add Below code in AppDelegate.m file
+        ###### Objective-C
+        ```objc
+          - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
+          [[[WebEngage sharedInstance] deeplinkManager] getAndTrackDeeplink:userActivity.webpageURL callbackBlock:^(id location){
+            [self.bridge trackDeeplinkURLCallback:location];
+          }];
+          return YES;
+        }
+        ```
+    
+    + Add Below code in AppDelegate.swift file
+        ###### Swift
+        ```swift
+        override func application(_ application: UIApplication,
+                                  continue userActivity: NSUserActivity,
+                                  restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool
+        {
+            if let webPageUrl = userActivity.webpageURL{
+                WebEngage.sharedInstance().deeplinkManager.getAndTrackDeeplink(webPageUrl) { location in
+                    self.bridge?.trackDeeplinkURLCallback(location)
+                }
+            }
+            return true
+        }
+        ```
+
+2. Add below subscribeToTrackUniversalLink() method in main.dart and call it from initMethod()
+    ```dart
+     void subscribeToTrackUniversalLink() {
+        _webEngagePlugin.trackDeeplinkStream.listen((location) {
+          print("trackDeeplinkStream: " + location);
+        });
+      }
+    ```
+
+3. Add below code in dispose() of the main.dart
+    ```dart
+      //Close the streams in dispose()
+      @override
+      void dispose() {
+        _webEngagePlugin.trackDeeplinkURLStreamSink.close();
+        super.dispose();
+      }
+    ```
+## Track Users
 ```dart
 import 'package:webengage_flutter/webengage_flutter.dart';
-...
+//...
     // User login
-    WebEngagePlugin.userLogin('3254');
+WebEngagePlugin.userLogin('JohnWick');
 
     // User logout
     WebEngagePlugin.userLogout();
@@ -301,22 +343,19 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 ```
 
 ## Track Events
-```dart
+```
 import 'package:webengage_flutter/webengage_flutter.dart';
-...
+//...
     // Track simple event
       WebEngagePlugin.trackEvent('Added to Cart');
 
       // Track event with attributes
       WebEngagePlugin.trackEvent('Order Placed', {'Amount': 808.48});
 ```
-
-## In-app Notifications
-
 ### Track Screens
-```dart
+```
 import 'package:webengage_flutter/webengage_flutter.dart';
-...
+//...
     // Track screen
     WebEngagePlugin.trackScreen('Home Page');
 
@@ -324,50 +363,62 @@ import 'package:webengage_flutter/webengage_flutter.dart';
     WebEngagePlugin.trackScreen('Product Page', {'Product Id': 'UHUH799'});
 ```
 
+## In-app Notifications
 ### In-app Notification Callbacks
 
-1. Add Below code in AppDelegate.h file
-
-```
-  #import <WebEngagePlugin.h>
-  
-  @property (nonatomic, strong) WebEngagePlugin *bridge;
-```
-2. Add Below code in AppDelegate.m file
-
-``` 
-    self.bridge = [WebEngagePlugin new];
-    //For setting in-app click callback set notificationDelegate while initialising WebEngage SDK
+1. Add inApp callback in iOS
+    ###### Objective-C
+    + Add Below code in AppDelegate.h file
     
-    [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
-```
-3. Add Below Method in main.dart
-```dart
- void _onInAppPrepared(Map<String, dynamic> message) {
-    print("This is a inapp Prepated callback from native to flutter. Payload " +
-        message.toString());
-  }
-  void _onInAppClick(Map<String, dynamic> message,String s) {
-    print("This is a inapp click callback from native to flutter. Payload " +
-        message.toString());
+        ```objc
+          #import <WebEngagePlugin.h>
+          //...
+          @property (nonatomic, strong) WebEngagePlugin *bridge;
+        ```
+    + Add Below code in AppDelegate.m file
+    
+        ```objc
+            self.bridge = [WebEngagePlugin new];
+            //For setting push click callback set pushNotificationDelegate after webengage SDK is initialised
+    
+            [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
+        ```
+    ###### Swift
+    + Add Below code in AppDelegate.swift file
+        ```swift
+        var bridge:WebEngagePlugin? = nil
+        ...
+        //Initialize SDK with in app notification delegates
+        WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions, notificationDelegate: self.bridge)
+        ```
 
-  }
-
-  void _onInAppShown(Map<String, dynamic> message) {
-    print("This is a callback on inapp shown from native to flutter. Payload " +
-        message.toString());
-  }
-
-  void _onInAppDismiss(Map<String, dynamic> message) {
-    print("This is a callback on inapp dismiss from native to flutter. Payload " +
-        message.toString());
-  }
-````
+2. Add Below Method in main.dart
+    ```dart
+     void _onInAppPrepared(Map<String, dynamic> message) {
+        print("This is a inapp Prepated callback from native to flutter. Payload " +
+            message.toString());
+      }
+      void _onInAppClick(Map<String, dynamic> message,String s) {
+        print("This is a inapp click callback from native to flutter. Payload " +
+            message.toString());
+    
+      }
+    
+      void _onInAppShown(Map<String, dynamic> message) {
+        print("This is a callback on inapp shown from native to flutter. Payload " +
+            message.toString());
+      }
+    
+      void _onInAppDismiss(Map<String, dynamic> message) {
+        print("This is a callback on inapp dismiss from native to flutter. Payload " +
+            message.toString());
+      }
+    ```
 4. Add Below code inside initmethod() in main.dart
-```dart
-_webEngagePlugin.setUpInAppCallbacks(
-        _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
-```
+    ```dart
+    _webEngagePlugin.setUpInAppCallbacks(
+            _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+    ```
 
 
 ## More Info
