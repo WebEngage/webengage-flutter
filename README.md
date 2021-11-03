@@ -366,25 +366,7 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 ## In-app Notifications
 ### In-app Notification Callbacks
 
-###### Objective-C
-1. Add Below code in AppDelegate.h file
-
-    ```objc
-      #import <WebEngagePlugin.h>
-      
-      @property (nonatomic, strong) WebEngagePlugin *bridge;
-    ```
-2. Add Below code in AppDelegate.m file
-
-    ```objc  
-        self.bridge = [WebEngagePlugin new];
-        //For setting in-app click callback set notificationDelegate while initialising WebEngage SDK
-        
-        [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
-    ```
-
-### Push Notification Callbacks
-1. Add push callback in iOS
+1. Add inApp callback in iOS
     ###### Objective-C
     + Add Below code in AppDelegate.h file
     
