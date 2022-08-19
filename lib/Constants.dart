@@ -21,6 +21,7 @@ const String METHOD_NAME_SET_USER_BOOL_ATTRIBUTE = "setUserBoolAttribute";
 const String METHOD_NAME_SET_USER_DATE_ATTRIBUTE = "setUserDateAttribute";
 const String METHOD_NAME_SET_USER_LIST_ATTRIBUTE = "setUserListAttribute";
 const String METHOD_NAME_SET_USER_MAP_ATTRIBUTE = "setUserMapAttribute";
+const String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
 
 const String METHOD_NAME_TRACK_EVENT = "trackEvent";
 const String METHOD_NAME_TRACK_SCREEN = "trackScreen";
