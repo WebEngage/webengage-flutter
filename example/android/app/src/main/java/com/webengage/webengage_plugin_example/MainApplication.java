@@ -30,7 +30,7 @@ public class MainApplication extends FlutterApplication {
         super.onCreate();
         Log.d("webengage", "MainApplicationstarts");
         WebEngageConfig webEngageConfig = new WebEngageConfig.Builder()
-                .setWebEngageKey("WEBENGAGE_LICENCE_KEY")
+                .setWebEngageKey("aa131d2c")
                 .setAutoGCMRegistrationFlag(false)
                 .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
                 .setDebugMode(true) // only in development mode

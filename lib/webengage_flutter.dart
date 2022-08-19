@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webengage_flutter/PushPayload.dart';
 
@@ -141,6 +140,11 @@ class WebEngagePlugin {
   static Future<void> setUserOptIn(String channel, bool optIn) async {
     return await _channel.invokeMethod(
         METHOD_NAME_SET_USER_OPT_IN, {CHANNEL: channel, OPTIN: optIn});
+  }
+
+  static Future<void> setUserDevicePushOptIn(bool status) async {
+    return await _channel.invokeMethod(
+        METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN, status);
   }
 
   static Future<void> setUserLocation(double lat, double lng) async {

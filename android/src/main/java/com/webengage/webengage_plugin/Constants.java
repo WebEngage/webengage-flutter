@@ -34,6 +34,7 @@ public interface Constants {
         String METHOD_NAME_ON_INAPP_CLICKED = "onInAppClick";
         String METHOD_NAME_ON_INAPP_DISMISS = "onInAppDismiss";
         String METHOD_NAME_ON_INAPP_PREPARED = "onInAppPrepared";
+        String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
     }
 
     interface PARAM {
