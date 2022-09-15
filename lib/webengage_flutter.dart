@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:webengage_flutter/PushPayload.dart';
@@ -32,7 +33,7 @@ class WebEngagePlugin {
 
   //Push Stream
   final StreamController<PushPayload> _pushClickStream =
-      new StreamController<PushPayload>();
+       StreamController<PushPayload>();
 
   Stream<PushPayload> get pushStream {
     return _pushClickStream.stream;
@@ -46,12 +47,25 @@ class WebEngagePlugin {
   final StreamController<PushPayload> _pushActionClickStream =
   new StreamController<PushPayload>();
 
+
+
   Stream<PushPayload> get pushActionStream {
     return _pushActionClickStream.stream;
   }
 
   Sink get pushActionSink {
     return _pushActionClickStream.sink;
+  }
+
+  //StateChangeCallback AnonymousId
+  final StreamController<Map<String,dynamic>?> _anonymousIDStream = StreamController();
+
+  Stream<Map<String,dynamic>?> get anonymousActionStream{
+    return _anonymousIDStream.stream;
+  }
+
+  Sink get anonymousActionSink {
+    return _anonymousIDStream.sink;
   }
 
   //
@@ -87,6 +101,7 @@ class WebEngagePlugin {
     _onInAppDismiss = onInAppDismiss;
     _onInAppPrepared = onInAppPrepared;
   }
+
 
   static Future<void> userLogin(String userId) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN, userId);
@@ -260,9 +275,29 @@ class WebEngagePlugin {
       }
     }
 
+    switch(call.method){
+      case callbackOnAnonymousIdChanged:
+        _onAnonymousUdChanged(call);
+        break;
+    }
+
     if (call.method == METHOD_TRACK_DEEPLINK_URL) {
       String? locationLink = call.arguments;
       _trackDeeplinkURLStream.sink.add(locationLink);
     }
   }
+
+  void _onAnonymousUdChanged(MethodCall call){
+    _anonymousIDStream.sink.add(_generateMap(call));
+  }
+
+  Map<String, dynamic>? _generateMap(MethodCall call){
+    if(Platform.isAndroid){
+      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+      return message?[PAYLOAD].cast<String, dynamic>();
+    }else{
+      return call.arguments.cast<String, dynamic>();
+    }
+  }
+
 }

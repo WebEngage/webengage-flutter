@@ -35,6 +35,7 @@
 #define METHOD_NAME_ON_INAPP_CLICKED @"onInAppClick"
 #define METHOD_NAME_ON_INAPP_DISMISS @"onInAppDismiss"
 #define METHOD_NAME_ON_INAPP_PREPARED @"onInAppPrepared"
+#define METHOD_NAME_ON_ANONYMOUS_ID_CHANGED @"onAnonymousIdChanged"
 #define PARAM_PLATFORM @"platform"
 #define PARAM_PAYLOAD @"payload"
 #define PARAM_PLATFORM_VALUE @"iOS"
@@ -56,6 +57,8 @@
 #define IN_APP @"in_app"
 #define EMAIL @"email"
 #define WHATSAPP @"whatsapp"
+#define ANONYMOUS_USER_ID @"anonymousUserID"
+#define REASON @"reason"
 
 #define METHOD_TRACK_DEEPLINK_URL@"onTrackDeeplinkURL"
 

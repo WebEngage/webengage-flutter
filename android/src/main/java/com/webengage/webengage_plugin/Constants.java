@@ -35,7 +35,8 @@ public interface Constants {
         String METHOD_NAME_ON_INAPP_DISMISS = "onInAppDismiss";
         String METHOD_NAME_ON_INAPP_PREPARED = "onInAppPrepared";
         String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
-    }
+        String METHOD_NAME_ON_ANONYMOUS_ID_CHANGED = "onAnonymousIdChanged";
+     }
 
     interface PARAM {
         String PARAM_PLATFORM = "platform";
@@ -62,6 +63,7 @@ public interface Constants {
         String EMAIL = "email";
         String WHATSAPP = "whatsapp";
         String SELECTED_ACTION_ID = "selectedActionId";
+        String ANONYMOUS_USER_ID = "anonymousUserID";
     }
 
 }

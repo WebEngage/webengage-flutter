@@ -8,9 +8,14 @@ import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
 import 'package:intl/intl.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
+
+
+
+
 
 class MyApp extends StatefulWidget {
   @override
@@ -57,6 +62,9 @@ class _MyAppState extends State<MyApp> {
             message.toString());
   }
 
+
+
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +79,18 @@ class _MyAppState extends State<MyApp> {
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
     subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
+    subscribeToAnonymousIDCallback();
+    _listenToAnonymousID();
+  }
+  var data = "";
+
+  void _listenToAnonymousID(){
+    _webEngagePlugin.anonymousActionStream.listen((event) {
+      setState((){
+        data = "${event}";
+      });
+
+    });
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -103,8 +123,11 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  var anonymousId = "null";
+
   @override
   Widget build(BuildContext context) {
+    data = data;
     print("build");
     return MaterialApp(
       navigatorKey: navigatorKey,
@@ -115,7 +138,15 @@ class _MyAppState extends State<MyApp> {
           body: ListView(
             children: <Widget>[
               new ListTile(
-                title: Text("Login"),
+                title: Text("$data"),
+                onTap: () {
+                  setState(() {
+                    data = data;
+                  });
+                },
+              ),
+              new ListTile(
+                title: Text("Login "),
                 onTap: () {
                   String s = "test" + randomString(6);
                   WebEngagePlugin.userLogin(s);
@@ -299,7 +330,7 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {
                   final DateTime now = DateTime.now();
                   final DateFormat formatter =
-                      DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                  DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                   WebEngagePlugin.trackEvent(
                       'Register', {'Registered On': formatter.format(now)});
                   showToast("Track ${formatter.format(now)}");
@@ -357,6 +388,15 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.trackDeeplinkStream.listen((location) {
       //Location URL
     });
+  }
+
+  void subscribeToAnonymousIDCallback(){
+    // _webEngagePlugin.anonymousActionStream.listen((event) {
+    //   //  var message = event as Map<String,dynamic>;
+    //   this.setState(() {
+    //     anonymousId  =  "${event}";
+    //   });
+    // });
   }
 
   final navigatorKey = GlobalKey<NavigatorState>();

@@ -12,9 +12,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     self.bridge = [WebEngagePlugin new];
     //Set in-app notification callbacks while initialising WebEngage SDK
+     //Set push notiification click callback
+     [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
     [[WebEngage sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions notificationDelegate:self.bridge];
-    //Set push notiification click callback
-    [WebEngage sharedInstance].pushNotificationDelegate = self.bridge;
+
+
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

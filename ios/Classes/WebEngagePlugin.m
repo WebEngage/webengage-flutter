@@ -7,9 +7,12 @@ NSString * const DATE_FORMAT = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 int const DATE_FORMAT_LENGTH = 24;
 
 @implementation WebEngagePlugin
+
+NSString *_anonymousId = @"";
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    channel = [FlutterMethodChannel methodChannelWithName:WEBENGAGE_PLUGIN binaryMessenger:[registrar messenger]];
     WebEngagePlugin* instance = [[WebEngagePlugin alloc] init];
+    channel = [FlutterMethodChannel methodChannelWithName:WEBENGAGE_PLUGIN binaryMessenger:[registrar messenger]];
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
@@ -51,6 +54,8 @@ int const DATE_FORMAT_LENGTH = 24;
     }else if ([METHOD_NAME_SET_USER_MAP_ATTRIBUTE isEqualToString:call.method]) {
         [self setUserAttributes:call withResult:result];
     } else if ([METHOD_NAME_INITIALISE isEqualToString:call.method]) {
+        NSDictionary *payload = @{@"anonymousUserID":_anonymousId};
+        [channel invokeMethod:METHOD_NAME_ON_ANONYMOUS_ID_CHANGED arguments:payload];
         NSLog(@"METHOD_NAME_INITIALISE");
     } else {
         result(FlutterMethodNotImplemented);
@@ -251,6 +256,12 @@ int const DATE_FORMAT_LENGTH = 24;
 - (void)trackDeeplinkURLCallback:(NSString *)redirectLocationURL {
    // NSLog(@"trackDeeplinkURLCallback %@", redirectLocationURL);
     [channel invokeMethod:METHOD_TRACK_DEEPLINK_URL arguments:redirectLocationURL];
+}
+
+- (void)didReceiveAnonymousID:(NSString *)anonymousID forReason:(WEGReason)reason {
+        _anonymousId = anonymousID;
+        NSDictionary *payload = @{@"anonymousUserID":anonymousID};
+        [channel invokeMethod:METHOD_NAME_ON_ANONYMOUS_ID_CHANGED arguments:payload];
 }
 
 @end
