@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
   s.name             = 'webengage_flutter'
-  s.version          = '0.0.1'
+  s.version          = '1.2.0'
   s.summary          = 'WebEngage Flutter iOS SDK.'
   s.description      = <<-DESC
   WebEngage Flutter iOS SDK.
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Ashwin Dinesh' => 'ashwin.dinesh@webklipper.com' }
+  s.author           = { 'WebEngage' => 'mobile@webengage.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
