@@ -32,6 +32,7 @@ const String callbackOnInAppShown = "onInAppShown";
 const String callbackOnInAppClicked = "onInAppClick";
 const String callbackOnInAppDismissed = "onInAppDismiss";
 const String callbackOnInAppPrepared = "onInAppPrepared";
+const String callbackOnAnonymousIdChanged = "onAnonymousIdChanged";
 
 const String CHANNEL = "channel";
 const String OPTIN = "optIn";

@@ -173,20 +173,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
             case METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN:
                 setDevicePushOptIn(call, result);
                 break;
-
-            case "getPlatformVersion":
-                result.success("Android " + android.os.Build.VERSION.RELEASE);
-                break;
             default:
                 result.notImplemented();
 
         }
-
-//        if (call.method.equals("getPlatformVersion")) {
-//            result.success("Android " + android.os.Build.VERSION.RELEASE);
-//        } else {
-//            result.notImplemented();
-//        }
     }
 
     private void setUserMapAttribute(MethodCall call, Result result) {

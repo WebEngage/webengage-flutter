@@ -14,14 +14,12 @@ import webengage_flutter
         
         // Basic set up
         bridge = WebEngagePlugin()
-        WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions, notificationDelegate: self.bridge)
-        
-        // Push notification delegates
+          // Push notification delegates
         WebEngage.sharedInstance().pushNotificationDelegate = self.bridge
-        
+        WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions, notificationDelegate: self.bridge)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
-    
+
     // Handling universal links
     override func application(_ application: UIApplication,
                               continue userActivity: NSUserActivity,
