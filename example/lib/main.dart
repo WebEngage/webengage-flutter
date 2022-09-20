@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -8,8 +10,16 @@ import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
 import 'package:intl/intl.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(MyApp());
+}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  print('Handling a background message ${message.messageId}');
 }
 
 class MyApp extends StatefulWidget {
@@ -60,8 +70,22 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
     initPlatformState();
     initWebEngage();
+    initFirebase();
+  }
+
+  Future<void> initFirebase() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // Set the background messaging handler early on, as a named top-level function
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      print("message recieved");
+      print(event.notification!.body);
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('Message clicked!');
+    });
   }
 
   void initWebEngage() {

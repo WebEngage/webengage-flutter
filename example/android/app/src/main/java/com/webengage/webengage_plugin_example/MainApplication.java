@@ -3,9 +3,11 @@ package com.webengage.webengage_plugin_example;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.webengage.sdk.android.LocationTrackingStrategy;
 import com.webengage.sdk.android.PushUtils;
 import com.webengage.sdk.android.WebEngage;
@@ -36,12 +38,19 @@ public class MainApplication extends FlutterApplication {
                 .setDebugMode(true) // only in development mode
                 .build();
         WebengageInitializer.initialize(this, webEngageConfig);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String token = instanceIdResult.getToken();
+            public void onComplete(@NonNull Task<String> task) {
+                String token = task.getResult();
                 WebEngage.get().setRegistrationID(token);
             }
         });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                String token = instanceIdResult.getToken();
+//                WebEngage.get().setRegistrationID(token);
+//            }
+//        });
     }
 }
