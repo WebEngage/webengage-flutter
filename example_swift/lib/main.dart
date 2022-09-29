@@ -1,17 +1,30 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
 import 'package:intl/intl.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 
-void main() {
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
+}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  print('flutter Handling a background message');
 }
 
 class MyApp extends StatelessWidget {
@@ -86,8 +99,34 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
     initPlatformState();
     initWebEngage();
+    initFirebase();
+  }
+
+  Future<void> initFirebase() async {
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+   _firebaseMessaging.setAutoInitEnabled(true);
+   FirebaseMessaging.onMessage.listen((event) {
+     print("flutter Firebase Notification received");
+     //print("${event.notification!.body}");
+      setState(() {
+       // message = "${event.notification!.body}";
+      });
+   });
+
+
+
+    // FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // // Set the background messaging handler early on, as a named top-level function
+    // FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+    //   print("message recieved");
+    //   print(event.notification!.body);
+    // });
+    // FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    //   print('Message clicked!');
+    // });
   }
 
   void initWebEngage() {
@@ -97,6 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
     subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
   }
+
+  var message = "NO";
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
@@ -192,12 +233,12 @@ class _MyHomePageState extends State<MyHomePage> {
       navigatorKey: navigatorKey,
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Plugin example app'),
+            title: Text('Plugin example app'),
           ),
           body: ListView(
             children: <Widget>[
               new ListTile(
-                title: Text("Login"),
+                title: Text("Login"+message),
                 onTap: () {
                   String s = "test" + randomString(6);
                   WebEngagePlugin.userLogin(s);
@@ -393,14 +434,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showToast(String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    // Fluttertoast.showToast(
+    //     msg: msg,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: Colors.red,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
   }
 
   @override
