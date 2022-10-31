@@ -12,5 +12,7 @@ public class WebengageInitializer {
         WebEngage.registerPushNotificationCallback(new FlutterPushMessageCallback());
         WebEngage.registerInAppNotificationCallback(new FlutterInAppCallbacks());
         application.registerActivityLifecycleCallbacks(new WebEngageActivityLifeCycleCallbacks(application.getApplicationContext(), config));
+        WebEngage.registerStateChangeCallback(new WEFlutterStateChangedCallbacks());
     }
+
 }

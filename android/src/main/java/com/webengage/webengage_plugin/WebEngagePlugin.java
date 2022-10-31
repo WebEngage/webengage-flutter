@@ -170,19 +170,13 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 setUserListAttribute(call, result);
                 break;
 
-            case "getPlatformVersion":
-                result.success("Android " + android.os.Build.VERSION.RELEASE);
+            case METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN:
+                setDevicePushOptIn(call, result);
                 break;
             default:
                 result.notImplemented();
 
         }
-
-//        if (call.method.equals("getPlatformVersion")) {
-//            result.success("Android " + android.os.Build.VERSION.RELEASE);
-//        } else {
-//            result.notImplemented();
-//        }
     }
 
     private void setUserMapAttribute(MethodCall call, Result result) {
@@ -272,6 +266,11 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     private void userLogin(MethodCall call, Result result) {
         String userId = call.arguments();
         WebEngage.get().user().login(userId);
+    }
+
+    private void setDevicePushOptIn(MethodCall call, Result result) {
+        Boolean status = call.arguments();
+        WebEngage.get().user().setDevicePushOptIn(status);
     }
 
     private void userLogout() {

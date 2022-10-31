@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
 import 'package:intl/intl.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
+
+
+
+
 
 class MyApp extends StatefulWidget {
   @override
@@ -56,6 +62,9 @@ class _MyAppState extends State<MyApp> {
             message.toString());
   }
 
+
+
+
   @override
   void initState() {
     super.initState();
@@ -70,6 +79,18 @@ class _MyAppState extends State<MyApp> {
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
     subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
+    subscribeToAnonymousIDCallback();
+    _listenToAnonymousID();
+  }
+  var data = "";
+
+  void _listenToAnonymousID(){
+    _webEngagePlugin.anonymousActionStream.listen((event) {
+      setState((){
+        data = "${event}";
+      });
+
+    });
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -90,77 +111,23 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _platformVersion = platformVersion!;
 
-      // User login
-      //   WebEngagePlugin.userLogin('saurav1237493cf');
-
-      // User logout
-      // WebEngagePlugin.userLogout();
-
-      // Set user first name
-      // WebEngagePlugin.setUserFirstName('John');
-
-      // Set user last name
-      // WebEngagePlugin.setUserLastName('Doe');
-
-      // Set user email
-      //WebEngagePlugin.setUserEmail('john.doe@gmail.com');
-
-      // Set user hashed email
-      // WebEngagePlugin.setUserHashedEmail('144e0424883546e07dcd727057fd3b62');
-
-      // Set user phone number
-      // WebEngagePlugin.setUserPhone('+551155256325');
-
-      // Set user hashed phone number
-      // WebEngagePlugin.setUserHashedPhone('e0ec043b3f9e198ec09041687e4d4e8d');
-
-      // Set user company
-      // WebEngagePlugin.setUserCompany('WebEngage');
-
-      // Set user birth-date, supported format: 'yyyy-MM-dd'
-      // WebEngagePlugin.setUserBirthDate('1994-05-24');
-
-      // Set user gender, allowed values are ['male', 'female', 'other']
-      // WebEngagePlugin.setUserGender('male');
-
-      // Set opt-in status, channels: ['push', 'in_app', 'email', 'sms']
-      // WebEngagePlugin.setUserOptIn('in_app', false);
-
-      // Set user location
-      // WebEngagePlugin.setUserLocation(19.25, 72.45);
-
-      // Track simple event
-      // WebEngagePlugin.trackEvent('Added to Cart');
-
-      // Track event with attributes
-      // WebEngagePlugin.trackEvent('Order Placed', {'Amount': 808.48});
-
-      // Track screen
-      // WebEngagePlugin.trackScreen('Home Page');
-
-      // Track screen with data
-      // WebEngagePlugin.trackScreen('Product Page', {'Product Id': 'UHUH799'});
-
-      // Set User Attribute with  String value
-      // WebEngagePlugin.setUserAttribute("twitterusename", "saurav12994");
-
-      // Set User Attribute with  Boolean value
-      // WebEngagePlugin.setUserAttribute("Subscribed to email", true);
-
-      // Set User Attribute with  Integer value
-      // WebEngagePlugin.setUserAttribute("Points earned", 2626);
-
-      // Set User Attribute with  Double value
-      // WebEngagePlugin.setUserAttribute("Dollar Spent", 123.44);
-
-      // Set User Attribute with  Map value
-      // var details = {'Usrname':'tom','Passiword':'pass@123'};
-      // WebEngagePlugin.setUserAttributes(details);
     });
+
+    if (await Permission.notification.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+      print("notification Permission is granted");
+      WebEngagePlugin.setUserDevicePushOptIn(true);
+    }else{
+      print("notification Permission is denied.");
+      WebEngagePlugin.setUserDevicePushOptIn(false);
+    }
   }
+
+  var anonymousId = "null";
 
   @override
   Widget build(BuildContext context) {
+    data = data;
     print("build");
     return MaterialApp(
       navigatorKey: navigatorKey,
@@ -171,7 +138,15 @@ class _MyAppState extends State<MyApp> {
           body: ListView(
             children: <Widget>[
               new ListTile(
-                title: Text("Login"),
+                title: Text("$data"),
+                onTap: () {
+                  setState(() {
+                    data = data;
+                  });
+                },
+              ),
+              new ListTile(
+                title: Text("Login "),
                 onTap: () {
                   String s = "test" + randomString(6);
                   WebEngagePlugin.userLogin(s);
@@ -355,10 +330,17 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {
                   final DateTime now = DateTime.now();
                   final DateFormat formatter =
-                      DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                  DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                   WebEngagePlugin.trackEvent(
                       'Register', {'Registered On': formatter.format(now)});
                   showToast("Track ${formatter.format(now)}");
+                },
+              ),
+              new ListTile(
+                title: Text("Set User Device Push Opt in"),
+                onTap: () {
+                  WebEngagePlugin.setUserDevicePushOptIn(true);
+                  showToast("UserDevice Push OptIn set to true");
                 },
               ),
             ],
@@ -406,6 +388,15 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.trackDeeplinkStream.listen((location) {
       //Location URL
     });
+  }
+
+  void subscribeToAnonymousIDCallback(){
+    // _webEngagePlugin.anonymousActionStream.listen((event) {
+    //   //  var message = event as Map<String,dynamic>;
+    //   this.setState(() {
+    //     anonymousId  =  "${event}";
+    //   });
+    // });
   }
 
   final navigatorKey = GlobalKey<NavigatorState>();

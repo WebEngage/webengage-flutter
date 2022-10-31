@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webengage_flutter/PushPayload.dart';
 
@@ -33,7 +33,7 @@ class WebEngagePlugin {
 
   //Push Stream
   final StreamController<PushPayload> _pushClickStream =
-      new StreamController<PushPayload>();
+      StreamController<PushPayload>();
 
   Stream<PushPayload> get pushStream {
     return _pushClickStream.stream;
@@ -42,10 +42,11 @@ class WebEngagePlugin {
   Sink get pushSink {
     return _pushClickStream.sink;
   }
+
   //Push Action click
   // ignore: close_sinks
   final StreamController<PushPayload> _pushActionClickStream =
-  new StreamController<PushPayload>();
+      new StreamController<PushPayload>();
 
   Stream<PushPayload> get pushActionStream {
     return _pushActionClickStream.stream;
@@ -55,9 +56,21 @@ class WebEngagePlugin {
     return _pushActionClickStream.sink;
   }
 
+  //StateChangeCallback AnonymousId
+  final StreamController<Map<String, dynamic>?> _anonymousIDStream =
+      StreamController();
+
+  Stream<Map<String, dynamic>?> get anonymousActionStream {
+    return _anonymousIDStream.stream;
+  }
+
+  Sink get anonymousActionSink {
+    return _anonymousIDStream.sink;
+  }
+
   //
   final StreamController<String?> _trackDeeplinkURLStream =
-  new StreamController<String?>();
+      new StreamController<String?>();
 
   Stream<String?> get trackDeeplinkStream {
     return _trackDeeplinkURLStream.stream;
@@ -66,12 +79,14 @@ class WebEngagePlugin {
   Sink get trackDeeplinkURLStreamSink {
     return _trackDeeplinkURLStream.sink;
   }
+
   static Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod('getPlatformVersion');
     return version;
   }
 
-  @Deprecated("Use '_pushClickStream' & 'pushActionStream' instead. This method will be removed in future build.")
+  @Deprecated(
+      "Use '_pushClickStream' & 'pushActionStream' instead. This method will be removed in future build.")
   void setUpPushCallbacks(MessageHandlerPushClick onPushClick,
       MessageHandlerPushClick onPushActionClick) {
     _onPushClick = onPushClick;
@@ -143,6 +158,11 @@ class WebEngagePlugin {
         METHOD_NAME_SET_USER_OPT_IN, {CHANNEL: channel, OPTIN: optIn});
   }
 
+  static Future<void> setUserDevicePushOptIn(bool status) async {
+    return await _channel.invokeMethod(
+        METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN, status);
+  }
+
   static Future<void> setUserLocation(double lat, double lng) async {
     return await _channel
         .invokeMethod(METHOD_NAME_SET_USER_LOCATION, {LAT: lat, LNG: lng});
@@ -173,7 +193,8 @@ class WebEngagePlugin {
 
   Future _platformCallHandler(MethodCall call) async {
     print("_platformCallHandler call ${call.method} ${call.arguments}");
-    if (call.method == callbackOnPushClick || call.method == callbackOnPushActionClick) {
+    if (call.method == callbackOnPushClick ||
+        call.method == callbackOnPushActionClick) {
       Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
       if (Platform.isAndroid) {
         String? deepLink = message![PAYLOAD][URI];
@@ -219,7 +240,8 @@ class WebEngagePlugin {
         _onInAppClick!(newPayload, selectedActionId);
       } else {
         String? selectedActionId = message![SELECTED_ACTION_ID];
-        _onInAppClick!(call.arguments.cast<String, dynamic>(), selectedActionId);
+        _onInAppClick!(
+            call.arguments.cast<String, dynamic>(), selectedActionId);
       }
     }
 
@@ -256,9 +278,28 @@ class WebEngagePlugin {
       }
     }
 
+    switch (call.method) {
+      case callbackOnAnonymousIdChanged:
+        _onAnonymousUdChanged(call);
+        break;
+    }
+
     if (call.method == METHOD_TRACK_DEEPLINK_URL) {
       String? locationLink = call.arguments;
       _trackDeeplinkURLStream.sink.add(locationLink);
+    }
+  }
+
+  void _onAnonymousUdChanged(MethodCall call) {
+    _anonymousIDStream.sink.add(_generateMap(call));
+  }
+
+  Map<String, dynamic>? _generateMap(MethodCall call) {
+    if (Platform.isAndroid) {
+      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+      return message?[PAYLOAD].cast<String, dynamic>();
+    } else {
+      return call.arguments.cast<String, dynamic>();
     }
   }
 }
