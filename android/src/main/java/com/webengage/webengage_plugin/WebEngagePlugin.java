@@ -53,9 +53,11 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     @Override
     public void onAttachedToEngine(FlutterPluginBinding flutterPluginBinding) {
         Log.w(TAG, "onAttachedToEngine on thread: " + Thread.currentThread().getName());
-        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), WEBENGAGE_PLUGIN);
-        channel.setMethodCallHandler(this);
-        this.context = flutterPluginBinding.getApplicationContext();
+        if(channel == null) {
+            channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), WEBENGAGE_PLUGIN);
+            channel.setMethodCallHandler(this);
+            this.context = flutterPluginBinding.getApplicationContext();
+        }
     }
 
     @Override
