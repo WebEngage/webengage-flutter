@@ -10,10 +10,24 @@ int const DATE_FORMAT_LENGTH = 24;
 
 NSString *_anonymousId = @"";
 
+static WebEngagePlugin *_shared = nil;
+
++(WebEngagePlugin *)shared {
+    @synchronized([WebEngagePlugin class]) {
+        if (!_shared)
+          _shared = [[self alloc] init];
+        return _shared;
+    }
+    return nil;
+}
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    WebEngagePlugin* instance = [[WebEngagePlugin alloc] init];
-    channel = [FlutterMethodChannel methodChannelWithName:WEBENGAGE_PLUGIN binaryMessenger:[registrar messenger]];
-    [registrar addMethodCallDelegate:instance channel:channel];
+    WebEngagePlugin* instance = [WebEngagePlugin shared];
+    if(channel == nil){
+        channel = [FlutterMethodChannel methodChannelWithName:WEBENGAGE_PLUGIN binaryMessenger:[registrar messenger]];
+        [registrar addMethodCallDelegate:instance channel:channel];
+    }
+
 }
 
 - (void) handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
