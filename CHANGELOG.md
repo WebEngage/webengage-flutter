@@ -1,5 +1,9 @@
 ## CHANGE LOG
 
+### Version 1.2.2 (March 13, 2023)
+* iOS SDK updated to XCFramework 
+* Plugin has been updated to Singlton Instance
+
 ### Version 1.2.1 (October 31, 2022)
 * Push callback in Background state
 * jcenter moved to mavencentral
