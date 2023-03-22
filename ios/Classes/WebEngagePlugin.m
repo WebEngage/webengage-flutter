@@ -30,6 +30,10 @@ static WebEngagePlugin *_shared = nil;
 
 }
 
+- (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar{
+    channel = nil;
+}
+
 - (void) handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     if ([METHOD_NAME_GET_PLATFORM_VERSION isEqualToString:call.method]) {
         result([PARAM_PLATFORM_VALUE stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
