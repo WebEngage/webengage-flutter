@@ -374,6 +374,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     public void onDetachedFromEngine(FlutterPluginBinding binding) {
         isInitialised = false;
         channel.setMethodCallHandler(null);
+        channel = null;
     }
 
 
