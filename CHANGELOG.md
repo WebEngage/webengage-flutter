@@ -1,5 +1,8 @@
 ## CHANGE LOG
 
+### Version 1.2.3 (March 22, 2023)
+* Plugin singleton issue fixed : [#issue-31](https://github.com/WebEngage/webengage-flutter/issues/31)
+
 ### Version 1.2.2 (March 13, 2023)
 * iOS SDK updated to XCFramework 
 * Plugin has been updated to Singlton Instance
