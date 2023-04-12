@@ -47,12 +47,19 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     private Context context;
     Activity activity;
     private static boolean isInitialised;
+
+    private FlutterPluginBinding flutterPluginBinding;
     private static final Map<String, Map<String, Object>> messageQueue =
             Collections.synchronizedMap(new LinkedHashMap<String, Map<String, Object>>());
+
 
     @Override
     public void onAttachedToEngine(FlutterPluginBinding flutterPluginBinding) {
         Log.w(TAG, "onAttachedToEngine on thread: " + Thread.currentThread().getName());
+        this.flutterPluginBinding = flutterPluginBinding;
+    }
+
+    private void init(){
         if(channel == null) {
             channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), WEBENGAGE_PLUGIN);
             channel.setMethodCallHandler(this);
@@ -375,6 +382,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         isInitialised = false;
         channel.setMethodCallHandler(null);
         channel = null;
+        flutterPluginBinding = null;
     }
 
 
@@ -392,6 +400,8 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
     static void sendCallback(final String methodName, final Map<String, Object> message) {
+        if(channel == null)
+            return;
         final Map<String, Object> messagePayload = new HashMap<>();
         messagePayload.put(PARAM_PLATFORM, PARAM_PLATFORM_VALUE);
         messagePayload.put(PARAM_PAYLOAD, message);
@@ -428,6 +438,8 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        android.util.Log.e(TAG, "onAttachedToActivity: " );
+        init();
         activity = binding.getActivity();
     }
 
