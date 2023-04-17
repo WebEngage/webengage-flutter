@@ -28,6 +28,7 @@ dependencies:
   permission_handler: ^10.0.0
   firebase_messaging: ^14.4.0
   firebase_core: ^2.9.0
+  flutter_isolate: ^2.0.4
 
 
 

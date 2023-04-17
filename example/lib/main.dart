@@ -1,8 +1,10 @@
+import 'dart:ui';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
+import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
@@ -22,9 +24,16 @@ import 'package:webengage_plugin_example/src/widget/TextSubmitWidget.dart';
 print("App testing firebase Handling a background message: ${message.messageId}");
 }
 
+@pragma('vm:entry-point')
+void someFunction(String arg) {
+  print("WE isolate: in an isolate with argument : $arg");
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+  DartPluginRegistrant.ensureInitialized();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(MyApp());
 }
@@ -64,7 +73,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onInAppShown(Map<String, dynamic>? message) {
-    print("This is a callback on inapp shown from native to flutter. Payload " +
+    print("WE isolate : This is a callback on inapp shown from native to flutter. Payload " +
         message.toString());
   }
 
@@ -134,6 +143,21 @@ class _MyAppState extends State<MyApp> {
           ),
           body: ListView(
             children: <Widget>[
+              ElevatedButton(
+                child: Text('Run'),
+                onPressed: () {
+                  FlutterIsolate.spawn(someFunction, "hello world");
+                },
+              ),
+              ElevatedButton(
+                child: Text('start kill'),
+                onPressed: () async {
+                 var _isolate = await FlutterIsolate.spawn(someFunction, "hello world");
+                 _isolate.kill();
+                 },
+
+
+              ),
               TextSubmitWidget(
                 title: "Login",
                 submit: (text){

@@ -20,6 +20,7 @@ class WebEngagePlugin {
   factory WebEngagePlugin() => _webengagePlugin;
 
   WebEngagePlugin._internal() {
+    print("WE isolate: _internal ${_channel.binaryMessenger.hashCode}");
     _channel.setMethodCallHandler(_platformCallHandler);
     _channel.invokeMethod(methodInitialise);
   }
@@ -192,7 +193,7 @@ class WebEngagePlugin {
   }
 
   Future _platformCallHandler(MethodCall call) async {
-    print("_platformCallHandler call ${call.method} ${call.arguments}");
+    print("WE isolate : _platformCallHandler call ${call.method} ${hashCode}");
     if (call.method == callbackOnPushClick ||
         call.method == callbackOnPushActionClick) {
       Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
