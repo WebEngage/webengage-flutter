@@ -62,14 +62,6 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         channel.setMethodCallHandler(this);
     }
 
-    private void deinit(){
-        WECallbackRegistry.getInstance().unRegister(this);
-    }
-
-    private void init(){
-        WECallbackRegistry.getInstance().register(this);
-    }
-
     @Override
     public void onMethodCall(MethodCall call, Result result) {
         switch (call.method) {
@@ -443,7 +435,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
         android.util.Log.e(TAG, "onAttachedToActivity: " );
-        init();
+        WECallbackRegistry.getInstance().register(this);
         activity = binding.getActivity();
     }
 
@@ -460,7 +452,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     @Override
     public void onDetachedFromActivity() {
-        deinit();
+        WECallbackRegistry.getInstance().unRegister(this);
         activity = null;
     }
 }

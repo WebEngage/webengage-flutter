@@ -12,12 +12,18 @@ public class WECallbackRegistry {
 
     private WECallbackRegistry(){}
 
-    private static class SINGLETON{
-        public static final WECallbackRegistry instance = new WECallbackRegistry();
-    }
+    private static volatile WECallbackRegistry instance = null;
 
-    public static synchronized WECallbackRegistry getInstance(){
-        return SINGLETON.instance;
+    public static WECallbackRegistry getInstance() {
+        if (instance != null) {
+            return instance;
+        }
+        synchronized (WECallbackRegistry.class) {
+            if (instance == null) {
+                instance = new WECallbackRegistry();
+            }
+        }
+        return instance;
     }
 
     private Set<WESendOrQueueCallbackListener> listeners;
