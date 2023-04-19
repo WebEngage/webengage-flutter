@@ -62,6 +62,7 @@ public interface Constants {
         String IN_APP = "in_app";
         String EMAIL = "email";
         String WHATSAPP = "whatsapp";
+        String VIBER = "viber";
         String SELECTED_ACTION_ID = "selectedActionId";
         String ANONYMOUS_USER_ID = "anonymousUserID";
     }

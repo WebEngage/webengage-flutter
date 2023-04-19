@@ -343,7 +343,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
             WebEngage.get().user().setOptIn(Channel.IN_APP, status);
         } else if (WHATSAPP.equalsIgnoreCase(channel)) {
             WebEngage.get().user().setOptIn(Channel.WHATSAPP, status);
-        } else {
+        } else if (VIBER.equalsIgnoreCase(channel)) {
+            WebEngage.get().user().setOptIn(Channel.VIBER, status);
+        }
+        else {
             result.error(TAG, "Invalid channel: " + channel + ". Must be one of [push, sms, email, in_app, whatsapp].", null);
         }
     }

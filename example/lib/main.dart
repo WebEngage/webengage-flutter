@@ -13,10 +13,6 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-
-
-
-
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -62,9 +58,6 @@ class _MyAppState extends State<MyApp> {
             message.toString());
   }
 
-
-
-
   @override
   void initState() {
     super.initState();
@@ -82,14 +75,14 @@ class _MyAppState extends State<MyApp> {
     subscribeToAnonymousIDCallback();
     _listenToAnonymousID();
   }
+
   var data = "";
 
-  void _listenToAnonymousID(){
+  void _listenToAnonymousID() {
     _webEngagePlugin.anonymousActionStream.listen((event) {
-      setState((){
+      setState(() {
         data = "${event}";
       });
-
     });
   }
 
@@ -110,14 +103,13 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _platformVersion = platformVersion!;
-
     });
 
     if (await Permission.notification.request().isGranted) {
       // Either the permission was already granted before or the user just granted it.
       print("notification Permission is granted");
       WebEngagePlugin.setUserDevicePushOptIn(true);
-    }else{
+    } else {
       print("notification Permission is denied.");
       WebEngagePlugin.setUserDevicePushOptIn(false);
     }
@@ -240,23 +232,28 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
               new ListTile(
-                title: Text("Opt-In  Push, InApp,email,sms"),
+                title: Text("Opt-In  Push, InApp,email,sms, whatsapp, viber"),
                 onTap: () {
                   WebEngagePlugin.setUserOptIn('in_app', true);
                   WebEngagePlugin.setUserOptIn('sms', true);
                   WebEngagePlugin.setUserOptIn('push', true);
                   WebEngagePlugin.setUserOptIn('email', true);
-                  showToast("Opt-In  Push, InApp,email,sms ");
+                  WebEngagePlugin.setUserOptIn('whatsapp', true);
+                  WebEngagePlugin.setUserOptIn('viber', true);
+                  showToast("Opt-In  Push, InApp,email,sms, whatsapp, viber ");
                 },
               ),
               new ListTile(
-                title: Text("Opt-Out  Push, InApp,email,sms"),
+                title: Text("Opt-Out  Push, InApp,email,sms, whatsapp, viber"),
                 onTap: () {
                   WebEngagePlugin.setUserOptIn('in_app', false);
                   WebEngagePlugin.setUserOptIn('sms', false);
                   WebEngagePlugin.setUserOptIn('push', false);
                   WebEngagePlugin.setUserOptIn('email', false);
-                  showToast("Opt-Out  Push, InApp,email,sms ");
+                  WebEngagePlugin.setUserOptIn('whatsapp', false);
+                  WebEngagePlugin.setUserOptIn('viber', false);
+
+                  showToast("Opt-Out  Push, InApp,email,sms, whatsapp, viber ");
                 },
               ),
               new ListTile(
@@ -319,10 +316,10 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Set User attribute with Map value "),
                 onTap: () {
-                  var details = {'Usrname': 'tom', 'Passiword': 'pass@123'};
+                  var details = {'Username': 'tom', 'Password': 'pass@123'};
 
                   WebEngagePlugin.setUserAttributes(details);
-                  showToast("Usrname':'tom','Passiword':'pass@123");
+                  showToast("Username':'tom','Password':'pass@123");
                 },
               ),
               new ListTile(
@@ -330,7 +327,7 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {
                   final DateTime now = DateTime.now();
                   final DateFormat formatter =
-                  DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                      DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                   WebEngagePlugin.trackEvent(
                       'Register', {'Registered On': formatter.format(now)});
                   showToast("Track ${formatter.format(now)}");
@@ -372,7 +369,7 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.pushStream.listen((event) {
       String? deepLink = event.deepLink;
       Map<String, dynamic> messagePayload = event.payload!;
-      showDialogWithMessage("Push click callback: " + event.toString() );
+      showDialogWithMessage("Push click callback: " + event.toString());
     });
 
     //Push action click listener
@@ -390,7 +387,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void subscribeToAnonymousIDCallback(){
+  void subscribeToAnonymousIDCallback() {
     // _webEngagePlugin.anonymousActionStream.listen((event) {
     //   //  var message = event as Map<String,dynamic>;
     //   this.setState(() {
