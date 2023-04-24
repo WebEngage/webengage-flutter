@@ -240,23 +240,29 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
               new ListTile(
-                title: Text("Opt-In  Push, InApp,email,sms"),
+                title: Text("Opt-In  Push, InApp,email,sms, whatsapp, viber"),
                 onTap: () {
                   WebEngagePlugin.setUserOptIn('in_app', true);
                   WebEngagePlugin.setUserOptIn('sms', true);
                   WebEngagePlugin.setUserOptIn('push', true);
                   WebEngagePlugin.setUserOptIn('email', true);
-                  showToast("Opt-In  Push, InApp,email,sms ");
+                  WebEngagePlugin.setUserOptIn('whatsapp', true);
+                  WebEngagePlugin.setUserOptIn('viber', true);
+                  showToast("Opt-In  Push, InApp,email,sms, whatsapp, viber");
+
                 },
               ),
               new ListTile(
-                title: Text("Opt-Out  Push, InApp,email,sms"),
+                title: Text("Opt-Out  Push, InApp,email,sms, whatsapp, viber"),
                 onTap: () {
                   WebEngagePlugin.setUserOptIn('in_app', false);
                   WebEngagePlugin.setUserOptIn('sms', false);
                   WebEngagePlugin.setUserOptIn('push', false);
                   WebEngagePlugin.setUserOptIn('email', false);
-                  showToast("Opt-Out  Push, InApp,email,sms ");
+                  WebEngagePlugin.setUserOptIn('whatsapp', false);
+                  WebEngagePlugin.setUserOptIn('viber', false);
+                  showToast("Opt-Out  Push, InApp,email,sms, whatsapp, viber");
+
                 },
               ),
               new ListTile(
@@ -357,6 +363,8 @@ class _MyAppState extends State<MyApp> {
     //     backgroundColor: Colors.red,
     //     textColor: Colors.white,
     //     fontSize: 16.0);
+    showDialogWithMessage(msg);
+
   }
 
   @override
