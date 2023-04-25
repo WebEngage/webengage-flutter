@@ -48,7 +48,6 @@ public class WECallbackRegistry {
     }
 
     public void  passCallback(String methodName, Map<String, Object> message){
-        Log.e("TAG", "WE ISOLATE: passCallback"+methodName+" "+(listeners!=null));
         if (listeners != null && listeners.size() > 0) {
             for (WESendOrQueueCallbackListener listener : listeners)
                 listener.sendOrQueueCallback(methodName, message);

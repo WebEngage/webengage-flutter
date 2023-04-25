@@ -387,7 +387,6 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     @Override
      public void sendOrQueueCallback(String methodName, Map<String, Object> message) {
-        Log.e(TAG, "WE ISOLATE: sendOrQueueCallback"+methodName+" ");
         if (isInitialised) {
             sendCallback(methodName, message);
         } else {
