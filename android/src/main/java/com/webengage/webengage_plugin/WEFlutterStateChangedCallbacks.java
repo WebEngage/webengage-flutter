@@ -9,6 +9,7 @@ import com.webengage.sdk.android.callbacks.StateChangeCallbacks;
 
 import java.util.HashMap;
 import java.util.Map;
+
 //weflutter
 public class WEFlutterStateChangedCallbacks extends StateChangeCallbacks {
 
@@ -17,6 +18,8 @@ public class WEFlutterStateChangedCallbacks extends StateChangeCallbacks {
         super.onAnonymousIdChanged(context, anonymousUserID);
         Map<String, Object> map = new HashMap<>();
         map.put(ANONYMOUS_USER_ID, anonymousUserID);
-        WebEngagePlugin.sendOrQueueCallback(METHOD_NAME_ON_ANONYMOUS_ID_CHANGED,map);
+        WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_ANONYMOUS_ID_CHANGED,map);
     }
+
+
 }

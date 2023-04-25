@@ -12,16 +12,18 @@ import static com.webengage.webengage_plugin.Constants.MethodName.*;
 
 
 public class FlutterInAppCallbacks implements InAppNotificationCallbacks {
+
+
     @Override
     public InAppNotificationData onInAppNotificationPrepared(Context context, InAppNotificationData inAppNotificationData) {
-        WebEngagePlugin.sendOrQueueCallback(METHOD_NAME_ON_INAPP_PREPARED,
+       WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_INAPP_PREPARED,
                 Utils.jsonObjectToMap(inAppNotificationData.getData()));
         return inAppNotificationData;
     }
 
     @Override
     public void onInAppNotificationShown(Context context, InAppNotificationData inAppNotificationData) {
-        WebEngagePlugin.sendOrQueueCallback(METHOD_NAME_ON_INAPP_SHOWN,
+        WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_INAPP_SHOWN,
                 Utils.jsonObjectToMap(inAppNotificationData.getData()));
     }
 
@@ -29,13 +31,13 @@ public class FlutterInAppCallbacks implements InAppNotificationCallbacks {
     public boolean onInAppNotificationClicked(Context context, InAppNotificationData inAppNotificationData, String s) {
         Map<String, Object> map = Utils.jsonObjectToMap(inAppNotificationData.getData());
         map.put(SELECTED_ACTION_ID, s);
-        WebEngagePlugin.sendOrQueueCallback(METHOD_NAME_ON_INAPP_CLICKED, map);
+        WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_INAPP_CLICKED, map);
         return false;
     }
 
     @Override
     public void onInAppNotificationDismissed(Context context, InAppNotificationData inAppNotificationData) {
-        WebEngagePlugin.sendOrQueueCallback(METHOD_NAME_ON_INAPP_DISMISS,
+        WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_INAPP_DISMISS,
                 Utils.jsonObjectToMap(inAppNotificationData.getData()));
     }
 }
