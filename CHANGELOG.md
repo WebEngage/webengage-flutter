@@ -1,5 +1,8 @@
 ## CHANGE LOG
 
+### Version 1.2.4 (April 25, 2023)
+* Isolate issue fixed :[#issue-32](https://github.com/WebEngage/webengage-flutter/issues/32), [#issue-24](https://github.com/WebEngage/webengage-flutter/issues/24)
+
 ### Version 1.2.3 (March 22, 2023)
 * Plugin singleton issue fixed : [#issue-31](https://github.com/WebEngage/webengage-flutter/issues/31)
 
