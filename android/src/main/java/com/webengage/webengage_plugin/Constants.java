@@ -45,7 +45,7 @@ public interface Constants {
         String PARAM_PLATFORM_VALUE = "android";
     }
 
-    interface ARGS {
+    public interface ARGS {
         String CHANNEL = "channel";
         String OPTIN = "optIn";
         String LAT = "lat";

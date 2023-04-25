@@ -7,14 +7,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
 import com.webengage.sdk.android.Channel;
 import com.webengage.sdk.android.Logger;
 import com.webengage.sdk.android.WebEngage;
 import com.webengage.sdk.android.actions.render.PushNotificationData;
-import com.webengage.sdk.android.callbacks.PushNotificationCallbacks;
 import com.webengage.sdk.android.utils.Gender;
 
 import java.util.Collections;
@@ -33,32 +31,36 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
 
 import static com.webengage.webengage_plugin.Constants.ARGS.*;
+
 import static com.webengage.webengage_plugin.Constants.MethodName.*;
 import static com.webengage.webengage_plugin.Constants.PARAM.*;
 import static com.webengage.webengage_plugin.Constants.WEBENGAGE_PLUGIN;
 
 
-public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, WESendOrQueueCallbackListener {
     private static final String TAG = "WebEngagePlugin";
 
-    private static MethodChannel channel;
+    private MethodChannel channel;
     private Context context;
     Activity activity;
     private static boolean isInitialised;
+
     private static final Map<String, Map<String, Object>> messageQueue =
             Collections.synchronizedMap(new LinkedHashMap<String, Map<String, Object>>());
+
 
     @Override
     public void onAttachedToEngine(FlutterPluginBinding flutterPluginBinding) {
         Log.w(TAG, "onAttachedToEngine on thread: " + Thread.currentThread().getName());
-        if(channel == null) {
-            channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), WEBENGAGE_PLUGIN);
-            channel.setMethodCallHandler(this);
-            this.context = flutterPluginBinding.getApplicationContext();
-        }
+        this.context = flutterPluginBinding.getApplicationContext();
+        init(flutterPluginBinding.getBinaryMessenger());
+    }
+
+    private void init(BinaryMessenger binaryMessenger){
+        channel = new MethodChannel(binaryMessenger, WEBENGAGE_PLUGIN);
+        channel.setMethodCallHandler(this);
     }
 
     @Override
@@ -395,7 +397,9 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         runOnMainThread(() -> channel.invokeMethod(methodName, bundleToMap(pushNotificationData.getCustomData())));
     }
 
-    static void sendOrQueueCallback(String methodName, Map<String, Object> message) {
+    @Override
+     public void sendOrQueueCallback(String methodName, Map<String, Object> message) {
+        Log.e(TAG, "WE ISOLATE: sendOrQueueCallback"+methodName+" ");
         if (isInitialised) {
             sendCallback(methodName, message);
         } else {
@@ -403,7 +407,9 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         }
     }
 
-    static void sendCallback(final String methodName, final Map<String, Object> message) {
+     void sendCallback(final String methodName, final Map<String, Object> message) {
+        if(channel == null)
+            return;
         final Map<String, Object> messagePayload = new HashMap<>();
         messagePayload.put(PARAM_PLATFORM, PARAM_PLATFORM_VALUE);
         messagePayload.put(PARAM_PAYLOAD, message);
@@ -415,7 +421,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         });
     }
 
-    static Map<String, Object> bundleToMap(Bundle extras) {
+     Map<String, Object> bundleToMap(Bundle extras) {
         Map<String, Object> map = new HashMap<>();
 
         Set<String> ks = extras.keySet();
@@ -440,6 +446,8 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        android.util.Log.e(TAG, "onAttachedToActivity: " );
+        WECallbackRegistry.getInstance().register(this);
         activity = binding.getActivity();
     }
 
@@ -456,6 +464,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     @Override
     public void onDetachedFromActivity() {
+        WECallbackRegistry.getInstance().unRegister(this);
         activity = null;
     }
 }
