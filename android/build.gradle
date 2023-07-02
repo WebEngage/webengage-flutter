@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:4.2.0'
     }
 }
 
@@ -38,4 +38,5 @@ android {
 
 dependencies {
     api 'com.webengage:android-sdk:[4,)'
+    implementation 'com.google.android.gms:play-services-tasks:18.0.2'
 }
