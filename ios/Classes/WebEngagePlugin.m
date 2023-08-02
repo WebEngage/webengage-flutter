@@ -3,6 +3,7 @@
 #import "WebEngageConstants.h"
 
 static FlutterMethodChannel* channel = nil;
+NSString *WEGPluginVersion = @"1.2.8";
 NSString * const DATE_FORMAT = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 int const DATE_FORMAT_LENGTH = 24;
 
@@ -27,7 +28,7 @@ static WebEngagePlugin *_shared = nil;
         channel = [FlutterMethodChannel methodChannelWithName:WEBENGAGE_PLUGIN binaryMessenger:[registrar messenger]];
         [registrar addMethodCallDelegate:instance channel:channel];
     }
-
+    [instance initialiseWEGVersions];
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar{
@@ -84,6 +85,10 @@ static WebEngagePlugin *_shared = nil;
     NSString * userId = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser login:userId];
+}
+
+- (void) initialiseWEGVersions {
+    [[WebEngage sharedInstance].WEGVersions setObject:WEGPluginVersion forKey:@"fl"];
 }
 
 - (void) userLogin:(FlutterMethodCall *)call withResult:(FlutterResult)result {
