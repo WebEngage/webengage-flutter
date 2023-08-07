@@ -340,6 +340,13 @@ class _MyAppState extends State<MyApp> {
                   showToast("UserDevice Push OptIn set to true");
                 },
               ),
+              new ListTile(
+                title: Text("Start GAID Tracking"),
+                onTap: () {
+                  WebEngagePlugin.startGAIDTracking();
+                  showToast("Started GAID Tracking");
+                },
+              ),
             ],
           )),
     );

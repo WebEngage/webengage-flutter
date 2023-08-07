@@ -34,6 +34,7 @@ public class MainApplication extends FlutterApplication {
                 .setAutoGCMRegistrationFlag(false)
                 .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
                 .setDebugMode(true) // only in development mode
+                .setAutoGAIDTracking(true)
                 .build();
         WebengageInitializer.initialize(this, webEngageConfig);
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {

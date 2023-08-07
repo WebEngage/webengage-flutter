@@ -36,6 +36,7 @@ public interface Constants {
         String METHOD_NAME_ON_INAPP_PREPARED = "onInAppPrepared";
         String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
         String METHOD_NAME_ON_ANONYMOUS_ID_CHANGED = "onAnonymousIdChanged";
+        String METHOD_NAME_START_GAID_TRACKING = "startGAIDTracking";
      }
 
     interface PARAM {

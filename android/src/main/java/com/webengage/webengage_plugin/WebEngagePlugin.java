@@ -11,6 +11,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
 import com.webengage.sdk.android.Channel;
+import com.webengage.sdk.android.Logger;
 import com.webengage.sdk.android.WebEngage;
 import com.webengage.sdk.android.actions.render.PushNotificationData;
 import com.webengage.sdk.android.callbacks.PushNotificationCallbacks;
@@ -174,6 +175,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
             case METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN:
                 setDevicePushOptIn(call, result);
+                break;
+
+            case METHOD_NAME_START_GAID_TRACKING :
+                startGAIDTracking();
                 break;
             default:
                 result.notImplemented();
@@ -371,6 +376,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         else
             WebEngage.get().analytics().screenNavigated(screenName, screenData);
 
+    }
+
+    private void startGAIDTracking(){
+        WebEngage.get().startGAIDTracking();
     }
 
     @Override
