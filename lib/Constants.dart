@@ -1,6 +1,8 @@
 const String methodInitialise = "initialise";
 
 const String METHOD_NAME_SET_USER_LOGIN = "userLogin";
+const String METHOD_NAME_SET_USER_LOGIN_WITH_TOKEN = "userLoginWithJWTToken";
+const String METHOD_NAME_SET_JWT_TOKEN = "setJWTToken";
 const String METHOD_NAME_SET_USER_LOGOUT = "userLogout";
 const String METHOD_NAME_SET_USER_FIRST_NAME = "setUserFirstName";
 const String METHOD_NAME_SET_USER_LAST_NAME = "setUserLastName";
@@ -33,6 +35,7 @@ const String callbackOnInAppClicked = "onInAppClick";
 const String callbackOnInAppDismissed = "onInAppDismiss";
 const String callbackOnInAppPrepared = "onInAppPrepared";
 const String callbackOnAnonymousIdChanged = "onAnonymousIdChanged";
+const String callbackOnTokenInvalidated = "onTokenInvalidated";
 
 const String CHANNEL = "channel";
 const String OPTIN = "optIn";
@@ -48,3 +51,5 @@ const String PAYLOAD = "payload";
 const String URI = "uri";
 const String SELECTED_ACTION_ID = "selectedActionId";
 const String METHOD_TRACK_DEEPLINK_URL = "onTrackDeeplinkURL";
+const String USERID = "userIdentifier";
+const String JWTTOKEN = "token";
