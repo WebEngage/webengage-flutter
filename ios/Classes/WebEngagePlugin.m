@@ -3,7 +3,7 @@
 #import "WebEngageConstants.h"
 
 static FlutterMethodChannel* channel = nil;
-NSString *WEGPluginVersion = @"1.2.8";
+NSString *WEGPluginVersion = @"1.2.4";
 NSString * const DATE_FORMAT = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 int const DATE_FORMAT_LENGTH = 24;
 
@@ -29,6 +29,14 @@ static WebEngagePlugin *_shared = nil;
         [registrar addMethodCallDelegate:instance channel:channel];
     }
     [instance initialiseWEGVersions];
+    
+    [WEGJWTManager shared].tokenInvalidatedCallback = ^{
+        NSLog(@"webengageBridge: JWT Token is Invalid. Please send valid ");
+        NSDictionary *data = @{
+            @"errorResponse" : @"401"
+        };
+          [channel invokeMethod:METHOD_NAME_ON_TOKEN_INVALIDATED arguments:data];
+    };
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar{
@@ -39,7 +47,11 @@ static WebEngagePlugin *_shared = nil;
     if ([METHOD_NAME_GET_PLATFORM_VERSION isEqualToString:call.method]) {
         result([PARAM_PLATFORM_VALUE stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
     } else if ([METHOD_NAME_SET_USER_LOGIN isEqualToString:call.method]) {
-        [self userLogin:call withResult:result];
+        [self userLogin:call withResult:result];   
+    } else if ([METHOD_NAME_SET_USER_LOGIN_WITH_TOKEN isEqualToString:call.method]) {
+        [self userLoginWithJWTToken:call withResult:result];
+    }else if ([METHOD_NAME_SET_JWT_TOKEN isEqualToString:call.method]) {
+        [self setJWTToken:call withResult:result];
     } else if ([METHOD_NAME_SET_USER_LOGOUT isEqualToString:call.method]) {
         [self userLogout:call withResult:result];
     } else if ([METHOD_NAME_SET_USER_FIRST_NAME isEqualToString:call.method]) {
@@ -95,6 +107,20 @@ static WebEngagePlugin *_shared = nil;
     NSString * userId = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser login:userId];
+}
+
+- (void) userLoginWithJWTToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    NSString * userId = call.arguments[USERID];
+    NSString * jwtToken = call.arguments[JWTTOKEN];
+    WEGUser * weUser = [WebEngage sharedInstance].user;
+    [weUser login:userId jwtToken:jwtToken];
+}
+
+- (void) setJWTToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    NSString * userId = call.arguments[USERID];
+    NSString * jwtToken = call.arguments[JWTTOKEN];
+    WEGUser * weUser = [WebEngage sharedInstance].user;
+    [weUser setJWTToken:userId jwtToken:jwtToken];
 }
 
 - (void) userLogout:(FlutterMethodCall *)call withResult:(FlutterResult)result {

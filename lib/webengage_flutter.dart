@@ -30,6 +30,7 @@ class WebEngagePlugin {
   MessageHandler? _onInAppShown;
   MessageHandler? _onInAppDismiss;
   MessageHandler? _onInAppPrepared;
+  MessageHandler? _onTokenInvalidated;
 
   //Push Stream
   final StreamController<PushPayload> _pushClickStream =
@@ -97,15 +98,28 @@ class WebEngagePlugin {
       MessageHandlerInAppClick onInAppClick,
       MessageHandler onInAppShown,
       MessageHandler onInAppDismiss,
-      MessageHandler onInAppPrepared) {
+      MessageHandler onInAppPrepared,
+      MessageHandler onTokenInvalidated) {
     _onInAppClick = onInAppClick;
     _onInAppShown = onInAppShown;
     _onInAppDismiss = onInAppDismiss;
     _onInAppPrepared = onInAppPrepared;
+    _onTokenInvalidated = onTokenInvalidated;
   }
 
   static Future<void> userLogin(String userId) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN, userId);
+  }
+
+  static Future<void> userLoginWithJWTToken(
+      String userId, String jwttoken) async {
+    return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN_WITH_TOKEN,
+        {USERID: userId, JWTTOKEN: jwttoken});
+  }
+
+  static Future<void> setSecurityToken(String userId, String jwttoken) async {
+    return await _channel.invokeMethod(
+        METHOD_NAME_SET_JWT_TOKEN, {USERID: userId, JWTTOKEN: jwttoken});
   }
 
   static Future<void> userLogout() async {
@@ -275,6 +289,19 @@ class WebEngagePlugin {
         _onInAppPrepared!(newPayload);
       } else {
         _onInAppPrepared!(call.arguments.cast<String, dynamic>());
+      }
+    }
+
+    if (call.method == callbackOnTokenInvalidated &&
+        _onTokenInvalidated != null) {
+      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+      if (Platform.isAndroid) {
+        Map<String, dynamic>? newPayload =
+            message?[PAYLOAD].cast<String, dynamic>();
+        _onTokenInvalidated!(newPayload);
+      } else {
+        _onTokenInvalidated!(call.arguments.cast<String, dynamic>());
+        print("Shubham Naidu $call");
       }
     }
 
