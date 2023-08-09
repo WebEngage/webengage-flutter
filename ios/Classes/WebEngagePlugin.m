@@ -29,14 +29,7 @@ static WebEngagePlugin *_shared = nil;
         [registrar addMethodCallDelegate:instance channel:channel];
     }
     [instance initialiseWEGVersions];
-    
-    [WEGJWTManager shared].tokenInvalidatedCallback = ^{
-        NSLog(@"webengageBridge: JWT Token is Invalid. Please send valid ");
-        NSDictionary *data = @{
-            @"errorResponse" : @"401"
-        };
-          [channel invokeMethod:METHOD_NAME_ON_TOKEN_INVALIDATED arguments:data];
-    };
+    [instance registerSDKSecurityCallback]
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar{
@@ -101,6 +94,16 @@ static WebEngagePlugin *_shared = nil;
 
 - (void) initialiseWEGVersions {
     [[WebEngage sharedInstance].WEGVersions setObject:WEGPluginVersion forKey:@"fl"];
+}
+
+- (void) registerSDKSecurityCallback{
+    [WEGJWTManager shared].tokenInvalidatedCallback = ^{
+            NSLog(@"webengageBridge: JWT Token is Invalid. Please send valid ");
+            NSDictionary *data = @{
+                @"errorResponse" : @"401"
+            };
+            [channel invokeMethod:METHOD_NAME_ON_TOKEN_INVALIDATED arguments:data];
+        };
 }
 
 - (void) userLogin:(FlutterMethodCall *)call withResult:(FlutterResult)result {
