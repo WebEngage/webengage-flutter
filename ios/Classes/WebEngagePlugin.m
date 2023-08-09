@@ -29,7 +29,7 @@ static WebEngagePlugin *_shared = nil;
         [registrar addMethodCallDelegate:instance channel:channel];
     }
     [instance initialiseWEGVersions];
-    [instance registerSDKSecurityCallback]
+    [instance registerSDKSecurityCallback];
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar{
@@ -93,7 +93,8 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) initialiseWEGVersions {
-    [[WebEngage sharedInstance].WEGVersions setObject:WEGPluginVersion forKey:@"fl"];
+    WegVersionKey key = WegVersionKeyFL;
+    [[WebEngage sharedInstance] setVersionForChildSDK:WEGPluginVersion forKey:key];;
 }
 
 - (void) registerSDKSecurityCallback{
