@@ -69,6 +69,13 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 userLogin(call, result);
                 break;
 
+            case METHOD_NAME_SET_USER_LOGIN_WITH_TOKEN:
+                userLoginWithJWT(call, result);
+               break;
+
+            case METHOD_NAME_SET_JWT_TOKEN:
+                setJwtToken(call, result);
+                break;
 
             case METHOD_NAME_SET_USER_LOGOUT:
                 userLogout();
@@ -270,6 +277,26 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     private void userLogin(MethodCall call, Result result) {
         String userId = call.arguments();
         WebEngage.get().user().login(userId);
+    }
+
+    private void userLoginWithJWT(MethodCall call, Result result) {
+        Map<String, Object> arguments = call.arguments();
+        String userId = (String) arguments.get(USER_ID);
+        String jwtToken = (String) arguments.get(JWT_TOKEN);
+        if (jwtToken != null && !jwtToken.isEmpty()) {
+            WebEngage.get().user().login(userId, jwtToken);
+        } else {
+            WebEngage.get().user().login(userId);
+        }
+    }
+
+    public void setJwtToken(MethodCall call, Result result) {
+        Map<String, Object> arguments = call.arguments();
+        String userId = (String) arguments.get(USER_ID);
+        String jwtToken = (String) arguments.get(JWT_TOKEN);
+        if(!userId.isEmpty() && userId != null && !jwtToken.isEmpty() && jwtToken != null) {
+            WebEngage.get().setSecurityToken(userId, jwtToken);
+        }
     }
 
     private void setDevicePushOptIn(MethodCall call, Result result) {

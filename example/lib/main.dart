@@ -10,12 +10,8 @@ import 'package:intl/intl.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(MaterialApp(home: MyApp()));
 }
-
-
-
-
 
 class MyApp extends StatefulWidget {
   @override
@@ -62,9 +58,6 @@ class _MyAppState extends State<MyApp> {
             message.toString());
   }
 
-
-
-
   @override
   void initState() {
     super.initState();
@@ -75,8 +68,8 @@ class _MyAppState extends State<MyApp> {
   void initWebEngage() {
     _webEngagePlugin = new WebEngagePlugin();
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
-    _webEngagePlugin.setUpInAppCallbacks(
-        _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+    _webEngagePlugin.setUpInAppCallbacks(_onInAppClick, _onInAppShown,
+        _onInAppDismiss, _onInAppPrepared, _onTokenInvalidated);
     subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
     subscribeToAnonymousIDCallback();
@@ -84,12 +77,19 @@ class _MyAppState extends State<MyApp> {
   }
   var data = "";
 
-  void _listenToAnonymousID(){
+  void _onTokenInvalidated(Map<String, dynamic>? message) {
+    print(
+        "tokenInvalidated callback received " + message.toString());
+        // Reset with new Security Token in the callback
+    WebEngagePlugin.setSecurityToken("akTest",
+        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdWlkIjoiYWtUZXN0IiwiaWF0IjoxNTE2MjM5MDIyfQ.0yF3MSX3h_NHq_zJQdfGzwvlsC_dPLD25q_BpgoNhXPnn6LqtotdeuTHDRDNRmNpamAC3JnH30d3P7_hB39_l1au9BUzFoim7P98tpkDWRwaLg5w49lyD5OiPp_gXR-YGWD4sUVQNMIAlwqKy14MGLZYNXyV0zglc_SqMfcEZw_IWpfiDGeTrYbPTMaLwg1rwilcYdQP_-HnSdGBhwJctZq7BFQMOv_rBA3HrOxgXpYX0LHkYrzhzq6UwvJVnMDwwgUFWQV8TMVK1XxsvljJJXYmASGgnGtL4EOfelYQNe0tz4k37p81YYPYq3OYYBacZ315BlcMbWcQrHdMXRJhK9Nu_M1EXPFkXQe-Fp8N2gD-HXBeGnc4j3dduAs8R_9zyEHE-EPvhCW4hlo_wUyTOzmVgd2XS0Ksc8J45fyce_R1Kmo9xuAiZmyhAfCB6zTtHWrgfljry9H5JrEus0WBm2AquIH9Rl7GNI8KEVYHnRz5gUw6qtPFMcDgw-73Z-lXyqKrYWypx8a4vMDrslkyOapr0jS0l3qityZ3u_Y5NaZ9_ZMm6JIrK1zVwAcyc6Dvs55iHEvBz4erfVezWa4CGLK7sC9u7fDiq8pKguql-CDzVj5GV-CO9c805ABOdVjXxlURdPgilPvXDii4RLjWoV7nMJbR3nVX72YnamlEOr8");
+  }
+
+  void _listenToAnonymousID() {
     _webEngagePlugin.anonymousActionStream.listen((event) {
-      setState((){
+      setState(() {
         data = "${event}";
       });
-
     });
   }
 
@@ -110,20 +110,72 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _platformVersion = platformVersion!;
-
     });
 
     if (await Permission.notification.request().isGranted) {
       // Either the permission was already granted before or the user just granted it.
       print("notification Permission is granted");
       WebEngagePlugin.setUserDevicePushOptIn(true);
-    }else{
+    } else {
       print("notification Permission is denied.");
       WebEngagePlugin.setUserDevicePushOptIn(false);
     }
   }
 
   var anonymousId = "null";
+
+  void _openLoginModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String username = "";
+        String jwtToken = "";
+
+        return AlertDialog(
+          title: Text("Login"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                onChanged: (value) {
+                  username = value;
+                },
+                decoration: InputDecoration(labelText: "Username"),
+              ),
+              TextField(
+                onChanged: (value) {
+                  jwtToken = value;
+                },
+                decoration: InputDecoration(labelText: "Token"),
+                obscureText: true,
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                if (username.isEmpty) {
+                  print("Please Enter valid UserName");
+                } else {
+                  if (jwtToken.isEmpty) {
+                    // login
+                    print("WebEngage: Login");
+                    WebEngagePlugin.userLogin(username);
+                  } else {
+                    // loginWithJWT
+                    print("WebEngage: Login with JWT");
+                    WebEngagePlugin.userLoginWithJWTToken(username, jwtToken);
+                  }
+                }
+                Navigator.of(context).pop();
+              },
+              child: Text("Login"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,9 +200,19 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Login "),
                 onTap: () {
-                  String s = "test" + randomString(6);
-                  WebEngagePlugin.userLogin(s);
-                  showToast("Login-" + s);
+                  String userName = "akTest";
+                  WebEngagePlugin.userLogin(userName);
+                  showToast("Login-" + userName);
+                },
+              ),
+              new ListTile(title: Text("Login Modal"), onTap: _openLoginModal),
+              new ListTile(
+                title: Text("Login With JWT "),
+                onTap: () {
+                  String userName = "akTest";
+                  String jwtToken =
+                      "invalid-token_eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdWlkIjoiYWtUZXN0IiwiaWF0IjoxNTE2MjM5MDIyfQ.0yF3MSX3h_NHq_zJQdfGzwvlsC_dPLD25q_BpgoNhXPnn6LqtotdeuTHDRDNRmNpamAC3JnH30d3P7_hB39_l1au9BUzFoim7P98tpkDWRwaLg5w49lyD5OiPp_gXR-YGWD4sUVQNMIAlwqKy14MGLZYNXyV0zglc_SqMfcEZw_IWpfiDGeTrYbPTMaLwg1rwilcYdQP_-HnSdGBhwJctZq7BFQMOv_rBA3HrOxgXpYX0LHkYrzhzq6UwvJVnMDwwgUFWQV8TMVK1XxsvljJJXYmASGgnGtL4EOfelYQNe0tz4k37p81YYPYq3OYYBacZ315BlcMbWcQrHdMXRJhK9Nu_M1EXPFkXQe-Fp8N2gD-HXBeGnc4j3dduAs8R_9zyEHE-EPvhCW4hlo_wUyTOzmVgd2XS0Ksc8J45fyce_R1Kmo9xuAiZmyhAfCB6zTtHWrgfljry9H5JrEus0WBm2AquIH9Rl7GNI8KEVYHnRz5gUw6qtPFMcDgw-73Z-lXyqKrYWypx8a4vMDrslkyOapr0jS0l3qityZ3u_Y5NaZ9_ZMm6JIrK1zVwAcyc6Dvs55iHEvBz4erfVezWa4CGLK7sC9u7fDiq8pKguql-CDzVj5GV-CO9c805ABOdVjXxlURdPgilPvXDii4RLjWoV7nMJbR3nVX72YnamlEOr8";
+                  WebEngagePlugin.userLoginWithJWTToken(userName, jwtToken);
                 },
               ),
               new ListTile(
@@ -330,7 +392,7 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {
                   final DateTime now = DateTime.now();
                   final DateFormat formatter =
-                  DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                      DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                   WebEngagePlugin.trackEvent(
                       'Register', {'Registered On': formatter.format(now)});
                   showToast("Track ${formatter.format(now)}");
@@ -372,7 +434,7 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.pushStream.listen((event) {
       String? deepLink = event.deepLink;
       Map<String, dynamic> messagePayload = event.payload!;
-      showDialogWithMessage("Push click callback: " + event.toString() );
+      showDialogWithMessage("Push click callback: " + event.toString());
     });
 
     //Push action click listener
@@ -390,7 +452,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void subscribeToAnonymousIDCallback(){
+  void subscribeToAnonymousIDCallback() {
     // _webEngagePlugin.anonymousActionStream.listen((event) {
     //   //  var message = event as Map<String,dynamic>;
     //   this.setState(() {

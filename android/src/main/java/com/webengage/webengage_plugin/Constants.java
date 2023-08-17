@@ -36,6 +36,9 @@ public interface Constants {
         String METHOD_NAME_ON_INAPP_PREPARED = "onInAppPrepared";
         String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
         String METHOD_NAME_ON_ANONYMOUS_ID_CHANGED = "onAnonymousIdChanged";
+        String METHOD_NAME_ON_TOKEN_INVALIDATED = "onTokenInvalidated";
+        String METHOD_NAME_SET_USER_LOGIN_WITH_TOKEN = "userLoginWithJWTToken";
+        String METHOD_NAME_SET_JWT_TOKEN = "setJWTToken";
      }
 
     interface PARAM {
@@ -64,6 +67,8 @@ public interface Constants {
         String WHATSAPP = "whatsapp";
         String SELECTED_ACTION_ID = "selectedActionId";
         String ANONYMOUS_USER_ID = "anonymousUserID";
+        String USER_ID = "userIdentifier";
+        String JWT_TOKEN = "token";
     }
 
 }
