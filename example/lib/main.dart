@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
     print(
         "tokenInvalidated callback received " + message.toString());
         // Reset with new Security Token in the callback
-    WebEngagePlugin.setSecurityToken("akTest",
+    WebEngagePlugin.setSecureToken("akTest",
         "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdWlkIjoiYWtUZXN0IiwiaWF0IjoxNTE2MjM5MDIyfQ.0yF3MSX3h_NHq_zJQdfGzwvlsC_dPLD25q_BpgoNhXPnn6LqtotdeuTHDRDNRmNpamAC3JnH30d3P7_hB39_l1au9BUzFoim7P98tpkDWRwaLg5w49lyD5OiPp_gXR-YGWD4sUVQNMIAlwqKy14MGLZYNXyV0zglc_SqMfcEZw_IWpfiDGeTrYbPTMaLwg1rwilcYdQP_-HnSdGBhwJctZq7BFQMOv_rBA3HrOxgXpYX0LHkYrzhzq6UwvJVnMDwwgUFWQV8TMVK1XxsvljJJXYmASGgnGtL4EOfelYQNe0tz4k37p81YYPYq3OYYBacZ315BlcMbWcQrHdMXRJhK9Nu_M1EXPFkXQe-Fp8N2gD-HXBeGnc4j3dduAs8R_9zyEHE-EPvhCW4hlo_wUyTOzmVgd2XS0Ksc8J45fyce_R1Kmo9xuAiZmyhAfCB6zTtHWrgfljry9H5JrEus0WBm2AquIH9Rl7GNI8KEVYHnRz5gUw6qtPFMcDgw-73Z-lXyqKrYWypx8a4vMDrslkyOapr0jS0l3qityZ3u_Y5NaZ9_ZMm6JIrK1zVwAcyc6Dvs55iHEvBz4erfVezWa4CGLK7sC9u7fDiq8pKguql-CDzVj5GV-CO9c805ABOdVjXxlURdPgilPvXDii4RLjWoV7nMJbR3nVX72YnamlEOr8");
   }
 
@@ -129,7 +129,7 @@ class _MyAppState extends State<MyApp> {
       context: context,
       builder: (BuildContext context) {
         String username = "";
-        String jwtToken = "";
+        String secureToken = "";
 
         return AlertDialog(
           title: Text("Login"),
@@ -144,7 +144,7 @@ class _MyAppState extends State<MyApp> {
               ),
               TextField(
                 onChanged: (value) {
-                  jwtToken = value;
+                  secureToken = value;
                 },
                 decoration: InputDecoration(labelText: "Token"),
                 obscureText: true,
@@ -157,14 +157,14 @@ class _MyAppState extends State<MyApp> {
                 if (username.isEmpty) {
                   print("Please Enter valid UserName");
                 } else {
-                  if (jwtToken.isEmpty) {
+                  if (secureToken.isEmpty) {
                     // login
                     print("WebEngage: Login");
                     WebEngagePlugin.userLogin(username);
                   } else {
-                    // loginWithJWT
-                    print("WebEngage: Login with JWT");
-                    WebEngagePlugin.userLoginWithJWTToken(username, jwtToken);
+                    // loginWithsecureToken
+                    print("WebEngage: Login with secureToken");
+                    WebEngagePlugin.userLoginWithSecureToken(username, secureToken);
                   }
                 }
                 Navigator.of(context).pop();
@@ -207,12 +207,12 @@ class _MyAppState extends State<MyApp> {
               ),
               new ListTile(title: Text("Login Modal"), onTap: _openLoginModal),
               new ListTile(
-                title: Text("Login With JWT "),
+                title: Text("Login With secureToken "),
                 onTap: () {
                   String userName = "akTest";
-                  String jwtToken =
+                  String secureToken =
                       "invalid-token_eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdWlkIjoiYWtUZXN0IiwiaWF0IjoxNTE2MjM5MDIyfQ.0yF3MSX3h_NHq_zJQdfGzwvlsC_dPLD25q_BpgoNhXPnn6LqtotdeuTHDRDNRmNpamAC3JnH30d3P7_hB39_l1au9BUzFoim7P98tpkDWRwaLg5w49lyD5OiPp_gXR-YGWD4sUVQNMIAlwqKy14MGLZYNXyV0zglc_SqMfcEZw_IWpfiDGeTrYbPTMaLwg1rwilcYdQP_-HnSdGBhwJctZq7BFQMOv_rBA3HrOxgXpYX0LHkYrzhzq6UwvJVnMDwwgUFWQV8TMVK1XxsvljJJXYmASGgnGtL4EOfelYQNe0tz4k37p81YYPYq3OYYBacZ315BlcMbWcQrHdMXRJhK9Nu_M1EXPFkXQe-Fp8N2gD-HXBeGnc4j3dduAs8R_9zyEHE-EPvhCW4hlo_wUyTOzmVgd2XS0Ksc8J45fyce_R1Kmo9xuAiZmyhAfCB6zTtHWrgfljry9H5JrEus0WBm2AquIH9Rl7GNI8KEVYHnRz5gUw6qtPFMcDgw-73Z-lXyqKrYWypx8a4vMDrslkyOapr0jS0l3qityZ3u_Y5NaZ9_ZMm6JIrK1zVwAcyc6Dvs55iHEvBz4erfVezWa4CGLK7sC9u7fDiq8pKguql-CDzVj5GV-CO9c805ABOdVjXxlURdPgilPvXDii4RLjWoV7nMJbR3nVX72YnamlEOr8";
-                  WebEngagePlugin.userLoginWithJWTToken(userName, jwtToken);
+                  WebEngagePlugin.userLoginWithSecureToken(userName, secureToken);
                 },
               ),
               new ListTile(

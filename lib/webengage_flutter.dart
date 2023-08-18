@@ -111,15 +111,15 @@ class WebEngagePlugin {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN, userId);
   }
 
-  static Future<void> userLoginWithJWTToken(
-      String userId, String jwttoken) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN_WITH_TOKEN,
-        {USERID: userId, JWTTOKEN: jwttoken});
+  static Future<void> userLoginWithSecureToken(
+      String userId, String secureToken) async {
+    return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN,
+        {USERID: userId, SECURE_TOKEN: secureToken});
   }
 
-  static Future<void> setSecurityToken(String userId, String jwttoken) async {
+  static Future<void> setSecureToken(String userId, String secureToken) async {
     return await _channel.invokeMethod(
-        METHOD_NAME_SET_JWT_TOKEN, {USERID: userId, JWTTOKEN: jwttoken});
+        METHOD_NAME_SET_SECURE_TOKEN, {USERID: userId, SECURE_TOKEN: secureToken});
   }
 
   static Future<void> userLogout() async {

@@ -69,12 +69,12 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 userLogin(call, result);
                 break;
 
-            case METHOD_NAME_SET_USER_LOGIN_WITH_TOKEN:
-                userLoginWithJWT(call, result);
+            case METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN:
+                userLoginWithSecureToken(call, result);
                break;
 
-            case METHOD_NAME_SET_JWT_TOKEN:
-                setJwtToken(call, result);
+            case METHOD_NAME_SET_SECURE_TOKEN:
+                setSecureToken(call, result);
                 break;
 
             case METHOD_NAME_SET_USER_LOGOUT:
@@ -279,23 +279,23 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         WebEngage.get().user().login(userId);
     }
 
-    private void userLoginWithJWT(MethodCall call, Result result) {
+    private void userLoginWithSecureToken(MethodCall call, Result result) {
         Map<String, Object> arguments = call.arguments();
         String userId = (String) arguments.get(USER_ID);
-        String jwtToken = (String) arguments.get(JWT_TOKEN);
-        if (jwtToken != null && !jwtToken.isEmpty()) {
-            WebEngage.get().user().login(userId, jwtToken);
+        String secureToken = (String) arguments.get(SECURE_TOKEN);
+        if (secureToken != null && !secureToken.isEmpty()) {
+            WebEngage.get().user().login(userId, secureToken);
         } else {
             WebEngage.get().user().login(userId);
         }
     }
 
-    public void setJwtToken(MethodCall call, Result result) {
+    public void setSecureToken(MethodCall call, Result result) {
         Map<String, Object> arguments = call.arguments();
         String userId = (String) arguments.get(USER_ID);
-        String jwtToken = (String) arguments.get(JWT_TOKEN);
-        if(!userId.isEmpty() && userId != null && !jwtToken.isEmpty() && jwtToken != null) {
-            WebEngage.get().setSecurityToken(userId, jwtToken);
+        String secureToken = (String) arguments.get(SECURE_TOKEN);
+        if(!userId.isEmpty() && userId != null && !secureToken.isEmpty() && secureToken != null) {
+            WebEngage.get().setSecurityToken(userId, secureToken);
         }
     }
 
