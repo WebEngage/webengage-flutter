@@ -113,13 +113,14 @@ class WebEngagePlugin {
 
   static Future<void> userLoginWithSecureToken(
       String userId, String secureToken) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN,
+    return await _channel.invokeMethod(
+        METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN,
         {USERID: userId, SECURE_TOKEN: secureToken});
   }
 
   static Future<void> setSecureToken(String userId, String secureToken) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_SECURE_TOKEN, {USERID: userId, SECURE_TOKEN: secureToken});
+    return await _channel.invokeMethod(METHOD_NAME_SET_SECURE_TOKEN,
+        {USERID: userId, SECURE_TOKEN: secureToken});
   }
 
   static Future<void> userLogout() async {
@@ -301,7 +302,6 @@ class WebEngagePlugin {
         _onTokenInvalidated!(newPayload);
       } else {
         _onTokenInvalidated!(call.arguments.cast<String, dynamic>());
-        print("Shubham Naidu $call");
       }
     }
 
