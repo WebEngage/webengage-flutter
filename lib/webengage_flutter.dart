@@ -307,7 +307,7 @@ class WebEngagePlugin {
     if(Platform.isAndroid)
       return await _channel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
     else
-      return
+      return;
   }
 
 }
