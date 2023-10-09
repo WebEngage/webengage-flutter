@@ -3,7 +3,6 @@
 #import "WebEngageConstants.h"
 
 static FlutterMethodChannel* channel = nil;
-NSString *WEGPluginVersion = @"1.2.4";
 NSString * const DATE_FORMAT = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 int const DATE_FORMAT_LENGTH = 24;
 
@@ -28,7 +27,6 @@ static WebEngagePlugin *_shared = nil;
         channel = [FlutterMethodChannel methodChannelWithName:WEBENGAGE_PLUGIN binaryMessenger:[registrar messenger]];
         [registrar addMethodCallDelegate:instance channel:channel];
     }
-    [instance initialiseWEGVersions];
     [instance registerSDKSecurityCallback];
 }
 
@@ -41,10 +39,10 @@ static WebEngagePlugin *_shared = nil;
         result([PARAM_PLATFORM_VALUE stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
     } else if ([METHOD_NAME_SET_USER_LOGIN isEqualToString:call.method]) {
         [self userLogin:call withResult:result];   
-    } else if ([METHOD_NAME_SET_USER_LOGIN_WITH_TOKEN isEqualToString:call.method]) {
-        [self userLoginWithJWTToken:call withResult:result];
-    }else if ([METHOD_NAME_SET_JWT_TOKEN isEqualToString:call.method]) {
-        [self setJWTToken:call withResult:result];
+    } else if ([METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN isEqualToString:call.method]) {
+        [self userLoginWithSecureToken:call withResult:result];
+    }else if ([METHOD_NAME_SET_SECURE_TOKEN isEqualToString:call.method]) {
+        [self setSecureToken:call withResult:result];
     } else if ([METHOD_NAME_SET_USER_LOGOUT isEqualToString:call.method]) {
         [self userLogout:call withResult:result];
     } else if ([METHOD_NAME_SET_USER_FIRST_NAME isEqualToString:call.method]) {
@@ -92,11 +90,6 @@ static WebEngagePlugin *_shared = nil;
     [weUser login:userId];
 }
 
-- (void) initialiseWEGVersions {
-    WegVersionKey key = WegVersionKeyFL;
-    [[WebEngage sharedInstance] setVersionForChildSDK:WEGPluginVersion forKey:key];;
-}
-
 - (void) registerSDKSecurityCallback{
     [WEGJWTManager shared].tokenInvalidatedCallback = ^{
             NSLog(@"webengageBridge: JWT Token is Invalid. Please send valid ");
@@ -113,18 +106,18 @@ static WebEngagePlugin *_shared = nil;
     [weUser login:userId];
 }
 
-- (void) userLoginWithJWTToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+- (void) userLoginWithSecureToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * userId = call.arguments[USERID];
     NSString * jwtToken = call.arguments[JWTTOKEN];
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser login:userId jwtToken:jwtToken];
 }
 
-- (void) setJWTToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+- (void) setSecureToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * userId = call.arguments[USERID];
     NSString * jwtToken = call.arguments[JWTTOKEN];
     WEGUser * weUser = [WebEngage sharedInstance].user;
-    [weUser setJWTToken:userId jwtToken:jwtToken];
+    [weUser setSecureToken:userId jwtToken:jwtToken];
 }
 
 - (void) userLogout:(FlutterMethodCall *)call withResult:(FlutterResult)result {
