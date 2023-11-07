@@ -62,8 +62,8 @@ class _MyAppState extends State<MyApp> {
     print(
         "This is a tokenInvalidated callback from native to flutter. Payload " +
             message.toString());
-    WebEngagePlugin.setSecureToken("sn_ios",
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiY3VpZCI6InNuX2lvcyIsImFkbWluIjp0cnVlLCJpYXQiOjE1MTYyMzkwMjJ9.Vssaf9-FgEzKWuZRM-n0f-52X6BV0xeSj-HNbdv_Faxy0tRXCiJFvK2M76MarG4fhlA1qcUmJ_-OhLdkBiP22CB-q7zo9gu-w3U5wADPFCelteM0fDH78QyCMQdJSRBHvrauB7SDcTyroQPNJ_CGQQl0yLLrTtYFSFqm9xkbDhzgODsVyZelN-vr7qIfr4isuWhgZZHCyLvpYdviSFiB7Jc5Rs-H7V5-aBMhYGnRGppgs35zqoO8Pjg8HjbTdFCcchIfx6-cBPv8UOVRoS6BESfJtKGcPDOt9FvjujW1oC3UTzLE4HxLva-OvDUxILviIycBwh7FMwPs2kL6tSKMSLsbt1hgCPU1XWPK4GBMHyu4orJbTvBvHJu_ARKWQBgD3y4XHzPPNW7-aulRV_Mq6IEOKlNPw3YrdgVCY6MRrThS3S2tlN4fe44JgUrWbAmQCbUim85Q9az9nz1Vs0spIzOzYWbmDemMtUfEa8vna00OTPyNaUGFxOLIZnfx3MbgfyY6YHv_V3YJH4BpW-jzAleYzZfjjkMja8UsDS2p_GM6ai9kHdqjRP_9ssaAl24pENBMgrevj-kMV_1S6uwbLv-MaaCyP6UeQw5SIkxu8HFgIJcGipXdIRnrnDSxonH_fgHQNhumQVeq-4kiIXbjlOcfnwDDl7jaZs55YRDmmBk");
+    WebEngagePlugin.setSecureToken(
+        "REPLACE_USER_NAME", "REPLACE_YOUR_SECURE_TOKEN");
   }
 
   @override
@@ -76,8 +76,9 @@ class _MyAppState extends State<MyApp> {
   void initWebEngage() {
     _webEngagePlugin = new WebEngagePlugin();
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
-    _webEngagePlugin.setUpInAppCallbacks(_onInAppClick, _onInAppShown,
-        _onInAppDismiss, _onInAppPrepared, _onTokenInvalidated);
+    _webEngagePlugin.setUpInAppCallbacks(
+        _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+    _webEngagePlugin.tokenInvalidatedCallback(_onTokenInvalidated);
     subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
     subscribeToAnonymousIDCallback();
@@ -148,10 +149,9 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Login "),
                 onTap: () {
-                  String s = "sn_ios";
-                  String jwtToken =
-                      "ShubhameyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiY3VpZCI6InNuX2lvcyIsImFkbWluIjp0cnVlLCJpYXQiOjE1MTYyMzkwMjJ9.Vssaf9-FgEzKWuZRM-n0f-52X6BV0xeSj-HNbdv_Faxy0tRXCiJFvK2M76MarG4fhlA1qcUmJ_-OhLdkBiP22CB-q7zo9gu-w3U5wADPFCelteM0fDH78QyCMQdJSRBHvrauB7SDcTyroQPNJ_CGQQl0yLLrTtYFSFqm9xkbDhzgODsVyZelN-vr7qIfr4isuWhgZZHCyLvpYdviSFiB7Jc5Rs-H7V5-aBMhYGnRGppgs35zqoO8Pjg8HjbTdFCcchIfx6-cBPv8UOVRoS6BESfJtKGcPDOt9FvjujW1oC3UTzLE4HxLva-OvDUxILviIycBwh7FMwPs2kL6tSKMSLsbt1hgCPU1XWPK4GBMHyu4orJbTvBvHJu_ARKWQBgD3y4XHzPPNW7-aulRV_Mq6IEOKlNPw3YrdgVCY6MRrThS3S2tlN4fe44JgUrWbAmQCbUim85Q9az9nz1Vs0spIzOzYWbmDemMtUfEa8vna00OTPyNaUGFxOLIZnfx3MbgfyY6YHv_V3YJH4BpW-jzAleYzZfjjkMja8UsDS2p_GM6ai9kHdqjRP_9ssaAl24pENBMgrevj-kMV_1S6uwbLv-MaaCyP6UeQw5SIkxu8HFgIJcGipXdIRnrnDSxonH_fgHQNhumQVeq-4kiIXbjlOcfnwDDl7jaZs55YRDmmBk";
-                  WebEngagePlugin.userLoginWithSecureToken(s, jwtToken);
+                  String s = "REPLACE_USERNAME";
+                  String jwtToken = "REPLACE_SECURE_TOKEN";
+                  WebEngagePlugin.userLogin(s, jwtToken);
                   showToast("Login-" + s);
                 },
               ),

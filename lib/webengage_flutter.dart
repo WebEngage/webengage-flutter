@@ -95,27 +95,29 @@ class WebEngagePlugin {
   }
 
   void setUpInAppCallbacks(
-      MessageHandlerInAppClick onInAppClick,
-      MessageHandler onInAppShown,
-      MessageHandler onInAppDismiss,
-      MessageHandler onInAppPrepared,
-      MessageHandler onTokenInvalidated) {
+    MessageHandlerInAppClick onInAppClick,
+    MessageHandler onInAppShown,
+    MessageHandler onInAppDismiss,
+    MessageHandler onInAppPrepared,
+  ) {
     _onInAppClick = onInAppClick;
     _onInAppShown = onInAppShown;
     _onInAppDismiss = onInAppDismiss;
     _onInAppPrepared = onInAppPrepared;
+  }
+
+  void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
     _onTokenInvalidated = onTokenInvalidated;
   }
 
-  static Future<void> userLogin(String userId) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN, userId);
-  }
-
-  static Future<void> userLoginWithSecureToken(
-      String userId, String secureToken) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN,
-        {USERID: userId, SECURE_TOKEN: secureToken});
+  static Future<void> userLogin(String userId, [String? secureToken]) async {
+    if (secureToken != null) {
+      return await _channel.invokeMethod(
+          METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN,
+          {USERID: userId, SECURE_TOKEN: secureToken});
+    } else {
+      return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN, userId);
+    }
   }
 
   static Future<void> setSecureToken(String userId, String secureToken) async {

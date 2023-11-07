@@ -68,21 +68,21 @@ class _MyAppState extends State<MyApp> {
   void initWebEngage() {
     _webEngagePlugin = new WebEngagePlugin();
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
-    _webEngagePlugin.setUpInAppCallbacks(_onInAppClick, _onInAppShown,
-        _onInAppDismiss, _onInAppPrepared, _onTokenInvalidated);
+    _webEngagePlugin.setUpInAppCallbacks(
+        _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+    _webEngagePlugin.tokenInvalidatedCallback(_onTokenInvalidated);
     subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
     subscribeToAnonymousIDCallback();
     _listenToAnonymousID();
   }
+
   var data = "";
 
   void _onTokenInvalidated(Map<String, dynamic>? message) {
-    print(
-        "tokenInvalidated callback received " + message.toString());
-        // Reset with new Security Token in the callback
-    WebEngagePlugin.setSecureToken("akTest",
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdWlkIjoiYWtUZXN0IiwiaWF0IjoxNTE2MjM5MDIyfQ.0yF3MSX3h_NHq_zJQdfGzwvlsC_dPLD25q_BpgoNhXPnn6LqtotdeuTHDRDNRmNpamAC3JnH30d3P7_hB39_l1au9BUzFoim7P98tpkDWRwaLg5w49lyD5OiPp_gXR-YGWD4sUVQNMIAlwqKy14MGLZYNXyV0zglc_SqMfcEZw_IWpfiDGeTrYbPTMaLwg1rwilcYdQP_-HnSdGBhwJctZq7BFQMOv_rBA3HrOxgXpYX0LHkYrzhzq6UwvJVnMDwwgUFWQV8TMVK1XxsvljJJXYmASGgnGtL4EOfelYQNe0tz4k37p81YYPYq3OYYBacZ315BlcMbWcQrHdMXRJhK9Nu_M1EXPFkXQe-Fp8N2gD-HXBeGnc4j3dduAs8R_9zyEHE-EPvhCW4hlo_wUyTOzmVgd2XS0Ksc8J45fyce_R1Kmo9xuAiZmyhAfCB6zTtHWrgfljry9H5JrEus0WBm2AquIH9Rl7GNI8KEVYHnRz5gUw6qtPFMcDgw-73Z-lXyqKrYWypx8a4vMDrslkyOapr0jS0l3qityZ3u_Y5NaZ9_ZMm6JIrK1zVwAcyc6Dvs55iHEvBz4erfVezWa4CGLK7sC9u7fDiq8pKguql-CDzVj5GV-CO9c805ABOdVjXxlURdPgilPvXDii4RLjWoV7nMJbR3nVX72YnamlEOr8");
+    print("tokenInvalidated callback received " + message.toString());
+    // Reset with new Security Token in the callback
+    WebEngagePlugin.setSecureToken("USER_NAME", "REPLACE_JWT_TOKEN_HERE");
   }
 
   void _listenToAnonymousID() {
@@ -164,7 +164,7 @@ class _MyAppState extends State<MyApp> {
                   } else {
                     // loginWithsecureToken
                     print("WebEngage: Login with secureToken");
-                    WebEngagePlugin.userLoginWithSecureToken(username, secureToken);
+                    WebEngagePlugin.userLogin(username, secureToken);
                   }
                 }
                 Navigator.of(context).pop();
@@ -200,7 +200,7 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Login "),
                 onTap: () {
-                  String userName = "akTest";
+                  String userName = "REPLACE_YOUR_USERNAME";
                   WebEngagePlugin.userLogin(userName);
                   showToast("Login-" + userName);
                 },
@@ -209,10 +209,9 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Login With secureToken "),
                 onTap: () {
-                  String userName = "akTest";
-                  String secureToken =
-                      "invalid-token_eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdWlkIjoiYWtUZXN0IiwiaWF0IjoxNTE2MjM5MDIyfQ.0yF3MSX3h_NHq_zJQdfGzwvlsC_dPLD25q_BpgoNhXPnn6LqtotdeuTHDRDNRmNpamAC3JnH30d3P7_hB39_l1au9BUzFoim7P98tpkDWRwaLg5w49lyD5OiPp_gXR-YGWD4sUVQNMIAlwqKy14MGLZYNXyV0zglc_SqMfcEZw_IWpfiDGeTrYbPTMaLwg1rwilcYdQP_-HnSdGBhwJctZq7BFQMOv_rBA3HrOxgXpYX0LHkYrzhzq6UwvJVnMDwwgUFWQV8TMVK1XxsvljJJXYmASGgnGtL4EOfelYQNe0tz4k37p81YYPYq3OYYBacZ315BlcMbWcQrHdMXRJhK9Nu_M1EXPFkXQe-Fp8N2gD-HXBeGnc4j3dduAs8R_9zyEHE-EPvhCW4hlo_wUyTOzmVgd2XS0Ksc8J45fyce_R1Kmo9xuAiZmyhAfCB6zTtHWrgfljry9H5JrEus0WBm2AquIH9Rl7GNI8KEVYHnRz5gUw6qtPFMcDgw-73Z-lXyqKrYWypx8a4vMDrslkyOapr0jS0l3qityZ3u_Y5NaZ9_ZMm6JIrK1zVwAcyc6Dvs55iHEvBz4erfVezWa4CGLK7sC9u7fDiq8pKguql-CDzVj5GV-CO9c805ABOdVjXxlURdPgilPvXDii4RLjWoV7nMJbR3nVX72YnamlEOr8";
-                  WebEngagePlugin.userLoginWithSecureToken(userName, secureToken);
+                  String userName = "REPLACE_YOUR_USERNAME";
+                  String secureToken = "REPLACE_YOUR_TOKEN_HERE";
+                  WebEngagePlugin.userLogin(userName, secureToken);
                 },
               ),
               new ListTile(
