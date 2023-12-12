@@ -304,10 +304,9 @@ class WebEngagePlugin {
   }
 
   static Future<void> startGAIDTracking() async {
-    if(Platform.isAndroid)
+    if (Platform.isAndroid)
       return await _channel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
     else
       return;
   }
-
 }
