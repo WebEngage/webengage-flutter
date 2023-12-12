@@ -57,5 +57,5 @@ String readVersion() {
 }
 
 dependencies {
-    api 'com.webengage:android-sdk:[4,)'
+    implementation 'com.webengage:android-sdk:4.+'
 }
