@@ -26,6 +26,9 @@ android {
 
     defaultConfig {
         minSdkVersion 21
+        manifestPlaceholders = [we_fl_version: readVersion()]
+        versionCode 1
+        versionName "1.0"
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -34,6 +37,23 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+String readVersion() {
+    def version = new Properties()
+    def stream
+    try {
+        stream = new FileInputStream(new File(projectDir, 'version.properties'))
+        version.load(stream)
+    } catch (FileNotFoundException ignore) {
+    } finally {
+        if (stream != null) stream.close()
+    }
+    // safety defaults in case file is missing
+    if(!version['major']) version['major'] = "1"
+    if(!version['minor']) version['minor'] = "0"
+    if(!version['patch']) version['patch'] = "0"
+    return "${version['major']}.${version['minor']}.${version['patch']}"
 }
 
 dependencies {
