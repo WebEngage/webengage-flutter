@@ -57,6 +57,7 @@
 #define IN_APP @"in_app"
 #define EMAIL @"email"
 #define WHATSAPP @"whatsapp"
+#define VIBER @"viber"
 #define ANONYMOUS_USER_ID @"anonymousUserID"
 #define REASON @"reason"
 

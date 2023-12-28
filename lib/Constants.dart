@@ -25,6 +25,7 @@ const String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
 
 const String METHOD_NAME_TRACK_EVENT = "trackEvent";
 const String METHOD_NAME_TRACK_SCREEN = "trackScreen";
+const String METHOD_NAME_START_GAID_TRACKING = "startGAIDTracking";
 
 const String callbackOnPushClick = "onPushClick";
 const String callbackOnPushActionClick = "onPushActionClick";

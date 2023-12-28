@@ -1,14 +1,15 @@
 PODS:
   - Flutter (1.0.0)
-  - WebEngage (5.2.4):
-    - WebEngage/Xcode11 (= 5.2.4)
-  - WebEngage/Xcode11 (5.2.4)
-  - webengage_flutter (0.0.1):
+  - permission_handler_apple (9.1.1):
     - Flutter
-    - WebEngage
+  - WebEngage (6.5.0)
+  - webengage_flutter (1.2.4):
+    - Flutter
+    - WebEngage (> 6.4.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - webengage_flutter (from `.symlinks/plugins/webengage_flutter/ios`)
 
 SPEC REPOS:
@@ -18,14 +19,17 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   webengage_flutter:
     :path: ".symlinks/plugins/webengage_flutter/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  WebEngage: e50708cc9dc849bd969312b603e8a7f3068ed2b0
-  webengage_flutter: 788e1bdf99fa8b1f570d2f1fcd80a938c7a89c63
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
+  WebEngage: 8389815a36b5ed2787fbf4495e716158944e3769
+  webengage_flutter: 291bce3c9b2789f5336c1770c04e86e8ad55e492
 
-PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
+PODFILE CHECKSUM: 663715e941f9adb426e33bf9376914006f9ea95b
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3
