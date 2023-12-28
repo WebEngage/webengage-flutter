@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.webengage.sdk.android.Channel;
+import com.webengage.sdk.android.Logger;
 import com.webengage.sdk.android.WebEngage;
 import com.webengage.sdk.android.actions.render.PushNotificationData;
 import com.webengage.sdk.android.utils.Gender;
@@ -57,7 +58,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         init(flutterPluginBinding.getBinaryMessenger());
     }
 
-    private void init(BinaryMessenger binaryMessenger){
+    private void init(BinaryMessenger binaryMessenger) {
         channel = new MethodChannel(binaryMessenger, WEBENGAGE_PLUGIN);
         channel.setMethodCallHandler(this);
     }
@@ -176,6 +177,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
             case METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN:
                 setDevicePushOptIn(call, result);
+                break;
+
+            case METHOD_NAME_START_GAID_TRACKING :
+                startGAIDTracking();
                 break;
             default:
                 result.notImplemented();
@@ -345,7 +350,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
             WebEngage.get().user().setOptIn(Channel.IN_APP, status);
         } else if (WHATSAPP.equalsIgnoreCase(channel)) {
             WebEngage.get().user().setOptIn(Channel.WHATSAPP, status);
-        } else {
+        } else if (VIBER.equalsIgnoreCase(channel)) {
+            WebEngage.get().user().setOptIn(Channel.VIBER, status);
+        }
+        else {
             result.error(TAG, "Invalid channel: " + channel + ". Must be one of [push, sms, email, in_app, whatsapp].", null);
         }
     }
@@ -372,6 +380,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     }
 
+    private void startGAIDTracking(){
+        WebEngage.get().startGAIDTracking();
+    }
+
     @Override
     public void onDetachedFromEngine(FlutterPluginBinding binding) {
         isInitialised = false;
@@ -386,7 +398,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
     @Override
-     public void sendOrQueueCallback(String methodName, Map<String, Object> message) {
+    public void sendOrQueueCallback(String methodName, Map<String, Object> message) {
         if (isInitialised) {
             sendCallback(methodName, message);
         } else {
@@ -394,8 +406,8 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         }
     }
 
-     void sendCallback(final String methodName, final Map<String, Object> message) {
-        if(channel == null)
+    void sendCallback(final String methodName, final Map<String, Object> message) {
+        if (channel == null)
             return;
         final Map<String, Object> messagePayload = new HashMap<>();
         messagePayload.put(PARAM_PLATFORM, PARAM_PLATFORM_VALUE);
@@ -403,12 +415,15 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                channel.invokeMethod(methodName, messagePayload);
+                // If the null check is not handled here, it can cause a crash when transitioning from the background to foreground state in a very rare case.
+                if (channel != null) {
+                    channel.invokeMethod(methodName, messagePayload);
+                }
             }
         });
     }
 
-     Map<String, Object> bundleToMap(Bundle extras) {
+    Map<String, Object> bundleToMap(Bundle extras) {
         Map<String, Object> map = new HashMap<>();
 
         Set<String> ks = extras.keySet();
@@ -433,7 +448,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-        android.util.Log.e(TAG, "onAttachedToActivity: " );
+        android.util.Log.e(TAG, "onAttachedToActivity: ");
         WECallbackRegistry.getInstance().register(this);
         activity = binding.getActivity();
     }

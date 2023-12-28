@@ -3,6 +3,7 @@
 #import "WebEngageConstants.h"
 
 static FlutterMethodChannel* channel = nil;
+NSString * const WEGPluginVersion = @"1.3.0";
 NSString * const DATE_FORMAT = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 int const DATE_FORMAT_LENGTH = 24;
 
@@ -27,7 +28,7 @@ static WebEngagePlugin *_shared = nil;
         channel = [FlutterMethodChannel methodChannelWithName:WEBENGAGE_PLUGIN binaryMessenger:[registrar messenger]];
         [registrar addMethodCallDelegate:instance channel:channel];
     }
-
+    [instance initialiseWEGVersions];
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar{
@@ -156,7 +157,7 @@ static WebEngagePlugin *_shared = nil;
     NSLocale* locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
     NSString* ch = [channel lowercaseStringWithLocale:locale];
 
-    BOOL status = call.arguments[OPTIN];
+    BOOL status = [call.arguments[OPTIN] boolValue];
 
     if ([ch isEqualToString:PUSH]) {
         [[WebEngage sharedInstance].user setOptInStatusForChannel:WEGEngagementChannelPush status:status];
@@ -168,6 +169,8 @@ static WebEngagePlugin *_shared = nil;
         [[WebEngage sharedInstance].user setOptInStatusForChannel:WEGEngagementChannelInApp status:status];
     } else if ([ch isEqualToString:WHATSAPP]) {
         [[WebEngage sharedInstance].user setOptInStatusForChannel:WEGEngagementChannelWhatsapp status:status];
+    }else if ([ch isEqualToString:VIBER]) {
+             [[WebEngage sharedInstance].user setOptInStatusForChannel:WEGEngagementChannelViber status:status];
     } else {
         NSString * msg = [NSString stringWithFormat:@"Invalid channel: %@. Must be one of [push, sms, email, in_app, whatsapp].", ch];
         result([FlutterError errorWithCode:@"WebEngagePlugin" message:msg details:nil]);
@@ -281,5 +284,11 @@ static WebEngagePlugin *_shared = nil;
         NSDictionary *payload = @{@"anonymousUserID":anonymousID};
         [channel invokeMethod:METHOD_NAME_ON_ANONYMOUS_ID_CHANGED arguments:payload];
 }
+
+ - (void) initialiseWEGVersions {
+    WegVersionKey key = WegVersionKeyFL;
+    [[WebEngage sharedInstance] setVersionForChildSDK:WEGPluginVersion forKey:key];;
+ }
+
 
 @end

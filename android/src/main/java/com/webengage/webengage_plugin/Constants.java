@@ -36,6 +36,7 @@ public interface Constants {
         String METHOD_NAME_ON_INAPP_PREPARED = "onInAppPrepared";
         String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
         String METHOD_NAME_ON_ANONYMOUS_ID_CHANGED = "onAnonymousIdChanged";
+        String METHOD_NAME_START_GAID_TRACKING = "startGAIDTracking";
      }
 
     interface PARAM {
@@ -62,6 +63,7 @@ public interface Constants {
         String IN_APP = "in_app";
         String EMAIL = "email";
         String WHATSAPP = "whatsapp";
+        String VIBER = "viber";
         String SELECTED_ACTION_ID = "selectedActionId";
         String ANONYMOUS_USER_ID = "anonymousUserID";
     }

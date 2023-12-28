@@ -1,5 +1,9 @@
 ## CHANGE LOG
 
+### Version 1.3.0 (Dec 19, 2023)
+* Viber Channel Support Added 
+* Version tracking 
+
 ### Version 1.2.4 (April 25, 2023)
 * Isolate issue fixed :[#issue-32](https://github.com/WebEngage/webengage-flutter/issues/32), [#issue-24](https://github.com/WebEngage/webengage-flutter/issues/24)
 
