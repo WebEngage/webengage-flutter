@@ -211,9 +211,26 @@ static WebEngagePlugin *_shared = nil;
 - (void) setUserAttribute:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString* attributeName = call.arguments[ATTRIBUTE_NAME];
     id value = call.arguments[ATTRIBUTES];
+    [self setUserAttribute:attributeName withValue:value];
+}
+
+- (void) setUserAttributes:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    id _dictionary = call.arguments[ATTRIBUTES];
+    if ([_dictionary isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *dictionary = (NSDictionary *)_dictionary;
+
+        for (NSString *attributeName in dictionary) {
+            id value = [dictionary objectForKey:attributeName];
+            [self setUserAttribute:attributeName withValue:value];
+        }
+    }
+
+}
+
+- (void)setUserAttribute:(NSString *)attributeName withValue:(id)value {
     if ([value isKindOfClass:[NSString class]]) {
         if ([value length] == DATE_FORMAT_LENGTH) {
-            NSDate * date = [self getDate:value];
+            NSDate *date = [self getDate:value];
             if (date != nil) {
                 [[WebEngage sharedInstance].user setAttribute:attributeName withDateValue:date];
             } else {
@@ -222,25 +239,13 @@ static WebEngagePlugin *_shared = nil;
         } else {
             [[WebEngage sharedInstance].user setAttribute:attributeName withStringValue:value];
         }
-    }
-    else if ([value isKindOfClass:[NSNumber class]]) {
+    } else if ([value isKindOfClass:[NSNumber class]]) {
         [[WebEngage sharedInstance].user setAttribute:attributeName withValue:value];
-    }
-    else if ([value isKindOfClass:[NSArray class]]) {
+    } else if ([value isKindOfClass:[NSArray class]]) {
         [[WebEngage sharedInstance].user setAttribute:attributeName withArrayValue:value];
-    }
-    else if ([value isKindOfClass:[NSDate class]]) {
+    } else if ([value isKindOfClass:[NSDate class]]) {
         [[WebEngage sharedInstance].user setAttribute:attributeName withDateValue:value];
     }
-}
-
-- (void) setUserAttributes:(FlutterMethodCall *)call withResult:(FlutterResult)result {
-    NSString* attributeName = call.arguments[ATTRIBUTE_NAME];
-    id value = call.arguments[ATTRIBUTES];
-    if ([value isKindOfClass:[NSDictionary class]]) {
-        [[WebEngage sharedInstance].user setAttribute:attributeName withDictionaryValue:value];
-    }
-
 }
 
 - (NSDate *)getDate:(NSString *)strValue {
