@@ -8,16 +8,6 @@ import 'package:random_string/random_string.dart';
 import 'dart:math' show Random;
 import 'package:intl/intl.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   late WebEngagePlugin _webEngagePlugin;
@@ -70,6 +60,7 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+    _webEngagePlugin.tokenInvalidatedCallback(_onTokenInvalidated);
     subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
     subscribeToAnonymousIDCallback();
@@ -77,6 +68,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   var data = "";
+
+  void _onTokenInvalidated(Map<String, dynamic>? message) {
+    print("tokenInvalidated callback received " + message.toString());
+    // Reset with new Security Token in the callback
+    WebEngagePlugin.setSecureToken("USER_NAME", "REPLACE_JWT_TOKEN_HERE");
+  }
 
   void _listenToAnonymousID() {
     _webEngagePlugin.anonymousActionStream.listen((event) {
@@ -117,6 +114,59 @@ class _MyAppState extends State<MyApp> {
 
   var anonymousId = "null";
 
+  void _openLoginModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String username = "";
+        String secureToken = "";
+
+        return AlertDialog(
+          title: Text("Login"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                onChanged: (value) {
+                  username = value;
+                },
+                decoration: InputDecoration(labelText: "Username"),
+              ),
+              TextField(
+                onChanged: (value) {
+                  secureToken = value;
+                },
+                decoration: InputDecoration(labelText: "Token"),
+                obscureText: true,
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                if (username.isEmpty) {
+                  print("Please Enter valid UserName");
+                } else {
+                  if (secureToken.isEmpty) {
+                    // login
+                    print("WebEngage: Login");
+                    WebEngagePlugin.userLogin(username);
+                  } else {
+                    // loginWithsecureToken
+                    print("WebEngage: Login with secureToken");
+                    WebEngagePlugin.userLogin(username, secureToken);
+                  }
+                }
+                Navigator.of(context).pop();
+              },
+              child: Text("Login"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     data = data;
@@ -140,9 +190,18 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Login "),
                 onTap: () {
-                  String s = "test" + randomString(6);
-                  WebEngagePlugin.userLogin(s);
-                  showToast("Login-" + s);
+                  String userName = "REPLACE_YOUR_USERNAME";
+                  WebEngagePlugin.userLogin(userName);
+                  showToast("Login-" + userName);
+                },
+              ),
+              new ListTile(title: Text("Login Modal"), onTap: _openLoginModal),
+              new ListTile(
+                title: Text("Login With secureToken "),
+                onTap: () {
+                  String userName = "REPLACE_YOUR_USERNAME";
+                  String secureToken = "REPLACE_YOUR_TOKEN_HERE";
+                  WebEngagePlugin.userLogin(userName, secureToken);
                 },
               ),
               new ListTile(
@@ -428,4 +487,14 @@ class _MyAppState extends State<MyApp> {
               ));
         });
   }
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MaterialApp(home: MyApp()));
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
 }
