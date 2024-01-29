@@ -37,6 +37,9 @@ public interface Constants {
         String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
         String METHOD_NAME_ON_ANONYMOUS_ID_CHANGED = "onAnonymousIdChanged";
         String METHOD_NAME_START_GAID_TRACKING = "startGAIDTracking";
+        String METHOD_NAME_ON_TOKEN_INVALIDATED = "onTokenInvalidated";
+        String METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN = "userLoginWithSecureToken";
+        String METHOD_NAME_SET_SECURE_TOKEN = "setSecureToken";
      }
 
     interface PARAM {
@@ -66,6 +69,8 @@ public interface Constants {
         String VIBER = "viber";
         String SELECTED_ACTION_ID = "selectedActionId";
         String ANONYMOUS_USER_ID = "anonymousUserID";
+        String USER_ID = "userIdentifier";
+        String SECURE_TOKEN = "secureToken";
     }
 
 }

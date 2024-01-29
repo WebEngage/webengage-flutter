@@ -70,6 +70,13 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 userLogin(call, result);
                 break;
 
+            case METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN:
+                userLoginWithSecureToken(call, result);
+               break;
+
+            case METHOD_NAME_SET_SECURE_TOKEN:
+                setSecureToken(call, result);
+                break;
 
             case METHOD_NAME_SET_USER_LOGOUT:
                 userLogout();
@@ -275,6 +282,26 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     private void userLogin(MethodCall call, Result result) {
         String userId = call.arguments();
         WebEngage.get().user().login(userId);
+    }
+
+    private void userLoginWithSecureToken(MethodCall call, Result result) {
+        Map<String, Object> arguments = call.arguments();
+        String userId = (String) arguments.get(USER_ID);
+        String secureToken = (String) arguments.get(SECURE_TOKEN);
+        if (secureToken != null && !secureToken.isEmpty()) {
+            WebEngage.get().user().login(userId, secureToken);
+        } else {
+            WebEngage.get().user().login(userId);
+        }
+    }
+
+    public void setSecureToken(MethodCall call, Result result) {
+        Map<String, Object> arguments = call.arguments();
+        String userId = (String) arguments.get(USER_ID);
+        String secureToken = (String) arguments.get(SECURE_TOKEN);
+        if(!userId.isEmpty() && userId != null && !secureToken.isEmpty() && secureToken != null) {
+            WebEngage.get().setSecurityToken(userId, secureToken);
+        }
     }
 
     private void setDevicePushOptIn(MethodCall call, Result result) {

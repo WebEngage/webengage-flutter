@@ -30,6 +30,7 @@ class WebEngagePlugin {
   MessageHandler? _onInAppShown;
   MessageHandler? _onInAppDismiss;
   MessageHandler? _onInAppPrepared;
+  MessageHandler? _onTokenInvalidated;
 
   //Push Stream
   final StreamController<PushPayload> _pushClickStream =
@@ -94,18 +95,34 @@ class WebEngagePlugin {
   }
 
   void setUpInAppCallbacks(
-      MessageHandlerInAppClick onInAppClick,
-      MessageHandler onInAppShown,
-      MessageHandler onInAppDismiss,
-      MessageHandler onInAppPrepared) {
+    MessageHandlerInAppClick onInAppClick,
+    MessageHandler onInAppShown,
+    MessageHandler onInAppDismiss,
+    MessageHandler onInAppPrepared,
+  ) {
     _onInAppClick = onInAppClick;
     _onInAppShown = onInAppShown;
     _onInAppDismiss = onInAppDismiss;
     _onInAppPrepared = onInAppPrepared;
   }
 
-  static Future<void> userLogin(String userId) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN, userId);
+  void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
+    _onTokenInvalidated = onTokenInvalidated;
+  }
+
+  static Future<void> userLogin(String userId, [String? secureToken]) async {
+    if (secureToken != null) {
+      return await _channel.invokeMethod(
+          METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN,
+          {USERID: userId, SECURE_TOKEN: secureToken});
+    } else {
+      return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN, userId);
+    }
+  }
+
+  static Future<void> setSecureToken(String userId, String secureToken) async {
+    return await _channel.invokeMethod(METHOD_NAME_SET_SECURE_TOKEN,
+        {USERID: userId, SECURE_TOKEN: secureToken});
   }
 
   static Future<void> userLogout() async {
@@ -275,6 +292,18 @@ class WebEngagePlugin {
         _onInAppPrepared!(newPayload);
       } else {
         _onInAppPrepared!(call.arguments.cast<String, dynamic>());
+      }
+    }
+
+    if (call.method == callbackOnTokenInvalidated &&
+        _onTokenInvalidated != null) {
+      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+      if (Platform.isAndroid) {
+        Map<String, dynamic>? newPayload =
+            message?[PAYLOAD].cast<String, dynamic>();
+        _onTokenInvalidated!(newPayload);
+      } else {
+        _onTokenInvalidated!(call.arguments.cast<String, dynamic>());
       }
     }
 

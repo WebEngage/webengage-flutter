@@ -13,6 +13,8 @@
 #define METHOD_NAME_INITIALISE  @"initialise"
 #define METHOD_NAME_GET_PLATFORM_VERSION @"getPlatformVersion"
 #define METHOD_NAME_SET_USER_LOGIN  @"userLogin"
+#define METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN  @"userLoginWithSecureToken"
+#define METHOD_NAME_SET_SECURE_TOKEN  @"setSecureToken"
 #define METHOD_NAME_SET_USER_LOGOUT  @"userLogout"
 #define METHOD_NAME_SET_USER_FIRST_NAME  @"setUserFirstName"
 #define METHOD_NAME_SET_USER_LAST_NAME  @"setUserLastName"
@@ -39,6 +41,7 @@
 #define PARAM_PLATFORM @"platform"
 #define PARAM_PAYLOAD @"payload"
 #define PARAM_PLATFORM_VALUE @"iOS"
+#define METHOD_NAME_ON_TOKEN_INVALIDATED @"onTokenInvalidated"
 
 #define CHANNEL @"channel"
 #define OPTIN @"optIn"
@@ -62,5 +65,8 @@
 #define REASON @"reason"
 
 #define METHOD_TRACK_DEEPLINK_URL@"onTrackDeeplinkURL"
+
+#define USERID @"userIdentifier"
+#define JWTTOKEN @"token"
 
 #endif /* WebEngageConstants_h */

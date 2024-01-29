@@ -13,10 +13,6 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-
-
-
-
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -62,8 +58,13 @@ class _MyAppState extends State<MyApp> {
             message.toString());
   }
 
-
-
+  void _onTokenInvalidated(Map<String, dynamic>? message) {
+    print(
+        "This is a tokenInvalidated callback from native to flutter. Payload " +
+            message.toString());
+    WebEngagePlugin.setSecureToken(
+        "REPLACE_USER_NAME", "REPLACE_YOUR_SECURE_TOKEN");
+  }
 
   @override
   void initState() {
@@ -77,19 +78,20 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+    _webEngagePlugin.tokenInvalidatedCallback(_onTokenInvalidated);
     subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
     subscribeToAnonymousIDCallback();
     _listenToAnonymousID();
   }
+
   var data = "";
 
-  void _listenToAnonymousID(){
+  void _listenToAnonymousID() {
     _webEngagePlugin.anonymousActionStream.listen((event) {
-      setState((){
+      setState(() {
         data = "${event}";
       });
-
     });
   }
 
@@ -110,14 +112,13 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _platformVersion = platformVersion!;
-
     });
 
     if (await Permission.notification.request().isGranted) {
       // Either the permission was already granted before or the user just granted it.
       print("notification Permission is granted");
       WebEngagePlugin.setUserDevicePushOptIn(true);
-    }else{
+    } else {
       print("notification Permission is denied.");
       WebEngagePlugin.setUserDevicePushOptIn(false);
     }
@@ -148,8 +149,9 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Login "),
                 onTap: () {
-                  String s = "test" + randomString(6);
-                  WebEngagePlugin.userLogin(s);
+                  String s = "REPLACE_USERNAME";
+                  String jwtToken = "REPLACE_SECURE_TOKEN";
+                  WebEngagePlugin.userLogin(s, jwtToken);
                   showToast("Login-" + s);
                 },
               ),
@@ -268,8 +270,27 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Track event with attributes"),
                 onTap: () {
-                  WebEngagePlugin.trackEvent(
-                      'Order Placed', {'Amount': 808.48});
+                  WebEngagePlugin.trackEvent("Cart Updated", {
+                    "Product Details": [
+                      {
+                        "Product Name":
+                            "Xiaomi Commuter Backpack 15.6-inch Laptop Bag Anti-theft Backpack For Business/Travel Backpack - Light Grey",
+                        "Discount": 5,
+                        "Currency": "AED",
+                        "Product ID": "STRUS-1897338-ZJB4196GL-LIGHT G",
+                        "Price Without Discount": 78,
+                        "Quantity": 2,
+                        "Price With Discount": 73,
+                        "Image": [
+                          "https://storeus-xcart.s3.me-central-1.amazonaws.com/images/product/1685024207646f6dc5d771e.jpg"
+                        ]
+                      }
+                    ],
+                    "Total Amount": 156,
+                    "Quantity": 2,
+                    "No. Of Products": 1,
+                    "Region": "AE"
+                  });
                   showToast("Order Placed tracked Amount: 808.48");
                 },
               ),
@@ -336,7 +357,7 @@ class _MyAppState extends State<MyApp> {
                 onTap: () {
                   final DateTime now = DateTime.now();
                   final DateFormat formatter =
-                  DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                      DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                   WebEngagePlugin.trackEvent(
                       'Register', {'Registered On': formatter.format(now)});
                   showToast("Track ${formatter.format(now)}");
@@ -380,7 +401,7 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.pushStream.listen((event) {
       String? deepLink = event.deepLink;
       Map<String, dynamic> messagePayload = event.payload!;
-      showDialogWithMessage("Push click callback: " + event.toString() );
+      showDialogWithMessage("Push click callback: " + event.toString());
     });
 
     //Push action click listener
@@ -398,7 +419,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void subscribeToAnonymousIDCallback(){
+  void subscribeToAnonymousIDCallback() {
     // _webEngagePlugin.anonymousActionStream.listen((event) {
     //   //  var message = event as Map<String,dynamic>;
     //   this.setState(() {
