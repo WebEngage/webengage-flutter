@@ -1,5 +1,10 @@
 ## CHANGE LOG
 
+### Version 1.4.0 (Jan 29, 2024)
+
+- Added SDK version tracking.
+- Implemented SDK security measures.
+
 ### Version 1.3.1 (Jan 12, 2024)
 
 - Resolved Android Gradle compatibility issue
