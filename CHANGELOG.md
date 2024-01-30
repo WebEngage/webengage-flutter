@@ -1,5 +1,9 @@
 ## CHANGE LOG
 
+### Version 1.4.1 (Jan 30, 2024)
+
+- Implemented SDK security measures.
+
 ### Version 1.4.0 (Jan 29, 2024)
 
 - Added SDK version tracking.
