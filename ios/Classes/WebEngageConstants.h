@@ -67,6 +67,6 @@
 #define METHOD_TRACK_DEEPLINK_URL@"onTrackDeeplinkURL"
 
 #define USERID @"userIdentifier"
-#define JWTTOKEN @"token"
+#define JWTTOKEN @"secureToken"
 
 #endif /* WebEngageConstants_h */
