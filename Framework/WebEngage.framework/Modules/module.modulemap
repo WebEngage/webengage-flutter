@@ -1,0 +1,11 @@
+framework module WebEngage {
+  umbrella header "WebEngage.h"
+
+  export *
+  module * { export * }
+}
+
+module WebEngage.Swift {
+  header "WebEngage-Swift.h"
+  requires objc
+}

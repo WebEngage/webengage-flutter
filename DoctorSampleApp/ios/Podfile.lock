@@ -1,0 +1,68 @@
+PODS:
+  - Flutter (1.0.0)
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - Toast (4.0.0)
+  - we_notificationinbox_flutter (1.0.0):
+    - Flutter
+    - WENotificationInbox (>= 1.1.0)
+  - we_personalization_flutter (1.0.3):
+    - Flutter
+    - WEPersonalization
+  - WebEngage (6.6.1)
+  - webengage_flutter (1.4.1):
+    - Flutter
+    - WebEngage (>= 6.6.1)
+  - WENotificationInbox (1.1.0):
+    - WebEngage (>= 6.4)
+  - WEPersonalization (1.2.5):
+    - WebEngage (>= 6.3)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - we_notificationinbox_flutter (from `.symlinks/plugins/we_notificationinbox_flutter/ios`)
+  - we_personalization_flutter (from `.symlinks/plugins/we_personalization_flutter/ios`)
+  - webengage_flutter (from `.symlinks/plugins/webengage_flutter/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Toast
+    - WebEngage
+    - WENotificationInbox
+    - WEPersonalization
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+  we_notificationinbox_flutter:
+    :path: ".symlinks/plugins/we_notificationinbox_flutter/ios"
+  we_personalization_flutter:
+    :path: ".symlinks/plugins/we_personalization_flutter/ios"
+  webengage_flutter:
+    :path: ".symlinks/plugins/webengage_flutter/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  we_notificationinbox_flutter: 42e19319ee7708786f73d3ac77764e430dee3adf
+  we_personalization_flutter: 103638a41cfbe20af5a2abb1fbd905dd9d8d893c
+  WebEngage: 440e5cd8e5cb5f4d573ef4fd36d74c299e99cae5
+  webengage_flutter: 9d0a5a4b1f24a04a7129a3f779585f10e1a7cf58
+  WENotificationInbox: b4eba365d903fe8bafa61b3fd1a009b5c8f060b5
+  WEPersonalization: 13997021d4a3b253041614f9e5615e30689c4eb5
+
+PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+
+COCOAPODS: 1.11.3

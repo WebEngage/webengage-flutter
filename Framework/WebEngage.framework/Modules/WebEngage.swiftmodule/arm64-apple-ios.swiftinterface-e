@@ -1,0 +1,49 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.8 (swiftlang-5.8.0.124.2 clang-1403.0.22.11.100)
+// swift-module-flags: -target arm64-apple-ios10.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name WebEngage
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import Foundation
+import Swift
+import UIKit
+@_exported import WebEngage
+import _Concurrency
+import _StringProcessing
+import os.log
+import os
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class WEGNetworkManager : ObjectiveC.NSObject {
+  @objc public static let shared: WebEngage.WEGNetworkManager
+  #if compiler(>=5.3) && $Sendable
+  @objc public func performUploadDataTask(to urlRequest: Foundation.URLRequest, cuid: Foundation.NSString?, body: Foundation.Data, then handler: @escaping @Sendable (Foundation.Data?, Foundation.URLResponse?, (any Swift.Error)?) -> Swift.Void) -> Foundation.URLSessionUploadTask
+  #endif
+  #if compiler(>=5.3) && $Sendable
+  @objc public func performDataTask(to urlRequest: Foundation.URLRequest, then handler: @escaping @Sendable (Foundation.Data?, Foundation.URLResponse?, (any Swift.Error)?) -> Swift.Void) -> Foundation.URLSessionDataTask
+  #endif
+  @objc public func getModifiedCommonRequest(request: Foundation.URLRequest, cuid: Swift.String?) -> Foundation.URLRequest
+  @objc public func getCuid() -> Swift.String?
+  @objc public func getLuid() -> Swift.String?
+  @objc public func getModifiedCommonRequestMutable(request: Foundation.NSMutableURLRequest) -> Foundation.NSMutableURLRequest
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class WEGUtils : ObjectiveC.NSObject {
+  @objc public class func deleteWebEngageDirectory()
+  @objc public class func createDirectory(at path: Swift.String)
+  @objc public class func createFile(at path: Swift.String, from oldPath: Swift.String)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class WEGInAppUtils : ObjectiveC.NSObject {
+  @objc public class func shouldPresentInapp(for data: [Swift.AnyHashable : Any]) -> Swift.Bool
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class WEGJWTManager : ObjectiveC.NSObject {
+  @objc public static let shared: WebEngage.WEGJWTManager
+  @objc public var tokenInvalidatedCallback: () -> Swift.Void
+  @objc public var JWTToken: Swift.String? {
+    @objc get
+    @objc set(newToken)
+  }
+  @objc public func storeJWTTokenInLocal(token: Swift.String?, cuid: Swift.String)
+  @objc public func removeJWTToken(cuid: Swift.String)
+  @objc deinit
+}
