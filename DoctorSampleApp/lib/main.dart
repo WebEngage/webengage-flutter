@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dev_sample_app/Screens/HomeScreen.dart';
 import 'package:dev_sample_app/WEUtils/Utils.dart';
 import 'package:dev_sample_app/WEUtils/WEConstants.dart';
@@ -12,6 +14,7 @@ import 'Screens/InLine/ListScreen.dart';
 import 'WEUtils/Logger.dart';
 import 'WEUtils/ScreenNavigator.dart';
 import 'observer/RouteObserver.dart';
+
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
@@ -40,6 +43,9 @@ class _MyHomePageState extends State<MyHomePage> with WECampaignCallback {
     WEPersonalization().init(enableLogs: true);
     WEPersonalization().registerWECampaignCallback(this);
     initSharedPref();
+    if (Platform.isAndroid) {
+      WebEngagePlugin.setUserDevicePushOptIn(true);
+    }
   }
 
   void initSharedPref() {

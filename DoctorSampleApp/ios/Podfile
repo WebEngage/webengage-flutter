@@ -30,9 +30,23 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
-
+  pod 'FirebaseAnalytics'
+  pod 'FirebaseCore'
+  pod 'FirebaseCrashlytics'
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
+
+
+target 'NotificationService' do
+  use_frameworks!
+  pod 'WebEngageBannerPush'
+end
+
+target 'NotificationViewController' do
+  use_frameworks!
+  pod 'WebEngageAppEx/ContentExtension'
+end
+
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
