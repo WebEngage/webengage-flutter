@@ -14,6 +14,12 @@ import com.webengage.sdk.android.WebEngageConfig;
 import com.webengage.sdk.android.callbacks.InAppNotificationCallbacks;
 
 public class WebengageInitializer {
+
+    /**
+     *  This method initializes WebEngage integration within an Android application,
+     *  registering callbacks for push notifications, in-app notifications,
+     *  activity lifecycle, and state change events with corresponding Flutter callback handlers.
+     */
     public static void initialize(Application application, WebEngageConfig config) {
         WebEngage.registerPushNotificationCallback(new FlutterPushMessageCallback());
         WebEngage.registerInAppNotificationCallback(new FlutterInAppCallbacks());

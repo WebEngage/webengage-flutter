@@ -8,6 +8,15 @@ package com.webengage.webengage_plugin;
 
 import java.util.Map;
 
+/**
+ * Interface for a callback listener used to send or queue callbacks.
+ */
 public interface WESendOrQueueCallbackListener {
+    /**
+     * Sends or queues a callback with the specified method name and message.
+     *
+     * @param methodName The name of the method associated with the callback.
+     * @param message    The message to be sent along with the callback.
+     */
     void sendOrQueueCallback(String methodName, Map<String, Object> message);
 }
