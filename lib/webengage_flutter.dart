@@ -1,5 +1,11 @@
+// Copyright 2020 WebEngage
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License, which can be
+// found in the LICENSE file.
+
+
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:webengage_flutter/PushPayload.dart';
@@ -25,7 +31,7 @@ class WebEngagePlugin {
   }
 
   MessageHandlerPushClick? _onPushClick;
-  late MessageHandlerPushClick _onPushActionClick;
+  MessageHandlerPushClick? _onPushActionClick;
   MessageHandlerInAppClick? _onInAppClick;
   MessageHandler? _onInAppShown;
   MessageHandler? _onInAppDismiss;
@@ -229,8 +235,8 @@ class WebEngagePlugin {
         } else if (call.method == callbackOnPushActionClick) {
           _pushActionClickStream.sink.add(pushPayload);
           //TODO Deprecated will be removed in future builds
-          if (null != callbackOnPushActionClick) {
-            _onPushActionClick(newPayload, deepLink);
+          if (null != _onPushActionClick) {
+            _onPushActionClick!(newPayload, deepLink);
           }
         }
       } else {
