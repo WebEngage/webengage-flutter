@@ -1,5 +1,9 @@
 ## CHANGE LOG
 
+### Version 1.4.2 (Apr 17, 2024)
+
+- The license has been updated and deprecated code has been removed.
+
 ### Version 1.4.1 (Jan 30, 2024)
 
 - Implemented SDK security measures.
