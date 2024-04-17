@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License, which can be
 // found in the LICENSE file.
 
-/// Constant representing the method name, callback name for initializing the WebEngage plugin.
+// Constant representing the method name, callback name for initializing the WebEngage plugin.
 
 const String methodInitialise = "initialise";
 
