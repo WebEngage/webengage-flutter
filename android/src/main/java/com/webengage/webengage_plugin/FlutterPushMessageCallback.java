@@ -30,6 +30,13 @@ public class FlutterPushMessageCallback implements PushNotificationCallbacks {
 
     }
 
+    /**
+     * Called when a push notification is clicked.
+     *
+     * @param context              The context associated with the callback.
+     * @param pushNotificationData The data of the push notification that was clicked.
+     * @return true if the click event is consumed, false otherwise.
+     */
     @Override
     public boolean onPushNotificationClicked(Context context, PushNotificationData pushNotificationData) {
         String uri = pushNotificationData.getPrimeCallToAction().getAction();
@@ -45,6 +52,14 @@ public class FlutterPushMessageCallback implements PushNotificationCallbacks {
 
     }
 
+    /**
+     * Called when an action associated with a push notification is clicked.
+     *
+     * @param context              The context associated with the callback.
+     * @param pushNotificationData The data of the push notification containing the action.
+     * @param actionId             The ID of the action that was clicked.
+     * @return true if the action click event is consumed, false otherwise.
+     */
     @Override
     public boolean onPushNotificationActionClicked(Context context, PushNotificationData pushNotificationData, String s) {
         String uri = pushNotificationData.getCallToActionById(s).getAction();

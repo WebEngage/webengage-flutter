@@ -4,12 +4,13 @@
 // you may not use this file except in compliance with the License, which can be
 // found in the LICENSE file.
 
-
+/// Constant representing the method name, callback name for initializing the WebEngage plugin.
 
 const String methodInitialise = "initialise";
 
 const String METHOD_NAME_SET_USER_LOGIN = "userLogin";
-const String METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN = "userLoginWithSecureToken";
+const String METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN =
+    "userLoginWithSecureToken";
 const String METHOD_NAME_SET_SECURE_TOKEN = "setSecureToken";
 const String METHOD_NAME_SET_USER_LOGOUT = "userLogout";
 const String METHOD_NAME_SET_USER_FIRST_NAME = "setUserFirstName";

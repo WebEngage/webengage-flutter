@@ -16,9 +16,17 @@ import com.webengage.sdk.android.callbacks.StateChangeCallbacks;
 import java.util.HashMap;
 import java.util.Map;
 
-//weflutter
+/**
+ * Subclass of StateChangeCallbacks that provides callbacks for Flutter state changes.
+ */
 public class WEFlutterStateChangedCallbacks extends StateChangeCallbacks {
 
+    /**
+     * Called when the anonymous user ID changes. Before first app open and after logout.
+     *
+     * @param context         The context associated with the callback.
+     * @param anonymousUserID The new anonymous user ID.
+     */
     @Override
     public void onAnonymousIdChanged(Context context, String anonymousUserID) {
         super.onAnonymousIdChanged(context, anonymousUserID);
