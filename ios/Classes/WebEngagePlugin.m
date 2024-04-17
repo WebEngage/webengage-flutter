@@ -1,9 +1,15 @@
+// Copyright 2020 WebEngage
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License, which can be
+// found in the LICENSE file.
+
 #import "WebEngagePlugin.h"
 #import <WebEngage/WebEngage.h>
 #import "WebEngageConstants.h"
 
 static FlutterMethodChannel* channel = nil;
-NSString * const WEGPluginVersion = @"1.4.1";
+NSString * const WEGPluginVersion = @"1.4.2";
 NSString * const DATE_FORMAT = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 int const DATE_FORMAT_LENGTH = 24;
 
