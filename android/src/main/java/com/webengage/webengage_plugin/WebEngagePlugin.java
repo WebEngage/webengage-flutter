@@ -462,7 +462,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     private void invokeMethodOnUiThread(String methodName, PushNotificationData pushNotificationData) {
         final MethodChannel channel = this.channel;
-        runOnMainThread(() -> channel.invokeMethod(methodName, bundleToMap(pushNotificationData.getCustomData())));
+        runOnMainThread(() -> channel.invokeMethod(methodName, Utils.bundleToMap(pushNotificationData.getCustomData())));
     }
 
     @Override
@@ -495,16 +495,6 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 }
             }
         });
-    }
-
-    Map<String, Object> bundleToMap(Bundle extras) {
-        Map<String, Object> map = new HashMap<>();
-
-        Set<String> ks = extras.keySet();
-        for (String key : ks) {
-            map.put(key, extras.get(key));
-        }
-        return map;
     }
 
     private void runOnMainThread(final Runnable runnable) {

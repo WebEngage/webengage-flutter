@@ -22,7 +22,7 @@ public class Utils {
         Map<String, Object> map = new HashMap<>();
         Set<String> keys = bundle.keySet();
         for (String key : keys) {
-            Object value = bundle.get(key);
+            Object value = bundle.getString(key);
             if (value != null) {
                 map.put(key, value);
             }
