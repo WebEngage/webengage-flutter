@@ -13,6 +13,7 @@ import 'Constants.dart';
 import 'dart:io' show Platform;
 
 import 'src/typedefs.dart';
+export 'package:webengage_flutter/src/utils.dart';
 
 /// A Flutter plugin for integrating WebEngage SDK into your Flutter applications.
 class WebEngagePlugin {
