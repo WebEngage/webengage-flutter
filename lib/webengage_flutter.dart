@@ -12,9 +12,7 @@ import 'package:webengage_flutter/PushPayload.dart';
 import 'Constants.dart';
 import 'dart:io' show Platform;
 
-typedef void MessageHandler(Map<String, dynamic>? message);
-typedef void MessageHandlerInAppClick(Map<String, dynamic>? message, String? s);
-typedef void MessageHandlerPushClick(Map<String, dynamic>? message, String? s);
+import 'src/typedefs.dart';
 
 /// A Flutter plugin for integrating WebEngage SDK into your Flutter applications.
 class WebEngagePlugin {
@@ -33,13 +31,14 @@ class WebEngagePlugin {
     _channel.invokeMethod(methodInitialise);
   }
 
-  MessageHandlerPushClick? _onPushClick;
-  MessageHandlerPushClick? _onPushActionClick;
-  MessageHandlerInAppClick? _onInAppClick;
-  MessageHandler? _onInAppShown;
-  MessageHandler? _onInAppDismiss;
-  MessageHandler? _onInAppPrepared;
-  MessageHandler? _onTokenInvalidated;
+  WEMessageHandlerPushClick? _onPushClick;
+  WEMessageHandlerPushClick? _onPushActionClick;
+  WEMessageHandlerInAppClick? _onInAppClick;
+  WEMessageHandler? _onInAppShown;
+  WEMessageHandler? _onInAppDismiss;
+  WEMessageHandler? _onInAppPrepared;
+  WEMessageHandler? _onTokenInvalidated;
+  WEPushNotificationClickedHandler? _webEngagePushNotificationClickedHandler;
 
   //Push Stream
   final StreamController<PushPayload> _pushClickStream =
@@ -95,6 +94,11 @@ class WebEngagePlugin {
     return version;
   }
 
+  /// Define a method to handle Push Clicked payload
+  void setWebEngagePushNotificationClickedHandler(
+          WEPushNotificationClickedHandler handler) =>
+      _webEngagePushNotificationClickedHandler = handler;
+
   /// Deprecated: Use '_pushClickStream' and 'pushActionStream' instead. This method will be removed in future builds.
   ///
   /// Sets up callbacks for push notification click and action click events.
@@ -103,8 +107,8 @@ class WebEngagePlugin {
   /// [onPushActionClick]: Callback function for push notification action click events.
   @Deprecated(
       "Use '_pushClickStream' & 'pushActionStream' instead. This method will be removed in future build.")
-  void setUpPushCallbacks(MessageHandlerPushClick onPushClick,
-      MessageHandlerPushClick onPushActionClick) {
+  void setUpPushCallbacks(WEMessageHandlerPushClick onPushClick,
+      WEMessageHandlerPushClick onPushActionClick) {
     _onPushClick = onPushClick;
     _onPushActionClick = onPushActionClick;
   }
@@ -116,10 +120,10 @@ class WebEngagePlugin {
   /// [onInAppDismiss]: Callback function for in-app notification dismiss events.
   /// [onInAppPrepared]: Callback function for in-app notification prepared events.
   void setUpInAppCallbacks(
-    MessageHandlerInAppClick onInAppClick,
-    MessageHandler onInAppShown,
-    MessageHandler onInAppDismiss,
-    MessageHandler onInAppPrepared,
+    WEMessageHandlerInAppClick onInAppClick,
+    WEMessageHandler onInAppShown,
+    WEMessageHandler onInAppDismiss,
+    WEMessageHandler onInAppPrepared,
   ) {
     _onInAppClick = onInAppClick;
     _onInAppShown = onInAppShown;
@@ -130,7 +134,7 @@ class WebEngagePlugin {
   /// Sets up a callback for token invalidated events.
   ///
   /// [onTokenInvalidated]: Callback function for token invalidated from server.
-  void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
+  void tokenInvalidatedCallback(WEMessageHandler onTokenInvalidated) {
     _onTokenInvalidated = onTokenInvalidated;
   }
 
@@ -161,7 +165,6 @@ class WebEngagePlugin {
   static Future<void> userLogout() async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGOUT);
   }
-
 
   /// Sets the user's first name to [firstName].
   static Future<void> setUserFirstName(String firstName) async {
@@ -213,8 +216,11 @@ class WebEngagePlugin {
 
   /// Sets the user's device push notification opt-in status to [status]
   static Future<void> setUserDevicePushOptIn(bool status) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN, status);
+    if(Platform.isAndroid) {
+      return await _channel.invokeMethod(
+          METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN, status);
+    }
+    return;
   }
 
   static Future<void> setUserLocation(double lat, double lng) async {
@@ -250,6 +256,31 @@ class WebEngagePlugin {
   /// Platform call handler for handling method calls from the native side.
   Future _platformCallHandler(MethodCall call) async {
     print("_platformCallHandler call ${call.method} ${call.arguments}");
+
+    switch (call.method) {
+      case callbackOnPushClickOptimized:
+      case callbackOnPushActionClickOptimized:
+
+       try{
+         Map<String, dynamic>? payload = call.arguments.cast<String, dynamic>();
+
+         Map<String, dynamic>? message = payload?["payload"].cast<String, dynamic>();
+         print("received");
+
+         String? deepLink = message![DEEPLINK];
+         Map<String, dynamic>? customData = message["data"].cast<String, dynamic>();
+         PushPayload pushPayload = PushPayload();
+         pushPayload.deepLink = deepLink;
+         pushPayload.customData = customData;
+         print("received");
+         if (null != _webEngagePushNotificationClickedHandler)
+           _webEngagePushNotificationClickedHandler!(pushPayload);
+       }catch(e){
+         print("error $e");
+       }
+        break;
+    }
+
     if (call.method == callbackOnPushClick ||
         call.method == callbackOnPushActionClick) {
       Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();

@@ -38,6 +38,7 @@
 #define METHOD_NAME_SET_USER_MAP_ATTRIBUTE @"setUserMapAttribute"
 
 #define METHOD_NAME_ON_PUSH_CLICK @"onPushClick"
+#define METHOD_NAME_OPTIMIZED_ON_PUSH_CLICK @"onPushClickOptimized"
 #define METHOD_NAME_ON_INAPP_SHOWN @"onInAppShown"
 #define METHOD_NAME_ON_INAPP_CLICKED @"onInAppClick"
 #define METHOD_NAME_ON_INAPP_DISMISS @"onInAppDismiss"

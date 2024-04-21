@@ -40,6 +40,10 @@ const String METHOD_NAME_START_GAID_TRACKING = "startGAIDTracking";
 
 const String callbackOnPushClick = "onPushClick";
 const String callbackOnPushActionClick = "onPushActionClick";
+
+const String callbackOnPushClickOptimized = "onPushClickOptimized";
+const String callbackOnPushActionClickOptimized = "onPushActionClickOptimized";
+
 const String callbackOnInAppShown = "onInAppShown";
 const String callbackOnInAppClicked = "onInAppClick";
 const String callbackOnInAppDismissed = "onInAppDismiss";

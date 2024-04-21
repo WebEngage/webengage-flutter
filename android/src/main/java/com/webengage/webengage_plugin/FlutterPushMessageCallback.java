@@ -13,6 +13,7 @@ import com.webengage.sdk.android.actions.render.PushNotificationData;
 import com.webengage.sdk.android.callbacks.PushNotificationCallbacks;
 
 import java.util.Map;
+import java.util.HashMap;
 
 import static com.webengage.webengage_plugin.Constants.MethodName.*;
 
@@ -40,9 +41,15 @@ public class FlutterPushMessageCallback implements PushNotificationCallbacks {
     @Override
     public boolean onPushNotificationClicked(Context context, PushNotificationData pushNotificationData) {
         String uri = pushNotificationData.getPrimeCallToAction().getAction();
+        Map<String, Object> advanceMap = new HashMap<>();
         Map<String, Object> map = Utils.bundleToMap(pushNotificationData.getCustomData());
+        advanceMap.put("data",map);
+        advanceMap.put("deeplink",uri);
+
         map.put("uri", uri);
-        WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_PUSH_CLICK, map);
+       WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_PUSH_CLICK, map);
+
+        WECallbackRegistry.getInstance().passCallback(METHOD_NAME_OPTIMIZED_ON_PUSH_CLICK, advanceMap);
 
         return false;
     }
@@ -63,9 +70,15 @@ public class FlutterPushMessageCallback implements PushNotificationCallbacks {
     @Override
     public boolean onPushNotificationActionClicked(Context context, PushNotificationData pushNotificationData, String s) {
         String uri = pushNotificationData.getCallToActionById(s).getAction();
+        Map<String, Object> advanceMap = new HashMap<>();
         Map<String, Object> map = Utils.bundleToMap(pushNotificationData.getCustomData());
+        advanceMap.put("data",map);
+        advanceMap.put("deeplink",uri);
+
+
         map.put("uri", uri);
         WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_PUSH_ACTION_CLICK, map);
+        WECallbackRegistry.getInstance().passCallback(METHOD_NAME_OPTIMIZED_ON_PUSH_ACTION_CLICK, advanceMap);
         return false;
     }
 

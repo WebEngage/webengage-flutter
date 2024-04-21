@@ -36,6 +36,10 @@ public interface Constants {
         String METHOD_NAME_TRACK_SCREEN = "trackScreen";
         String METHOD_NAME_ON_PUSH_CLICK = "onPushClick";
         String METHOD_NAME_ON_PUSH_ACTION_CLICK = "onPushActionClick";
+
+        String METHOD_NAME_OPTIMIZED_ON_PUSH_CLICK = "onPushClickOptimized";
+        String METHOD_NAME_OPTIMIZED_ON_PUSH_ACTION_CLICK =  "onPushActionClickOptimized";
+
         String METHOD_NAME_ON_INAPP_SHOWN = "onInAppShown";
         String METHOD_NAME_ON_INAPP_CLICKED = "onInAppClick";
         String METHOD_NAME_ON_INAPP_DISMISS = "onInAppDismiss";

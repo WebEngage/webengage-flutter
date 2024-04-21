@@ -61,7 +61,10 @@ class _MyAppState extends State<MyApp> {
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
     _webEngagePlugin.tokenInvalidatedCallback(_onTokenInvalidated);
-    subscribeToPushCallbacks();
+    _webEngagePlugin.setWebEngagePushNotificationClickedHandler((pushPayload) {
+      print("New Payload ${pushPayload.toString()}");
+    });
+  //  subscribeToPushCallbacks();
     subscribeToTrackDeeplink();
     subscribeToAnonymousIDCallback();
     _listenToAnonymousID();
@@ -85,22 +88,12 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String? platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await WebEngagePlugin.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion!;
-    });
 
     if (await Permission.notification.request().isGranted) {
       // Either the permission was already granted before or the user just granted it.
@@ -199,8 +192,8 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Login With secureToken "),
                 onTap: () {
-                  String userName = "REPLACE_YOUR_USERNAME";
-                  String secureToken = "REPLACE_YOUR_TOKEN_HERE";
+                  String userName = "mk_2024";
+                  String secureToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdWlkIjoibWtfMjAyNCIsImlhdCI6MTc0NTYwNTY1M30.0MFhUXXbhaUvPABzp41OdSXgAyGEr5BfSlXE0-WKlzpYPajLHc7G6N1g4ZGHy10XIzHE1mlBIgiX3drm3vZdFPiK8dzZSCaTLdwjvt80OmOfkZ8EW7xHf7Ynrl5FxgmTc0QYBLfFyjredRbaNwL8wsfwKP2hC6X1TqK17_1lGgkWTbi-mO8eq9805gw1xzKjY-n0DQ_JKp_rBYw6f1N9sypyV_e_yhjCtGBnIpUbBkxHwhHzJ-HNgOljxvsQsNyjQwUt-rredfwFpiaI9Fd6JA0G69QNySXYX4VOcKL6eRm0iat9k1KnG78sWHBORceM1N_Qv2ANMtVy2B_AVql-NIj0vGhH6rDvpkKGD4miu2X5rwNKgAdjy-PuwCBHUbrw1srXF49pnWEHg0JCN8wJKzKmOZGYAdJMoKu3_zZT8WPxy4FYFttguO51db2Ue2ptjGE5_JCddtz3JptZ0rTZE0iM9c64w6qUmkI9mYxryVkqccX31B3526jeqxcBbz5x_8I82r27qlyDoHSaYS0TY62OfL6ldGvTFzkeszvn2SzZcJTSYBpY4MT0Lq3hgNPdwbDN684Z7cCVi3X6qaHUrITgRna1YeCWYxRuvhRru83QgavINW_eajlc342zbCRfAopjQk1a8jb7OEwoKG_iXiHC4XTjOVNx6OaeXI62CvI";
                   WebEngagePlugin.userLogin(userName, secureToken);
                 },
               ),
@@ -214,21 +207,21 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Set FirstName"),
                 onTap: () {
-                  WebEngagePlugin.setUserFirstName('Sourabh');
+                  WebEngagePlugin.setUserFirstName('Milind');
                   showToast("User FirstName- Sourabh");
                 },
               ),
               new ListTile(
                 title: Text("Set LastName"),
                 onTap: () {
-                  WebEngagePlugin.setUserLastName('Gupta');
+                  WebEngagePlugin.setUserLastName('Keni');
                   showToast("LastName Gupta");
                 },
               ),
               new ListTile(
                 title: Text("Set UserEmail"),
                 onTap: () {
-                  WebEngagePlugin.setUserEmail('ram@gmail.com');
+                  WebEngagePlugin.setUserEmail('milind.keni@webengage.com');
                   showToast("Email - ram@gmail.com");
                 },
               ),
