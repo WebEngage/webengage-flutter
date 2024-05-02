@@ -89,13 +89,16 @@ static WebEngagePlugin *_shared = nil;
         NSLog(@"METHOD_NAME_INITIALISE");
     } else {
         result(FlutterMethodNotImplemented);
+        return;
     }
+    result(nil);
 }
 
 - (void) initialisePlugin:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * userId = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser login:userId];
+    result(nil);
 }
 
 - (void) registerSDKSecurityCallback{
@@ -112,6 +115,7 @@ static WebEngagePlugin *_shared = nil;
     NSString * userId = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser login:userId];
+    result(nil);
 }
 
 - (void) userLoginWithSecureToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
@@ -119,6 +123,7 @@ static WebEngagePlugin *_shared = nil;
     NSString * jwtToken = call.arguments[JWTTOKEN];
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser login:userId jwtToken:jwtToken];
+    result(nil);
 }
 
 - (void) setSecureToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
@@ -126,65 +131,76 @@ static WebEngagePlugin *_shared = nil;
     NSString * jwtToken = call.arguments[JWTTOKEN];
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setSecureToken:userId jwtToken:jwtToken];
+    result(nil);
 }
 
 - (void) userLogout:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser logout];
+    result(nil);
 }
 
 - (void) setUserFirstName:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * firstName = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setFirstName:firstName];
+    result(nil);
 }
 
 - (void) setUserLastName:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * lastName = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setLastName:lastName];
+    result(nil);
 }
 
 - (void) setUserEmail:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * email = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setEmail:email];
+    result(nil);
 }
 
 - (void) setUserHashedEmail:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * hashedEmail = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setHashedEmail:hashedEmail];
+    result(nil);
 }
 
 - (void) setUserPhone:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * phone = call.arguments;
     WEGUser* weUser = [WebEngage sharedInstance].user;
     [weUser setPhone:phone];
+    result(nil);
 }
 
 - (void) setUserHashedPhone:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * hashedPhone = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setHashedPhone:hashedPhone];
+    result(nil);
 }
 
 - (void) setUserCompany:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * company = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setCompany:company];
+    result(nil);
 }
 
 - (void) setUserBirthDate:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * birthDate = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setBirthDateString:birthDate];
+    result(nil);
 }
 
 - (void) setUserGender:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString * gender = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setGender:gender];
+    result(nil);
 }
 
 - (void) setUserOptIn:(FlutterMethodCall *)call withResult:(FlutterResult)result {
@@ -209,7 +225,9 @@ static WebEngagePlugin *_shared = nil;
     } else {
         NSString * msg = [NSString stringWithFormat:@"Invalid channel: %@. Must be one of [push, sms, email, in_app, whatsapp].", ch];
         result([FlutterError errorWithCode:@"WebEngagePlugin" message:msg details:nil]);
+        return;
     }
+    result(nil);
 }
 
 - (void) setUserLocation:(FlutterMethodCall *)call withResult:(FlutterResult)result {
@@ -217,6 +235,7 @@ static WebEngagePlugin *_shared = nil;
     NSNumber * lng = call.arguments[LNG];
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setUserLocationWithLatitude:lat andLongitude:lng];
+    result(nil);
 }
 
 - (void) trackEvent:(FlutterMethodCall *)call withResult:(FlutterResult)result {
@@ -229,6 +248,7 @@ static WebEngagePlugin *_shared = nil;
     else{
         [weAnalytics trackEventWithName:eventName];
     }
+    result(nil);
 }
 
 - (void) trackScreen:(FlutterMethodCall *)call withResult:(FlutterResult)result {
@@ -241,12 +261,14 @@ static WebEngagePlugin *_shared = nil;
     else{
         [weAnalytics navigatingToScreenWithName:screenName];
     }
+    result(nil);
 }
 
 - (void) setUserAttribute:(FlutterMethodCall *)call withResult:(FlutterResult)result {
     NSString* attributeName = call.arguments[ATTRIBUTE_NAME];
     id value = call.arguments[ATTRIBUTES];
     [self setUserAttribute:attributeName withValue:value];
+    result(nil);
 }
 
 - (void) setUserAttributes:(FlutterMethodCall *)call withResult:(FlutterResult)result {
@@ -259,6 +281,7 @@ static WebEngagePlugin *_shared = nil;
             [self setUserAttribute:attributeName withValue:value];
         }
     }
+    result(nil);
 
 }
 

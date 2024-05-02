@@ -206,6 +206,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 result.notImplemented();
 
         }
+        result.success(null);
     }
 
     /**
@@ -215,6 +216,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     private void setUserMapAttribute(MethodCall call, Result result) {
         Map<String, ? extends Object> attributes = call.argument(ATTRIBUTES);
         WebEngage.get().user().setAttributes(attributes);
+        result.success(null);
     }
 
     /**
@@ -249,8 +251,11 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
             Boolean attributes = call.argument(ATTRIBUTES);
             WebEngage.get().user().setAttribute(attributeName, attributes);
         } else {
+            result.success(false);
             Log.d("webengage", "No other type supported");
+            return;
         }
+        result.success(null);
 
     }
 
@@ -258,36 +263,42 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         String attributeName = call.argument(ATTRIBUTE_NAME);
         List<? extends Object> attributes = call.argument(ATTRIBUTES);
         WebEngage.get().user().setAttribute(attributeName, attributes);
+        result.success(null);
     }
 
     private void setUserDateAttribute(MethodCall call, Result result) {
         String attributeName = call.argument(ATTRIBUTE_NAME);
         Date attributes = call.argument(ATTRIBUTES);
         WebEngage.get().user().setAttribute(attributeName, attributes);
+        result.success(null);
     }
 
     private void setUserBoolAttribute(MethodCall call, Result result) {
         String attributeName = call.argument(ATTRIBUTE_NAME);
         Boolean attributes = call.argument(ATTRIBUTES);
         WebEngage.get().user().setAttribute(attributeName, attributes);
+        result.success(null);
     }
 
     private void setUserDoubleAttribute(MethodCall call, Result result) {
         String attributeName = call.argument(ATTRIBUTE_NAME);
         double attributes = call.argument(ATTRIBUTES);
         WebEngage.get().user().setAttribute(attributeName, attributes);
+        result.success(null);
     }
 
     private void setUserIntAttribute(MethodCall call, Result result) {
         String attributeName = call.argument(ATTRIBUTE_NAME);
         int attributes = call.argument(ATTRIBUTES);
         WebEngage.get().user().setAttribute(attributeName, attributes);
+        result.success(null);
     }
 
     private void setUserStringAttribute(MethodCall call, Result result) {
         String attributeName = call.argument(ATTRIBUTE_NAME);
         String attributes = call.argument(ATTRIBUTES);
         WebEngage.get().user().setAttribute(attributeName, attributes);
+        result.success(null);
     }
 
     private void onInitialised() {
@@ -309,6 +320,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     private void userLogin(MethodCall call, Result result) {
         String userId = call.arguments();
         WebEngage.get().user().login(userId);
+        result.success(null);
     }
 
     /**
@@ -329,6 +341,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         } else {
             WebEngage.get().user().login(userId);
         }
+        result.success(null);
     }
 
     public void setSecureToken(MethodCall call, Result result) {
@@ -338,11 +351,13 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         if(!userId.isEmpty() && userId != null && !secureToken.isEmpty() && secureToken != null) {
             WebEngage.get().setSecurityToken(userId, secureToken);
         }
+        result.success(null);
     }
 
     private void setDevicePushOptIn(MethodCall call, Result result) {
         Boolean status = call.arguments();
         WebEngage.get().user().setDevicePushOptIn(status);
+        result.success(null);
     }
 
     private void userLogout() {
@@ -352,41 +367,49 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     private void setUserFirstName(MethodCall call, Result result) {
         String firstName = call.arguments();
         WebEngage.get().user().setFirstName(firstName);
+        result.success(null);
     }
 
     private void setUserLastName(MethodCall call, Result result) {
         String lastName = call.arguments();
         WebEngage.get().user().setLastName(lastName);
+        result.success(null);
     }
 
     private void setUserEmail(MethodCall call, Result result) {
         String email = call.arguments();
         WebEngage.get().user().setEmail(email);
+        result.success(null);
     }
 
     private void setUserHashedEmail(MethodCall call, Result result) {
         String hashedEmail = call.arguments();
         WebEngage.get().user().setHashedEmail(hashedEmail);
+        result.success(null);
     }
 
     private void setUserPhone(MethodCall call, Result result) {
         String phone = call.arguments();
         WebEngage.get().user().setPhoneNumber(phone);
+        result.success(null);
     }
 
     private void setUserHashedPhone(MethodCall call, Result result) {
         String hashedPhone = call.arguments();
         WebEngage.get().user().setHashedPhoneNumber(hashedPhone);
+        result.success(null);
     }
 
     private void setUserCompany(MethodCall call, Result result) {
         String company = call.arguments();
         WebEngage.get().user().setCompany(company);
+        result.success(null);
     }
 
     private void setUserBirthDate(MethodCall call, Result result) {
         String birthDate = call.arguments();
         WebEngage.get().user().setBirthDate(birthDate);
+        result.success(null);
     }
 
     private void setUserGender(MethodCall call, Result result) {
@@ -398,6 +421,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         } else if (OTHER.equalsIgnoreCase(gender)) {
             WebEngage.get().user().setGender(Gender.OTHER);
         }
+        result.success(null);
     }
 
     private void setUserOptIn(MethodCall call, Result result) {
@@ -418,19 +442,23 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         }
         else {
             result.error(TAG, "Invalid channel: " + channel + ". Must be one of [push, sms, email, in_app, whatsapp].", null);
+            return;
         }
+        result.success(null);
     }
 
     private void setUserLocation(MethodCall call, Result result) {
         double lat = call.argument(LAT);
         double lng = call.argument(LNG);
         WebEngage.get().user().setLocation(lat, lng);
+        result.success(null);
     }
 
     private void trackEvent(MethodCall call, Result result) {
         String eventName = call.argument(EVENT_NAME);
         Map<String, Object> attributes = call.argument(ATTRIBUTES);
         WebEngage.get().analytics().track(eventName, attributes);
+        result.success(null);
     }
 
     private void trackScreen(MethodCall call, Result result) {
@@ -440,6 +468,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
             WebEngage.get().analytics().screenNavigated(screenName);
         else
             WebEngage.get().analytics().screenNavigated(screenName, screenData);
+        result.success(null);
 
     }
 
