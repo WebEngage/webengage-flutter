@@ -20,6 +20,4 @@ void main() {
   test('getPlatformVersion', () async {
     expect(await WebEngagePlugin.platformVersion, '42');
   });
-
-
 }

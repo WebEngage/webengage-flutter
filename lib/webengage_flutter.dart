@@ -1,19 +1,30 @@
+// Copyright 2020 WebEngage
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License, which can be
+// found in the LICENSE file.
+
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/services.dart';
-import 'package:webengage_flutter/PushPayload.dart';
+import 'package:webengage_flutter/push_payload.dart';
 
-import 'Constants.dart';
+import 'constants.dart';
 import 'dart:io' show Platform;
 
-typedef void MessageHandler(Map<String, dynamic>? message);
-typedef void MessageHandlerInAppClick(Map<String, dynamic>? message, String? s);
-typedef void MessageHandlerPushClick(Map<String, dynamic>? message, String? s);
+typedef MessageHandler<T> = void Function(Map<String, T>? message);
+typedef MessageHandlerInAppClick<T> = void Function(
+    Map<String, T>? message, String? s);
+typedef MessageHandlerPushClick<T> = void Function(
+    Map<String, T>? message, String? s);
 
+/// A Flutter plugin for integrating WebEngage SDK into your Flutter applications.
 class WebEngagePlugin {
+  /// The method channel used for communication between Flutter and native code.
   static const MethodChannel _channel =
       const MethodChannel('webengage_flutter');
+
+  /// Singleton instance of [WebEngagePlugin].
   static final WebEngagePlugin _webengagePlugin =
       new WebEngagePlugin._internal();
 
@@ -25,7 +36,7 @@ class WebEngagePlugin {
   }
 
   MessageHandlerPushClick? _onPushClick;
-  late MessageHandlerPushClick _onPushActionClick;
+  MessageHandlerPushClick? _onPushActionClick;
   MessageHandlerInAppClick? _onInAppClick;
   MessageHandler? _onInAppShown;
   MessageHandler? _onInAppDismiss;
@@ -86,6 +97,12 @@ class WebEngagePlugin {
     return version;
   }
 
+  /// Deprecated: Use '_pushClickStream' and 'pushActionStream' instead. This method will be removed in future builds.
+  ///
+  /// Sets up callbacks for push notification click and action click events.
+  ///
+  /// [onPushClick]: Callback function for push notification click events.
+  /// [onPushActionClick]: Callback function for push notification action click events.
   @Deprecated(
       "Use '_pushClickStream' & 'pushActionStream' instead. This method will be removed in future build.")
   void setUpPushCallbacks(MessageHandlerPushClick onPushClick,
@@ -94,6 +111,12 @@ class WebEngagePlugin {
     _onPushActionClick = onPushActionClick;
   }
 
+  /// Sets up callbacks for in-app notification events.
+  ///
+  /// [onInAppClick]: Callback function for in-app notification click events.
+  /// [onInAppShown]: Callback function for in-app notification shown events.
+  /// [onInAppDismiss]: Callback function for in-app notification dismiss events.
+  /// [onInAppPrepared]: Callback function for in-app notification prepared events.
   void setUpInAppCallbacks(
     MessageHandlerInAppClick onInAppClick,
     MessageHandler onInAppShown,
@@ -106,10 +129,17 @@ class WebEngagePlugin {
     _onInAppPrepared = onInAppPrepared;
   }
 
+  /// Sets up a callback for token invalidated events.
+  ///
+  /// [onTokenInvalidated]: Callback function for token invalidated from server.
   void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
     _onTokenInvalidated = onTokenInvalidated;
   }
 
+  /// Initiates a user login action with an optional secure token.
+  ///
+  /// [userId]: The unique identifier for the user.
+  /// [secureToken]: The secure token for authentication, if applicable.
   static Future<void> userLogin(String userId, [String? secureToken]) async {
     if (secureToken != null) {
       return await _channel.invokeMethod(
@@ -120,20 +150,27 @@ class WebEngagePlugin {
     }
   }
 
+  /// Sets a secure token for the specified user.
+  ///
+  /// [userId]: The unique identifier for the user.
+  /// [secureToken]: The secure token for authentication.
   static Future<void> setSecureToken(String userId, String secureToken) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_SECURE_TOKEN,
         {USERID: userId, SECURE_TOKEN: secureToken});
   }
 
+  /// Initiates user logout.
   static Future<void> userLogout() async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGOUT);
   }
 
+  /// Sets the user's first name to [firstName].
   static Future<void> setUserFirstName(String firstName) async {
     return await _channel.invokeMethod(
         METHOD_NAME_SET_USER_FIRST_NAME, firstName);
   }
 
+  /// Sets the user's last name to [lastName].
   static Future<void> setUserLastName(String lastName) async {
     return await _channel.invokeMethod(
         METHOD_NAME_SET_USER_LAST_NAME, lastName);
@@ -161,53 +198,64 @@ class WebEngagePlugin {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_COMPANY, company);
   }
 
+  /// Sets the user's birth date to the specified [birthDate].
+  /// For more information, see the [Flutter Tracking Events documentation](https://docs.webengage.com/docs/flutter-tracking-events#tracking-custom-events--attributes).
   static Future<void> setUserBirthDate(String birthDate) async {
     return await _channel.invokeMethod(
         METHOD_NAME_SET_USER_BIRTHDATE, birthDate);
   }
 
+  /// Sets the user's gender to the specified [gender].
   static Future<void> setUserGender(String gender) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_GENDER, gender);
   }
 
+  /// Sets the user's opt-in status for the specified [channel].
   static Future<void> setUserOptIn(String channel, bool optIn) async {
     return await _channel.invokeMethod(
         METHOD_NAME_SET_USER_OPT_IN, {CHANNEL: channel, OPTIN: optIn});
   }
 
+  /// Sets the user's device push notification opt-in status to [status]
   static Future<void> setUserDevicePushOptIn(bool status) async {
     return await _channel.invokeMethod(
         METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN, status);
   }
 
+  /// Sets the user's location with the specified latitude [lat] and longitude [lng].
   static Future<void> setUserLocation(double lat, double lng) async {
     return await _channel
         .invokeMethod(METHOD_NAME_SET_USER_LOCATION, {LAT: lat, LNG: lng});
   }
 
+  /// Tracks an event with the specified [eventName] and optional [attributes].
   static Future<void> trackEvent(String eventName,
       [Map<String, dynamic>? attributes]) async {
     return await _channel.invokeMethod(METHOD_NAME_TRACK_EVENT,
         {EVENT_NAME: eventName, ATTRIBUTES: attributes});
   }
 
+  /// Sets user attributes with multiple values in the specified [userAttributeValue].
   static Future<void> setUserAttributes(Map userAttributeValue) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_MAP_ATTRIBUTE,
         {ATTRIBUTE_NAME: "attributeName", ATTRIBUTES: userAttributeValue});
   }
 
+  /// Sets user attributes with single values in the specified [attributeName] and [userAttributeValue].
   static Future<void> setUserAttribute(
       String attributeName, dynamic userAttributeValue) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_ATTRIBUTE,
         {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
   }
 
+  /// Tracks a screen with the specified [eventName] and optional [screenData].
   static Future<void> trackScreen(String eventName,
       [Map<String, dynamic>? screenData]) async {
     return await _channel.invokeMethod(METHOD_NAME_TRACK_SCREEN,
         {SCREEN_NAME: eventName, SCREEN_DATA: screenData});
   }
 
+  /// Platform call handler for handling method calls from the native side.
   Future _platformCallHandler(MethodCall call) async {
     print("_platformCallHandler call ${call.method} ${call.arguments}");
     if (call.method == callbackOnPushClick ||
@@ -229,8 +277,8 @@ class WebEngagePlugin {
         } else if (call.method == callbackOnPushActionClick) {
           _pushActionClickStream.sink.add(pushPayload);
           //TODO Deprecated will be removed in future builds
-          if (null != callbackOnPushActionClick) {
-            _onPushActionClick(newPayload, deepLink);
+          if (null != _onPushActionClick) {
+            _onPushActionClick!(newPayload, deepLink);
           }
         }
       } else {
@@ -332,10 +380,13 @@ class WebEngagePlugin {
     }
   }
 
+  /// Starts tracking Google Advertising ID (GAID) on Android devices using platform channels.
+  /// Returns a Future<void> indicating completion, or does nothing if the platform is not Android.
   static Future<void> startGAIDTracking() async {
-    if (Platform.isAndroid)
+    if (Platform.isAndroid) {
       return await _channel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
-    else
+    } else {
       return;
+    }
   }
 }
