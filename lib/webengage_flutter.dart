@@ -7,14 +7,16 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:webengage_flutter/PushPayload.dart';
+import 'package:webengage_flutter/push_payload.dart';
 
-import 'Constants.dart';
+import 'constants.dart';
 import 'dart:io' show Platform;
 
-typedef void MessageHandler(Map<String, dynamic>? message);
-typedef void MessageHandlerInAppClick(Map<String, dynamic>? message, String? s);
-typedef void MessageHandlerPushClick(Map<String, dynamic>? message, String? s);
+typedef MessageHandler<T> = void Function(Map<String, T>? message);
+typedef MessageHandlerInAppClick<T> = void Function(
+    Map<String, T>? message, String? s);
+typedef MessageHandlerPushClick<T> = void Function(
+    Map<String, T>? message, String? s);
 
 /// A Flutter plugin for integrating WebEngage SDK into your Flutter applications.
 class WebEngagePlugin {
@@ -162,7 +164,6 @@ class WebEngagePlugin {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGOUT);
   }
 
-
   /// Sets the user's first name to [firstName].
   static Future<void> setUserFirstName(String firstName) async {
     return await _channel.invokeMethod(
@@ -197,15 +198,19 @@ class WebEngagePlugin {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_COMPANY, company);
   }
 
+  /// Sets the user's birth date to the specified [birthDate].
+  /// For more information, see the [Flutter Tracking Events documentation](https://docs.webengage.com/docs/flutter-tracking-events#tracking-custom-events--attributes).
   static Future<void> setUserBirthDate(String birthDate) async {
     return await _channel.invokeMethod(
         METHOD_NAME_SET_USER_BIRTHDATE, birthDate);
   }
 
+  /// Sets the user's gender to the specified [gender].
   static Future<void> setUserGender(String gender) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_GENDER, gender);
   }
 
+  /// Sets the user's opt-in status for the specified [channel].
   static Future<void> setUserOptIn(String channel, bool optIn) async {
     return await _channel.invokeMethod(
         METHOD_NAME_SET_USER_OPT_IN, {CHANNEL: channel, OPTIN: optIn});
@@ -217,6 +222,7 @@ class WebEngagePlugin {
         METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN, status);
   }
 
+  /// Sets the user's location with the specified latitude [lat] and longitude [lng].
   static Future<void> setUserLocation(double lat, double lng) async {
     return await _channel
         .invokeMethod(METHOD_NAME_SET_USER_LOCATION, {LAT: lat, LNG: lng});
@@ -229,11 +235,13 @@ class WebEngagePlugin {
         {EVENT_NAME: eventName, ATTRIBUTES: attributes});
   }
 
+  /// Sets user attributes with multiple values in the specified [userAttributeValue].
   static Future<void> setUserAttributes(Map userAttributeValue) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_MAP_ATTRIBUTE,
         {ATTRIBUTE_NAME: "attributeName", ATTRIBUTES: userAttributeValue});
   }
 
+  /// Sets user attributes with single values in the specified [attributeName] and [userAttributeValue].
   static Future<void> setUserAttribute(
       String attributeName, dynamic userAttributeValue) async {
     return await _channel.invokeMethod(METHOD_NAME_SET_USER_ATTRIBUTE,
@@ -375,9 +383,10 @@ class WebEngagePlugin {
   /// Starts tracking Google Advertising ID (GAID) on Android devices using platform channels.
   /// Returns a Future<void> indicating completion, or does nothing if the platform is not Android.
   static Future<void> startGAIDTracking() async {
-    if (Platform.isAndroid)
+    if (Platform.isAndroid) {
       return await _channel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
-    else
+    } else {
       return;
+    }
   }
 }
