@@ -1,5 +1,9 @@
 ## CHANGE LOG
 
+### Version 1.5.0 (July 18, 2024)
+
+- Separated the location module from the core for iOS.
+
 ### Version 1.4.2 (Apr 17, 2024)
 
 - The license has been updated and deprecated code has been removed.
