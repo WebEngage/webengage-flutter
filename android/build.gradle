@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.4'
+        classpath 'com.android.tools.build:gradle:8.2.2'
     }
 }
 
@@ -27,9 +27,11 @@ android {
     }
 
     compileSdkVersion 34
+    compileSdk 34
 
     defaultConfig {
         minSdkVersion 21
+        minSdk 21
         manifestPlaceholders = [we_fl_version: readVersion()]
         versionCode 1
         versionName "1.0"
