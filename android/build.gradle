@@ -1,5 +1,5 @@
 group 'com.webengage.webengage_plugin'
-version '1.5.0'
+version '1.5.1'
 
 buildscript {
     repositories {
@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:8.2.2'
     }
 }
 
@@ -22,10 +22,16 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 33
+    if (project.android.hasProperty("namespace")) {
+        namespace("com.webengage.webengage_plugin")
+    }
+
+    compileSdkVersion 34
+    compileSdk 34
 
     defaultConfig {
         minSdkVersion 21
+        minSdk 21
         manifestPlaceholders = [we_fl_version: readVersion()]
         versionCode 1
         versionName "1.0"
@@ -57,5 +63,5 @@ String readVersion() {
 }
 
 dependencies {
-    api 'com.webengage:android-sdk:[4,)'
+    api 'com.webengage:android-sdk:4.16.0'
 }
