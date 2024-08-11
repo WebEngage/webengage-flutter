@@ -5,6 +5,7 @@
 .pub/
 
 build/
+.fvm/
 
 .idea
 .vscode
