@@ -44,7 +44,9 @@ import static com.webengage.webengage_plugin.Constants.MethodName.*;
 import static com.webengage.webengage_plugin.Constants.PARAM.*;
 import static com.webengage.webengage_plugin.Constants.WEBENGAGE_PLUGIN;
 
-/** WebEngage Plugin */
+/**
+ * WebEngage Plugin
+ */
 public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, WESendOrQueueCallbackListener {
     private static final String TAG = "WebEngagePlugin";
 
@@ -85,7 +87,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
             case METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN:
                 userLoginWithSecureToken(call, result);
-               break;
+                break;
 
             case METHOD_NAME_SET_SECURE_TOKEN:
                 setSecureToken(call, result);
@@ -199,8 +201,16 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 setDevicePushOptIn(call, result);
                 break;
 
-            case METHOD_NAME_START_GAID_TRACKING :
+            case METHOD_NAME_START_GAID_TRACKING:
                 startGAIDTracking();
+                break;
+
+            case METHOD_NAME_ON_PUSH_MESSAGE_RECEIVED:
+                onPushMessageReceive(call);
+                break;
+
+            case METHOD_NAME_ON_PUSH_TOKEN:
+                setPushToken(call);
                 break;
             default:
                 result.notImplemented();
@@ -210,7 +220,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     /**
      * This private method sets user attributes using data provided in the method call
-     *  from Flutter using the WebEngage SDK.
+     * from Flutter using the WebEngage SDK.
      */
     private void setUserMapAttribute(MethodCall call, Result result) {
         Map<String, ? extends Object> attributes = call.argument(ATTRIBUTES);
@@ -218,10 +228,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
     /**
-     *  This method sets user attributes based on the type of data received from the Flutter end.
-     *  Depending on the data type (String, Integer, Double/Float, Date, List, Boolean),
-     *  it sets the corresponding attribute using the WebEngage SDK.
-     *  If the data type is not supported, it logs a message indicating so.
+     * This method sets user attributes based on the type of data received from the Flutter end.
+     * Depending on the data type (String, Integer, Double/Float, Date, List, Boolean),
+     * it sets the corresponding attribute using the WebEngage SDK.
+     * If the data type is not supported, it logs a message indicating so.
      */
     private void setUserAttribute(MethodCall call, Result result) {
         if (call.argument(ATTRIBUTES) instanceof String) {
@@ -303,8 +313,8 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
     /**
-     *  This method handles user login by extracting the user ID from the method call arguments
-     *  received from Flutter and then initiates a login action using the WebEngage SDK.
+     * This method handles user login by extracting the user ID from the method call arguments
+     * received from Flutter and then initiates a login action using the WebEngage SDK.
      */
     private void userLogin(MethodCall call, Result result) {
         String userId = call.arguments();
@@ -312,13 +322,13 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
     /**
-     *  This method facilitates user login with a secure token by extracting the user ID and
-     *  secure token from the method call arguments received from Flutter.
-     *  It then initiates a login action using the WebEngage SDK,
-     *  considering whether a secure token is provided.
-     *  If a secure token is provided and not empty,
-     *  it uses both the user ID and secure token for login; otherwise,
-     *  it proceeds with only the user ID for login.
+     * This method facilitates user login with a secure token by extracting the user ID and
+     * secure token from the method call arguments received from Flutter.
+     * It then initiates a login action using the WebEngage SDK,
+     * considering whether a secure token is provided.
+     * If a secure token is provided and not empty,
+     * it uses both the user ID and secure token for login; otherwise,
+     * it proceeds with only the user ID for login.
      */
     private void userLoginWithSecureToken(MethodCall call, Result result) {
         Map<String, Object> arguments = call.arguments();
@@ -335,7 +345,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         Map<String, Object> arguments = call.arguments();
         String userId = (String) arguments.get(USER_ID);
         String secureToken = (String) arguments.get(SECURE_TOKEN);
-        if(!userId.isEmpty() && userId != null && !secureToken.isEmpty() && secureToken != null) {
+        if (!userId.isEmpty() && userId != null && !secureToken.isEmpty() && secureToken != null) {
             WebEngage.get().setSecurityToken(userId, secureToken);
         }
     }
@@ -415,8 +425,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
             WebEngage.get().user().setOptIn(Channel.WHATSAPP, status);
         } else if (VIBER.equalsIgnoreCase(channel)) {
             WebEngage.get().user().setOptIn(Channel.VIBER, status);
-        }
-        else {
+        } else {
             result.error(TAG, "Invalid channel: " + channel + ". Must be one of [push, sms, email, in_app, whatsapp].", null);
         }
     }
@@ -443,7 +452,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     }
 
-    private void startGAIDTracking(){
+    private void startGAIDTracking() {
         WebEngage.get().startGAIDTracking();
     }
 
@@ -475,10 +484,10 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     }
 
     /**
-     *  This method sends a callback message to Flutter,
-     *  packaging it with necessary platform information,
-     *  using a background thread to ensure UI responsiveness and avoiding potential crashes due
-     *  to null channel during transition from background to foreground state
+     * This method sends a callback message to Flutter,
+     * packaging it with necessary platform information,
+     * using a background thread to ensure UI responsiveness and avoiding potential crashes due
+     * to null channel during transition from background to foreground state
      */
     void sendCallback(final String methodName, final Map<String, Object> message) {
         if (channel == null)
@@ -532,4 +541,23 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
         WECallbackRegistry.getInstance().unRegister(this);
         activity = null;
     }
+
+
+    private void onPushMessageReceive(MethodCall call) {
+        Map<String, Object> arguments = call.arguments();
+        Map<String, String> data = (Map<String, String>) call.argument("data");
+        if (data != null) {
+            if (data.containsKey("source") && "webengage".equals(data.get("source"))) {
+                WebEngage.get().receive(data);
+            }
+        }
+    }
+
+    private void setPushToken(MethodCall call) {
+        String token = call.arguments();
+        if (token != null) {
+            WebEngage.get().setRegistrationID(token);
+        }
+    }
+
 }
