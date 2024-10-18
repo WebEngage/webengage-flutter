@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:webengage_flutter_android/webengage_flutter.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
 
 class _MyAppState extends State<MyApp> {
   late WebEngagePlugin _webEngagePlugin;

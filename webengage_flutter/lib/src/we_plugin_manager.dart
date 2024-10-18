@@ -1,95 +1,49 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
-import 'package:flutter/services.dart';
-import 'package:webengage_flutter/push_payload.dart';
-import 'package:webengage_flutter/src/webengage_plugin_abstract.dart';
-
-import '../constants.dart';
-
-typedef MessageHandler<T> = void Function(Map<String, T>? message);
-typedef MessageHandlerInAppClick<T> = void Function(
-    Map<String, T>? message, String? s);
-typedef MessageHandlerPushClick<T> = void Function(
-    Map<String, T>? message, String? s);
+import 'package:flutter/services.dart' hide MessageHandler;
+import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 
 /// A Flutter plugin for integrating WebEngage SDK into your Flutter applications.
-class WePluginManager extends WEPluginAbstract {
-  /// The method channel used for communication between Flutter and native code.
-  static const MethodChannel _channel =
-      const MethodChannel('webengage_flutter');
+class WePluginManager {
+  WebEngageFlutterPlatform get _platform => WebEngageFlutterPlatform.instance;
 
-  /// Singleton instance of [WebEngagePlugin].
   static final WePluginManager _webengagePlugin =
       new WePluginManager._internal();
 
   factory WePluginManager() => _webengagePlugin;
 
-  WePluginManager._internal() {
-    _channel.setMethodCallHandler(platformCallHandler);
-    _channel.invokeMethod(methodInitialise);
-  }
-
-  MessageHandlerPushClick? _onPushClick;
-  MessageHandlerPushClick? _onPushActionClick;
-  MessageHandlerInAppClick? _onInAppClick;
-  MessageHandler? _onInAppShown;
-  MessageHandler? _onInAppDismiss;
-  MessageHandler? _onInAppPrepared;
-  MessageHandler? _onTokenInvalidated;
-
-  //Push Stream
-  final StreamController<PushPayload> _pushClickStream =
-      StreamController<PushPayload>();
+  WePluginManager._internal() {}
 
   Stream<PushPayload> get pushStream {
-    return _pushClickStream.stream;
+    return _platform.pushStream;
   }
 
   Sink get pushSink {
-    return _pushClickStream.sink;
+    return _platform.pushSink;
   }
 
-  //Push Action click
-  // ignore: close_sinks
-  final StreamController<PushPayload> _pushActionClickStream =
-      new StreamController<PushPayload>();
-
   Stream<PushPayload> get pushActionStream {
-    return _pushActionClickStream.stream;
+    return _platform.pushActionStream;
   }
 
   Sink get pushActionSink {
-    return _pushActionClickStream.sink;
+    return _platform.pushActionSink;
   }
 
-  //StateChangeCallback AnonymousId
-  final StreamController<Map<String, dynamic>?> _anonymousIDStream =
-      StreamController();
-
   Stream<Map<String, dynamic>?> get anonymousActionStream {
-    return _anonymousIDStream.stream;
+    return _platform.anonymousActionStream;
   }
 
   Sink get anonymousActionSink {
-    return _anonymousIDStream.sink;
+    return _platform.anonymousActionSink;
   }
 
-  //
-  final StreamController<String?> _trackDeeplinkURLStream =
-      new StreamController<String?>();
-
   Stream<String?> get trackDeeplinkStream {
-    return _trackDeeplinkURLStream.stream;
+    return _platform.trackDeeplinkStream;
   }
 
   Sink get trackDeeplinkURLStreamSink {
-    return _trackDeeplinkURLStream.sink;
-  }
-
-  static Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+    return _platform.trackDeeplinkURLStreamSink;
   }
 
   /// Deprecated: Use '_pushClickStream' and 'pushActionStream' instead. This method will be removed in future builds.
@@ -102,8 +56,7 @@ class WePluginManager extends WEPluginAbstract {
       "Use '_pushClickStream' & 'pushActionStream' instead. This method will be removed in future build.")
   void setUpPushCallbacks(MessageHandlerPushClick onPushClick,
       MessageHandlerPushClick onPushActionClick) {
-    _onPushClick = onPushClick;
-    _onPushActionClick = onPushActionClick;
+    _platform.setUpPushCallbacks(onPushClick, onPushActionClick);
   }
 
   /// Sets up callbacks for in-app notification events.
@@ -118,292 +71,259 @@ class WePluginManager extends WEPluginAbstract {
     MessageHandler onInAppDismiss,
     MessageHandler onInAppPrepared,
   ) {
-    _onInAppClick = onInAppClick;
-    _onInAppShown = onInAppShown;
-    _onInAppDismiss = onInAppDismiss;
-    _onInAppPrepared = onInAppPrepared;
+    _platform.setUpInAppCallbacks(
+        onInAppClick, onInAppShown, onInAppDismiss, onInAppPrepared);
   }
 
   /// Sets up a callback for token invalidated events.
   ///
   /// [onTokenInvalidated]: Callback function for token invalidated from server.
   void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
-    _onTokenInvalidated = onTokenInvalidated;
+    _platform.tokenInvalidatedCallback(onTokenInvalidated);
   }
 
   /// Initiates a user login action with an optional secure token.
   ///
   /// [userId]: The unique identifier for the user.
   /// [secureToken]: The secure token for authentication, if applicable.
-  @override
   Future<void> userLogin(String userId, [String? secureToken]) async {
-    if (secureToken != null) {
-      return await _channel.invokeMethod(
-          METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN,
-          {USERID: userId, SECURE_TOKEN: secureToken});
-    } else {
-      return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGIN, userId);
-    }
+    return await _platform.userLogin(userId, secureToken);
   }
 
   /// Sets a secure token for the specified user.
   ///
   /// [userId]: The unique identifier for the user.
   /// [secureToken]: The secure token for authentication.
-  @override
   Future<void> setSecureToken(String userId, String secureToken) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_SECURE_TOKEN,
-        {USERID: userId, SECURE_TOKEN: secureToken});
+    return await _platform.setSecureToken(userId, secureToken);
   }
 
   /// Initiates user logout.
-  @override
+
   Future<void> userLogout() async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_LOGOUT);
+    return await _platform.userLogout();
   }
 
   /// Sets the user's first name to [firstName].
-  @override
+
   Future<void> setUserFirstName(String firstName) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_FIRST_NAME, firstName);
+    return await _platform.setUserFirstName(firstName);
   }
 
   /// Sets the user's last name to [lastName].
-  @override
+
   Future<void> setUserLastName(String lastName) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_LAST_NAME, lastName);
+    return await _platform.setUserLastName(lastName);
   }
 
-  @override
   Future<void> setUserEmail(String email) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_EMAIL, email);
+    return await _platform.setUserEmail(email);
   }
 
-  @override
   Future<void> setUserHashedEmail(String email) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_HASHED_EMAIL, email);
+    return await _platform.setUserHashedEmail(email);
   }
 
-  @override
   Future<void> setUserPhone(String phone) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_PHONE, phone);
+    return await _platform.setUserPhone(phone);
   }
 
-  @override
   Future<void> setUserHashedPhone(String phone) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_HASHED_PHONE, phone);
+    return await _platform.setUserHashedPhone(phone);
   }
 
-  @override
   Future<void> setUserCompany(String company) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_COMPANY, company);
+    return await _platform.setUserCompany(company);
   }
 
   /// Sets the user's birth date to the specified [birthDate].
   /// For more information, see the [Flutter Tracking Events documentation](https://docs.webengage.com/docs/flutter-tracking-events#tracking-custom-events--attributes).
-  @override
+
   Future<void> setUserBirthDate(String birthDate) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_BIRTHDATE, birthDate);
+    return await _platform.setUserBirthDate(birthDate);
   }
 
   /// Sets the user's gender to the specified [gender].
 
-  @override
   Future<void> setUserGender(String gender) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_GENDER, gender);
+    return await _platform.setUserGender(gender);
   }
 
   /// Sets the user's opt-in status for the specified [channel].
-  @override
+
   Future<void> setUserOptIn(String channel, bool optIn) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_OPT_IN, {CHANNEL: channel, OPTIN: optIn});
+    return await _platform.setUserOptIn(channel, optIn);
   }
 
   /// Sets the user's device push notification opt-in status to [status]
-  @override
+
   Future<void> setUserDevicePushOptIn(bool status) async {
-    return await _channel.invokeMethod(
-        METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN, status);
+    return await _platform.setUserDevicePushOptIn(status);
   }
 
   /// Sets the user's location with the specified latitude [lat] and longitude [lng].
-  @override
+
   Future<void> setUserLocation(double lat, double lng) async {
-    return await _channel
-        .invokeMethod(METHOD_NAME_SET_USER_LOCATION, {LAT: lat, LNG: lng});
+    return await _platform.setUserLocation(lat, lng);
   }
 
   /// Tracks an event with the specified [eventName] and optional [attributes].
-  @override
+
   Future<void> trackEvent(String eventName,
       [Map<String, dynamic>? attributes]) async {
-    return await _channel.invokeMethod(METHOD_NAME_TRACK_EVENT,
-        {EVENT_NAME: eventName, ATTRIBUTES: attributes});
+    return await _platform.trackEvent(eventName, attributes);
   }
 
   /// Sets user attributes with multiple values in the specified [userAttributeValue].
-  @override
+
   Future<void> setUserAttributes(Map userAttributeValue) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_MAP_ATTRIBUTE,
-        {ATTRIBUTE_NAME: "attributeName", ATTRIBUTES: userAttributeValue});
+    return await _platform.setUserAttributes(userAttributeValue);
   }
 
   /// Sets user attributes with single values in the specified [attributeName] and [userAttributeValue].
-  @override
+
   Future<void> setUserAttribute(
       String attributeName, dynamic userAttributeValue) async {
-    return await _channel.invokeMethod(METHOD_NAME_SET_USER_ATTRIBUTE,
-        {ATTRIBUTE_NAME: attributeName, ATTRIBUTES: userAttributeValue});
+    return await _platform.setUserAttribute(attributeName, userAttributeValue);
   }
 
   /// Tracks a screen with the specified [eventName] and optional [screenData].
-  @override
+
   Future<void> trackScreen(String eventName,
       [Map<String, dynamic>? screenData]) async {
-    return await _channel.invokeMethod(METHOD_NAME_TRACK_SCREEN,
-        {SCREEN_NAME: eventName, SCREEN_DATA: screenData});
+    return await _platform.trackScreen(eventName, screenData);
   }
 
   /// Platform call handler for handling method calls from the native side.
-  @override
-  Future<void> platformCallHandler(MethodCall call) async {
-    print("_platformCallHandler call ${call.method} ${call.arguments}");
-    if (call.method == callbackOnPushClick ||
-        call.method == callbackOnPushActionClick) {
-      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
-      if (Platform.isAndroid) {
-        String? deepLink = message![PAYLOAD][URI];
-        Map<String, dynamic>? newPayload =
-            message[PAYLOAD].cast<String, dynamic>();
-        PushPayload pushPayload = PushPayload();
-        pushPayload.deepLink = deepLink;
-        pushPayload.payload = newPayload;
-        if (call.method == callbackOnPushClick) {
-          _pushClickStream.sink.add(pushPayload);
-          //TODO Deprecated will be removed in future builds
-          if (null != _onPushClick) {
-            _onPushClick!(newPayload, deepLink);
-          }
-        } else if (call.method == callbackOnPushActionClick) {
-          _pushActionClickStream.sink.add(pushPayload);
-          //TODO Deprecated will be removed in future builds
-          if (null != _onPushActionClick) {
-            _onPushActionClick!(newPayload, deepLink);
-          }
-        }
-      } else {
-        String? deepLink = message![DEEPLINK];
-        Map<String, dynamic>? newPayload =
-            call.arguments.cast<String, dynamic>();
-        PushPayload pushPayload = PushPayload();
-        pushPayload.deepLink = deepLink;
-        pushPayload.payload = newPayload;
-        if (call.method == callbackOnPushClick) {
-          _pushClickStream.sink.add(pushPayload);
-        } else if (call.method == callbackOnPushActionClick) {
-          _pushActionClickStream.sink.add(pushPayload);
-        }
-      }
-    }
 
-    if (call.method == callbackOnInAppClicked && _onInAppClick != null) {
-      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
-      if (Platform.isAndroid) {
-        String? selectedActionId = message![PAYLOAD][SELECTED_ACTION_ID];
-        Map<String, dynamic>? newPayload =
-            message[PAYLOAD].cast<String, dynamic>();
-        _onInAppClick!(newPayload, selectedActionId);
-      } else {
-        String? selectedActionId = message![SELECTED_ACTION_ID];
-        _onInAppClick!(
-            call.arguments.cast<String, dynamic>(), selectedActionId);
-      }
-    }
-
-    if (call.method == callbackOnInAppShown && _onInAppShown != null) {
-      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
-      if (Platform.isAndroid) {
-        Map<String, dynamic>? newPayload =
-            message![PAYLOAD].cast<String, dynamic>();
-        _onInAppShown!(newPayload);
-      } else {
-        _onInAppShown!(call.arguments.cast<String, dynamic>());
-      }
-    }
-
-    if (call.method == callbackOnInAppDismissed && _onInAppDismiss != null) {
-      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
-      if (Platform.isAndroid) {
-        Map<String, dynamic>? newPayload =
-            message![PAYLOAD].cast<String, dynamic>();
-        _onInAppDismiss!(newPayload);
-      } else {
-        _onInAppDismiss!(call.arguments.cast<String, dynamic>());
-      }
-    }
-
-    if (call.method == callbackOnInAppPrepared && _onInAppPrepared != null) {
-      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
-      if (Platform.isAndroid) {
-        Map<String, dynamic>? newPayload =
-            message?[PAYLOAD].cast<String, dynamic>();
-        _onInAppPrepared!(newPayload);
-      } else {
-        _onInAppPrepared!(call.arguments.cast<String, dynamic>());
-      }
-    }
-
-    if (call.method == callbackOnTokenInvalidated &&
-        _onTokenInvalidated != null) {
-      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
-      if (Platform.isAndroid) {
-        Map<String, dynamic>? newPayload =
-            message?[PAYLOAD].cast<String, dynamic>();
-        _onTokenInvalidated!(newPayload);
-      } else {
-        _onTokenInvalidated!(call.arguments.cast<String, dynamic>());
-      }
-    }
-
-    switch (call.method) {
-      case callbackOnAnonymousIdChanged:
-        _onAnonymousUdChanged(call);
-        break;
-    }
-
-    if (call.method == METHOD_TRACK_DEEPLINK_URL) {
-      String? locationLink = call.arguments;
-      _trackDeeplinkURLStream.sink.add(locationLink);
-    }
+  Future<void> _platformCallHandler(MethodCall call) async {
+    // print("_platformCallHandler call ${call.method} ${call.arguments}");
+    // if (call.method == callbackOnPushClick ||
+    //     call.method == callbackOnPushActionClick) {
+    //   Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+    //   if (Platform.isAndroid) {
+    //     String? deepLink = message![PAYLOAD][URI];
+    //     Map<String, dynamic>? newPayload =
+    //         message[PAYLOAD].cast<String, dynamic>();
+    //     PushPayload pushPayload = PushPayload();
+    //     pushPayload.deepLink = deepLink;
+    //     pushPayload.payload = newPayload;
+    //     if (call.method == callbackOnPushClick) {
+    //       _pushClickStream.sink.add(pushPayload);
+    //       //TODO Deprecated will be removed in future builds
+    //       if (null != _onPushClick) {
+    //         _onPushClick!(newPayload, deepLink);
+    //       }
+    //     } else if (call.method == callbackOnPushActionClick) {
+    //       _pushActionClickStream.sink.add(pushPayload);
+    //       //TODO Deprecated will be removed in future builds
+    //       if (null != _onPushActionClick) {
+    //         _onPushActionClick!(newPayload, deepLink);
+    //       }
+    //     }
+    //   } else {
+    //     String? deepLink = message![DEEPLINK];
+    //     Map<String, dynamic>? newPayload =
+    //         call.arguments.cast<String, dynamic>();
+    //     PushPayload pushPayload = PushPayload();
+    //     pushPayload.deepLink = deepLink;
+    //     pushPayload.payload = newPayload;
+    //     if (call.method == callbackOnPushClick) {
+    //       _pushClickStream.sink.add(pushPayload);
+    //     } else if (call.method == callbackOnPushActionClick) {
+    //       _pushActionClickStream.sink.add(pushPayload);
+    //     }
+    //   }
+    // }
+    //
+    // if (call.method == callbackOnInAppClicked && _onInAppClick != null) {
+    //   Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+    //   if (Platform.isAndroid) {
+    //     String? selectedActionId = message![PAYLOAD][SELECTED_ACTION_ID];
+    //     Map<String, dynamic>? newPayload =
+    //         message[PAYLOAD].cast<String, dynamic>();
+    //     _onInAppClick!(newPayload, selectedActionId);
+    //   } else {
+    //     String? selectedActionId = message![SELECTED_ACTION_ID];
+    //     _onInAppClick!(
+    //         call.arguments.cast<String, dynamic>(), selectedActionId);
+    //   }
+    // }
+    //
+    // if (call.method == callbackOnInAppShown && _onInAppShown != null) {
+    //   Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+    //   if (Platform.isAndroid) {
+    //     Map<String, dynamic>? newPayload =
+    //         message![PAYLOAD].cast<String, dynamic>();
+    //     _onInAppShown!(newPayload);
+    //   } else {
+    //     _onInAppShown!(call.arguments.cast<String, dynamic>());
+    //   }
+    // }
+    //
+    // if (call.method == callbackOnInAppDismissed && _onInAppDismiss != null) {
+    //   Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+    //   if (Platform.isAndroid) {
+    //     Map<String, dynamic>? newPayload =
+    //         message![PAYLOAD].cast<String, dynamic>();
+    //     _onInAppDismiss!(newPayload);
+    //   } else {
+    //     _onInAppDismiss!(call.arguments.cast<String, dynamic>());
+    //   }
+    // }
+    //
+    // if (call.method == callbackOnInAppPrepared && _onInAppPrepared != null) {
+    //   Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+    //   if (Platform.isAndroid) {
+    //     Map<String, dynamic>? newPayload =
+    //         message?[PAYLOAD].cast<String, dynamic>();
+    //     _onInAppPrepared!(newPayload);
+    //   } else {
+    //     _onInAppPrepared!(call.arguments.cast<String, dynamic>());
+    //   }
+    // }
+    //
+    // if (call.method == callbackOnTokenInvalidated &&
+    //     _onTokenInvalidated != null) {
+    //   Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+    //   if (Platform.isAndroid) {
+    //     Map<String, dynamic>? newPayload =
+    //         message?[PAYLOAD].cast<String, dynamic>();
+    //     _onTokenInvalidated!(newPayload);
+    //   } else {
+    //     _onTokenInvalidated!(call.arguments.cast<String, dynamic>());
+    //   }
+    // }
+    //
+    // switch (call.method) {
+    //   case callbackOnAnonymousIdChanged:
+    //     _onAnonymousUdChanged(call);
+    //     break;
+    // }
+    //
+    // if (call.method == METHOD_TRACK_DEEPLINK_URL) {
+    //   String? locationLink = call.arguments;
+    //   _trackDeeplinkURLStream.sink.add(locationLink);
+    // }
   }
 
-  void _onAnonymousUdChanged(MethodCall call) {
-    _anonymousIDStream.sink.add(_generateMap(call));
-  }
-
-  Map<String, dynamic>? _generateMap(MethodCall call) {
-    if (Platform.isAndroid) {
-      Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
-      return message?[PAYLOAD].cast<String, dynamic>();
-    } else {
-      return call.arguments.cast<String, dynamic>();
-    }
-  }
+  // void _onAnonymousUdChanged(MethodCall call) {
+  //   _anonymousIDStream.sink.add(_generateMap(call));
+  // }
+  //
+  // Map<String, dynamic>? _generateMap(MethodCall call) {
+  //   if (Platform.isAndroid) {
+  //     Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
+  //     return message?[PAYLOAD].cast<String, dynamic>();
+  //   } else {
+  //     return call.arguments.cast<String, dynamic>();
+  //   }
+  // }
 
   /// Starts tracking Google Advertising ID (GAID) on Android devices using platform channels.
   /// Returns a Future<void> indicating completion, or does nothing if the platform is not Android.
-  @override
+
   Future<void> startGAIDTracking() async {
-    if (Platform.isAndroid) {
-      return await _channel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
-    } else {
-      return;
-    }
+    return await _platform.startGAIDTracking();
   }
 }

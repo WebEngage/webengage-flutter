@@ -11,6 +11,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  webengage_flutter_platform_interface:
+    path: ../webengage_flutter_platform_interface
+  webengage_flutter_android:
+    path: ../webengage_flutter_android
+
+
 
 dev_dependencies:
   flutter_test:
@@ -20,7 +26,6 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.webengage.webengage_plugin
-        pluginClass: WebEngagePlugin
+        default_package: webengage_flutter_android
       ios:
         pluginClass: WebEngagePlugin

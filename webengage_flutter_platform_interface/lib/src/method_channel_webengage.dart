@@ -13,6 +13,10 @@ class MethodChannelWebEngageFlutter extends WebEngageFlutterPlatform {
   MessageHandler? onInAppPrepared;
   MessageHandler? onTokenInvalidated;
 
+  MethodChannelWebEngageFlutter() {
+    _methodChannel.setMethodCallHandler(platformCallHandler);
+  }
+
   final MethodChannel _methodChannel = const MethodChannel(channelName);
 
   final StreamController<Map<String, dynamic>?> anonymousIDStream =

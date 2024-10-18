@@ -10,16 +10,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
+  webengage_flutter_platform_interface:
+    path: ../webengage_flutter_platform_interface
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  plugin_platform_interface: ^2.0.0
 
 flutter:
-
   plugin:
+    implements: webengage_flutter
     platforms:
       android:
         package: com.webengage.webengage_plugin
