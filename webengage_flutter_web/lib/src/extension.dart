@@ -41,12 +41,17 @@ extension WebengageFlutterWebExtension on WebengageFlutterWeb {
     return Future.value();
   }
 
-  Future<void> performTrackEvent(String eventName, dynamic args) async {
+  Future<void> performTrackEvent(String eventName, dynamic eventData) async {
     var action = WEB_METHOD_NAME_TRACK;
-    print("performUserAction track $eventName $args");
+    print("performUserAction track $eventName $eventData");
     if (webengage != null) {
       try {
-        js_util.callMethod(webengage, action, [eventName, args]);
+        if (eventData != null) {
+          var jsEventData = js_util.jsify(eventData);
+          js_util.callMethod(webengage, action, [eventName, jsEventData]);
+        } else {
+          js_util.callMethod(webengage, action, [eventName]);
+        }
       } catch (e) {
         print("Error calling $action: $e");
       }
@@ -56,15 +61,17 @@ extension WebengageFlutterWebExtension on WebengageFlutterWeb {
     return Future.value();
   }
 
-  Future<void> performTrackScreen(String screenName, dynamic args) async {
+  Future<void> performTrackScreen(String screenName, dynamic screenData) async {
     var action = WEB_METHOD_NAME_SCREEN;
-    print("performUserAction track $screenName $args");
+    print("performUserAction track $screenName $screenData");
     if (webengage != null) {
       try {
-        js_util.callMethod(webengage, action, [
-          screenName,
-          [args]
-        ]);
+        if (screenData != null) {
+          var jsEventData = js_util.jsify(screenName);
+          js_util.callMethod(webengage, action, [screenName, jsEventData]);
+        } else {
+          js_util.callMethod(webengage, action, [screenName]);
+        }
       } catch (e) {
         print("Error calling $action: $e");
       }
