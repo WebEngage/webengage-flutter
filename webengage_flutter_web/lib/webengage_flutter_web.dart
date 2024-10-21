@@ -4,6 +4,7 @@ import 'dart:js_util' as js_util;
 import 'package:flutter/src/services/message_codec.dart';
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 import 'package:webengage_flutter_web/src/extension.dart';
+import 'package:webengage_flutter_web/src/utils/Utils.dart';
 import 'package:webengage_flutter_web/src/utils/constants.dart';
 
 class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
@@ -15,8 +16,42 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
 
   @override
   void init() {
-    methodChannel.setMethodCallHandler(platformCallHandler);
     webEngageInitialize();
+    _handleCallbacks();
+  }
+
+  void _handleCallbacks() {
+    var notification =
+        js_util.getProperty(webengage, WEB_METHOD_NAME_NOTIFICATION);
+    if (notification != null) {
+      js_util.callMethod(notification, WEB_METHOD_NAME_NOTIFICATION_ON_CLICK, [
+        js_util.allowInterop((data) {
+          var object = convertJsObjectToMap(data);
+          //TODO : ID
+          if (onInAppClick != null) {
+            onInAppClick!(object, "");
+          }
+          print(object);
+        })
+      ]);
+      js_util.callMethod(notification, WEB_METHOD_NAME_NOTIFICATION_ON_OPEN, [
+        js_util.allowInterop((data) {
+          var object = convertJsObjectToMap(data);
+          if (onInAppShown != null) {
+            onInAppShown!(object);
+          }
+        })
+      ]);
+      js_util.callMethod(notification, WEB_METHOD_NAME_NOTIFICATION_ON_CLOSE, [
+        js_util.allowInterop((data) {
+          print("data $data");
+          var object = convertJsObjectToMap(data);
+          if (onInAppDismiss != null) {
+            onInAppDismiss!(object);
+          }
+        })
+      ]);
+    }
   }
 
   void webEngageInitialize() {
@@ -31,9 +66,11 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
   }
 
   @override
+  @override
   Future<void> setSecureToken(String userId, String secureToken) {
-    // TODO: implement setSecureToken
-    throw UnimplementedError();
+    print("$userId $secureToken");
+    this.performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
+    return Future.value();
   }
 
   @override
@@ -163,7 +200,7 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
 
   @override
   Future<void> userLogin(String userId, [String? secureToken]) {
-    this.performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId]);
+    this.performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
     return Future.value();
   }
 

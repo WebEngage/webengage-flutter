@@ -5,6 +5,10 @@ const String WEB_METHOD_NAME_SCREEN = "screen";
 const String WEB_METHOD_NAME_USER_LOGIN = "login";
 const String WEB_METHOD_NAME_USER_LOGOUT = "logout";
 const String WEB_METHOD_NAME_SET_ATTRIBUTE = "setAttribute";
+const String WEB_METHOD_NAME_NOTIFICATION = "notification";
+const String WEB_METHOD_NAME_NOTIFICATION_ON_OPEN = "onOpen";
+const String WEB_METHOD_NAME_NOTIFICATION_ON_CLOSE = "onClose";
+const String WEB_METHOD_NAME_NOTIFICATION_ON_CLICK = "onClick";
 
 const String WEB_ATTRIBUTE_NAME_BIRTH_DATE = "we_birth_date";
 const String WEB_ATTRIBUTE_NAME_COMPANY = "we_company";
