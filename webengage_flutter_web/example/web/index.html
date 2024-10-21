@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script id="_webengage_script_tag" type="text/javascript">
+    var webengage;
+    ! function(w, e, b, n, g) {
+      function o(e, t) {
+        e[t[t.length - 1]] = function() {
+          r.__queue.push([t.join("."), arguments])
+        }
+      }
+      var i, s, r = w[b],
+        z = " ",
+        l = "init options track screen onReady".split(z),
+        a = "feedback survey notification".split(z),
+        c = "options render clear abort".split(z),
+        p = "Open Close Submit Complete View Click".split(z),
+        u = "identify login logout setAttribute".split(z);
+      if (!r || !r.__v) {
+        for (w[b] = r = {
+            __queue: [],
+            __v: "6.0",
+            user: {}
+          }, i = 0; i < l.length; i++) o(r, [l[i]]);
+        for (i = 0; i < a.length; i++) {
+          for (r[a[i]] = {}, s = 0; s < c.length; s++) o(r[a[i]], [a[i], c[s]]);
+          for (s = 0; s < p.length; s++) o(r[a[i]], [a[i], "on" + p[s]])
+        }
+        for (i = 0; i < u.length; i++) o(r.user, ["user", u[i]]);
+        setTimeout(function() {
+          var f = e.createElement("script"),
+            d = e.getElementById("_webengage_script_tag");
+          f.type = "text/javascript",
+            f.async = !0,
+            f.src = ("https:" == e.location.protocol ? "https://ssl.widgets.webengage.com" : "http://cdn.widgets.webengage.com") + "/js/webengage-min-v-6.0.js",
+            d.parentNode.insertBefore(f, d)
+        })
+      }
+    }(window, document, "webengage");
+
+    webengage.init('~2024bb40');
+  </script>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Demonstrates how to use the webengage_flutter_web plugin.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="webengage_flutter_web_example">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>webengage_flutter_web_example</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
