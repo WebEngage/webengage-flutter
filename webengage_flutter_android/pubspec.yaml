@@ -25,4 +25,5 @@ flutter:
       android:
         package: com.webengage.webengage_plugin
         pluginClass: WebEngagePlugin
+        dartPluginClass: WebEngageFlutterAndroid
 

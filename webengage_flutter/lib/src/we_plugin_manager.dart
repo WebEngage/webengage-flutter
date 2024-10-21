@@ -14,6 +14,10 @@ class WePluginManager {
 
   WePluginManager._internal() {}
 
+  void init() {
+    _platform.init();
+  }
+
   Stream<PushPayload> get pushStream {
     return _platform.pushStream;
   }
@@ -101,6 +105,7 @@ class WePluginManager {
   /// Initiates user logout.
 
   Future<void> userLogout() async {
+    print("Manager");
     return await _platform.userLogout();
   }
 
@@ -189,9 +194,9 @@ class WePluginManager {
 
   /// Tracks a screen with the specified [eventName] and optional [screenData].
 
-  Future<void> trackScreen(String eventName,
+  Future<void> trackScreen(String screenName,
       [Map<String, dynamic>? screenData]) async {
-    return await _platform.trackScreen(eventName, screenData);
+    return await _platform.trackScreen(screenName, screenData);
   }
 
   /// Platform call handler for handling method calls from the native side.

@@ -1,44 +1,62 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart' hide MessageHandler;
+import 'package:webengage_flutter_android/src/extensions.dart';
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 
-class WebEngageFlutterAndroid extends WebEngageFlutterPlatform {
-  final MethodChannel _methodChannel = const MethodChannel(channelName);
-
-  @override
-  // TODO: implement anonymousActionSink
-  Sink get anonymousActionSink => throw UnimplementedError();
-
-  @override
-  // TODO: implement anonymousActionStream
-  Stream<Map<String, dynamic>?> get anonymousActionStream =>
-      throw UnimplementedError();
-
-  @override
-  Future<void> platformCallHandler(MethodCall call) {
-    // TODO: implement platformCallHandler
-    throw UnimplementedError();
+class WebEngageFlutterAndroid extends MethodChannelWebEngageFlutter {
+  static void registerWith() {
+    WebEngageFlutterPlatform.instance = WebEngageFlutterAndroid();
   }
 
   @override
-  // TODO: implement pushActionSink
-  Sink get pushActionSink => throw UnimplementedError();
+  void init() {
+    methodChannel.setMethodCallHandler(platformCallHandler);
+    methodChannel.invokeMethod(methodInitialise);
+  }
 
   @override
-  // TODO: implement pushActionStream
-  Stream<PushPayload> get pushActionStream => throw UnimplementedError();
+  Future<void> platformCallHandler(MethodCall call) {
+    switch (call.method) {
+      case callbackOnPushClick:
+      case callbackOnPushActionClick:
+        this.handlePushClick(call);
+        break;
+
+      case callbackOnInAppClicked:
+        this.handleInAppClick(call);
+        break;
+
+      case callbackOnInAppShown:
+        this.handleCallbackFunctions(call, onInAppShown);
+        break;
+
+      case callbackOnInAppDismissed:
+        this.handleCallbackFunctions(call, onInAppDismiss);
+        break;
+
+      case callbackOnInAppPrepared:
+        this.handleCallbackFunctions(call, onInAppPrepared);
+        break;
+
+      case callbackOnTokenInvalidated:
+        this.handleCallbackFunctions(call, onTokenInvalidated);
+        break;
+
+      case callbackOnAnonymousIdChanged:
+        this.onAnonymousIdChanged(call);
+        break;
+
+      case METHOD_TRACK_DEEPLINK_URL:
+        this.trackDeeplinkCallback(call);
+        break;
+    }
+    return Future.value();
+  }
 
   @override
-  // TODO: implement pushSink
-  Sink get pushSink => throw UnimplementedError();
-
-  @override
-  // TODO: implement pushStream
-  Stream<PushPayload> get pushStream => throw UnimplementedError();
-
-  @override
-  Future<void> setSecureToken(String userId, String secureToken) {
-    // TODO: implement setSecureToken
-    throw UnimplementedError();
+  Future<void> setSecureToken(String userId, String secureToken) async {
+    return await super.setSecureToken(userId, secureToken);
   }
 
   @override
@@ -47,141 +65,116 @@ class WebEngageFlutterAndroid extends WebEngageFlutterPlatform {
       MessageHandler onInAppShown,
       MessageHandler onInAppDismiss,
       MessageHandler onInAppPrepared) {
-    // TODO: implement setUpInAppCallbacks
+    super.setUpInAppCallbacks(
+        onInAppClick, onInAppShown, onInAppDismiss, onInAppPrepared);
   }
 
   @override
   void setUpPushCallbacks(MessageHandlerPushClick onPushClick,
       MessageHandlerPushClick onPushActionClick) {
-    // TODO: implement setUpPushCallbacks
+    super.setUpPushCallbacks(onPushClick, onPushActionClick);
   }
 
   @override
-  Future<void> setUserAttribute(String attributeName, userAttributeValue) {
-    // TODO: implement setUserAttribute
-    throw UnimplementedError();
+  Future<void> setUserAttribute(
+      String attributeName, userAttributeValue) async {
+    return await super.setUserAttribute(attributeName, userAttributeValue);
   }
 
   @override
-  Future<void> setUserAttributes(Map userAttributeValue) {
-    // TODO: implement setUserAttributes
-    throw UnimplementedError();
+  Future<void> setUserAttributes(Map userAttributeValue) async {
+    return await super.setUserAttributes(userAttributeValue);
   }
 
   @override
-  Future<void> setUserBirthDate(String birthDate) {
-    // TODO: implement setUserBirthDate
-    throw UnimplementedError();
+  Future<void> setUserBirthDate(String birthDate) async {
+    return await super.setUserBirthDate(birthDate);
   }
 
   @override
-  Future<void> setUserCompany(String company) {
-    // TODO: implement setUserCompany
-    throw UnimplementedError();
+  Future<void> setUserCompany(String company) async {
+    return await super.setUserCompany(company);
   }
 
   @override
-  Future<void> setUserDevicePushOptIn(bool status) {
-    // TODO: implement setUserDevicePushOptIn
-    throw UnimplementedError();
+  Future<void> setUserDevicePushOptIn(bool status) async {
+    return await super.setUserDevicePushOptIn(status);
   }
 
   @override
-  Future<void> setUserEmail(String email) {
-    // TODO: implement setUserEmail
-    throw UnimplementedError();
+  Future<void> setUserEmail(String email) async {
+    return await super.setUserEmail(email);
   }
 
   @override
-  Future<void> setUserFirstName(String firstName) {
-    // TODO: implement setUserFirstName
-    throw UnimplementedError();
+  Future<void> setUserFirstName(String firstName) async {
+    return await super.setUserFirstName(firstName);
   }
 
   @override
-  Future<void> setUserGender(String gender) {
-    // TODO: implement setUserGender
-    throw UnimplementedError();
+  Future<void> setUserGender(String gender) async {
+    return await super.setUserGender(gender);
   }
 
   @override
-  Future<void> setUserHashedEmail(String email) {
-    // TODO: implement setUserHashedEmail
-    throw UnimplementedError();
+  Future<void> setUserHashedEmail(String email) async {
+    return await super.setUserHashedEmail(email);
   }
 
   @override
-  Future<void> setUserHashedPhone(String phone) {
-    // TODO: implement setUserHashedPhone
-    throw UnimplementedError();
+  Future<void> setUserHashedPhone(String phone) async {
+    return await super.setUserHashedPhone(phone);
   }
 
   @override
-  Future<void> setUserLastName(String lastName) {
-    // TODO: implement setUserLastName
-    throw UnimplementedError();
+  Future<void> setUserLastName(String lastName) async {
+    return await super.setUserLastName(lastName);
   }
 
   @override
-  Future<void> setUserLocation(double lat, double lng) {
-    // TODO: implement setUserLocation
-    throw UnimplementedError();
+  Future<void> setUserLocation(double lat, double lng) async {
+    return await super.setUserLocation(lat, lng);
   }
 
   @override
-  Future<void> setUserOptIn(String channel, bool optIn) {
-    // TODO: implement setUserOptIn
-    throw UnimplementedError();
+  Future<void> setUserOptIn(String channel, bool optIn) async {
+    return await super.setUserOptIn(channel, optIn);
   }
 
   @override
-  Future<void> setUserPhone(String phone) {
-    // TODO: implement setUserPhone
-    throw UnimplementedError();
+  Future<void> setUserPhone(String phone) async {
+    return await super.setUserPhone(phone);
   }
 
   @override
-  Future<void> startGAIDTracking() {
-    // TODO: implement startGAIDTracking
-    throw UnimplementedError();
+  Future<void> startGAIDTracking() async {
+    return await methodChannel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
   }
 
   @override
   void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
-    // TODO: implement tokenInvalidatedCallback
+    super.tokenInvalidatedCallback(onTokenInvalidated);
   }
-
-  @override
-  // TODO: implement trackDeeplinkStream
-  Stream<String?> get trackDeeplinkStream => throw UnimplementedError();
-
-  @override
-  // TODO: implement trackDeeplinkURLStreamSink
-  Sink get trackDeeplinkURLStreamSink => throw UnimplementedError();
 
   @override
   Future<void> trackEvent(String eventName,
-      [Map<String, dynamic>? attributes]) {
-    // TODO: implement trackEvent
-    throw UnimplementedError();
+      [Map<String, dynamic>? attributes]) async {
+    return await super.trackEvent(eventName, attributes);
   }
 
   @override
-  Future<void> trackScreen(String eventName,
-      [Map<String, dynamic>? screenData]) {
-    // TODO: implement trackScreen
-    throw UnimplementedError();
+  Future<void> trackScreen(String screenName,
+      [Map<String, dynamic>? screenData]) async {
+    return await super.trackScreen(screenName, screenData);
   }
 
   @override
-  Future<void> userLogin(String userId, [String? secureToken]) {
-    // TODO: implement userLogin
-    throw UnimplementedError();
+  Future<void> userLogin(String userId, [String? secureToken]) async {
+    return await super.userLogin(userId, secureToken);
   }
 
   @override
-  Future<void> userLogout() {
-    Logger.d("Not available");
-    return Future.value(null);
+  Future<void> userLogout() async {
+    return await super.userLogout();
   }
 }

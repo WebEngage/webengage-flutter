@@ -8,6 +8,15 @@ import '../webengage_flutter.dart';
 class WebEngagePlugin {
   static final WePluginManager _manager = WePluginManager();
 
+  static final WebEngagePlugin _webengagePlugin =
+      new WebEngagePlugin._internal();
+
+  factory WebEngagePlugin() => _webengagePlugin;
+
+  WebEngagePlugin._internal() {
+    _manager.init();
+  }
+
   Stream<PushPayload> get pushStream {
     return _manager.pushStream;
   }

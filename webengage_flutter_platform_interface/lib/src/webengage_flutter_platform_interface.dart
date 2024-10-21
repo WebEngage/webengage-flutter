@@ -10,7 +10,9 @@ typedef MessageHandlerPushClick<T> = void Function(
     Map<String, T>? message, String? s);
 
 abstract class WebEngageFlutterPlatform extends PlatformInterface {
-  WebEngageFlutterPlatform() : super(token: _token);
+  WebEngageFlutterPlatform() : super(token: _token) {
+    print("WebEngageFlutterPlatform called ${hashCode} ${_token.hashCode}");
+  }
 
   static final Object _token = Object();
 
@@ -22,6 +24,8 @@ abstract class WebEngageFlutterPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
+
+  void init();
 
   Stream<PushPayload> get pushStream;
 
@@ -87,7 +91,7 @@ abstract class WebEngageFlutterPlatform extends PlatformInterface {
   Future<void> setUserAttribute(
       String attributeName, dynamic userAttributeValue);
 
-  Future<void> trackScreen(String eventName,
+  Future<void> trackScreen(String screenName,
       [Map<String, dynamic>? screenData]);
 
   Future<void> startGAIDTracking();
