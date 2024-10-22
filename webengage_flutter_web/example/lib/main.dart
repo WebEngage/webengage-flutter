@@ -50,7 +50,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
     initWebEngage();
-    handleWeb();
   }
 
   void handleWeb() {
@@ -64,6 +63,23 @@ class _MyAppState extends State<MyApp> {
     });
     WebEngagePlugin.web()?.onSessionStarted(() {
       print("Main.dart onSession Started");
+    });
+    WebEngagePlugin.web()?.checkPushNotificationSupport((bool) {
+      print("Main.dart Supported $bool");
+    });
+    //WebEngagePlugin.web()?.setOption("webpush.disablePrompt", true);
+    //WebEngagePlugin.web()?.setOption("webpush.registerServiceWorker", false);
+    WebEngagePlugin.web()?.checkSubscriptionStatus((bool) {
+      print("Main.dart checkSubscriptionStatus $bool");
+      if (!bool) {
+        WebEngagePlugin.web()?.onPushSubscribe(() {
+          print("Subscribe");
+        });
+      }
+    });
+    WebEngagePlugin.web()?.handleWebPushEvent(WebPushEventType.onPushRegistered,
+        () {
+      print("Main.dart register");
     });
   }
 
@@ -178,6 +194,11 @@ class _MyAppState extends State<MyApp> {
           ),
           body: ListView(
             children: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    handleWeb();
+                  },
+                  child: Text("WEB ")),
               new ListTile(
                 title: Text("$data"),
                 onTap: () {

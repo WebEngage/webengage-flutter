@@ -10,11 +10,19 @@ abstract class WEWeb {
 
   void setSurveyOption(optionKey, value);
 
-  void onWebEngageReady(callback);
+  void onWebEngageReady(Function callback);
 
   void handleSurveyEvent(SurveyEventType eventType, callback);
 
   void handleNotificationEvent(NotificationEventType eventType, callback);
 
   void handleWebPushEvent(WebPushEventType eventType, Function callback);
+
+  void promptPushNotification();
+
+  void onPushSubscribe(Function callback);
+
+  void checkSubscriptionStatus(Function(bool) callback);
+
+  void checkPushNotificationSupport(Function(bool) callback);
 }
