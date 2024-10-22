@@ -226,4 +226,10 @@ class MethodChannelWebEngageFlutter extends WebEngageFlutterPlatform {
     methodChannel.setMethodCallHandler(platformCallHandler);
     methodChannel.invokeMethod(methodInitialise);
   }
+
+  @override
+  WEWeb? web() {
+    Logger.e("web : : Not supported in Android/iOS Platform");
+    return null;
+  }
 }

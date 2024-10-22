@@ -331,4 +331,8 @@ class WePluginManager {
   Future<void> startGAIDTracking() async {
     return await _platform.startGAIDTracking();
   }
+
+  WEWeb? web() {
+    return _platform.web();
+  }
 }

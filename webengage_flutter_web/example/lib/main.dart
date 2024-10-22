@@ -50,6 +50,21 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
     initWebEngage();
+    handleWeb();
+  }
+
+  void handleWeb() {
+    WebEngagePlugin.web()
+        ?.handleNotificationEvent(NotificationEventType.onClose, (data) {
+      print("Main.dart close $data");
+    });
+    WebEngagePlugin.web()?.handleNotificationEvent(NotificationEventType.onOpen,
+        (data) {
+      print("Main.dart open $data");
+    });
+    WebEngagePlugin.web()?.onSessionStarted(() {
+      print("Main.dart onSession Started");
+    });
   }
 
   void initWebEngage() {
@@ -136,7 +151,8 @@ class _MyAppState extends State<MyApp> {
                     WebEngagePlugin.userLogin(username);
                   } else {
                     // loginWithsecureToken
-                    print("WebEngage: Login with secureToken");
+                    print(
+                        "WebEngage: Login with secureToken $username $secureToken");
                     WebEngagePlugin.userLogin(username, secureToken);
                   }
                 }
@@ -197,21 +213,21 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Set FirstName"),
                 onTap: () {
-                  WebEngagePlugin.setUserFirstName('Sourabh');
+                  WebEngagePlugin.setUserFirstName('Milind');
                   showToast("User FirstName- Sourabh");
                 },
               ),
               new ListTile(
                 title: Text("Set LastName"),
                 onTap: () {
-                  WebEngagePlugin.setUserLastName('Gupta');
+                  WebEngagePlugin.setUserLastName('K');
                   showToast("LastName Gupta");
                 },
               ),
               new ListTile(
                 title: Text("Set UserEmail"),
                 onTap: () {
-                  WebEngagePlugin.setUserEmail('ram@gmail.com');
+                  WebEngagePlugin.setUserEmail('mk@gmail.com');
                   showToast("Email - ram@gmail.com");
                 },
               ),

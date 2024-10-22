@@ -97,4 +97,6 @@ abstract class WebEngageFlutterPlatform extends PlatformInterface {
   Future<void> startGAIDTracking();
 
   Future<void> platformCallHandler(MethodCall call);
+
+  WEWeb? web();
 }

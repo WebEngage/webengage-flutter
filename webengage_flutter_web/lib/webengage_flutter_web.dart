@@ -4,11 +4,12 @@ import 'dart:js_util' as js_util;
 import 'package:flutter/src/services/message_codec.dart';
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 import 'package:webengage_flutter_web/src/extension.dart';
-import 'package:webengage_flutter_web/src/utils/Utils.dart';
+import 'package:webengage_flutter_web/src/model/we_web.dart';
 import 'package:webengage_flutter_web/src/utils/constants.dart';
 
 class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
   var webengage, user;
+  WEWeb? _web;
 
   static void registerWith([Object? registrar]) {
     WebEngageFlutterPlatform.instance = WebengageFlutterWeb();
@@ -17,41 +18,6 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
   @override
   void init() {
     webEngageInitialize();
-    _handleCallbacks();
-  }
-
-  void _handleCallbacks() {
-    var notification =
-        js_util.getProperty(webengage, WEB_METHOD_NAME_NOTIFICATION);
-    if (notification != null) {
-      js_util.callMethod(notification, WEB_METHOD_NAME_NOTIFICATION_ON_CLICK, [
-        js_util.allowInterop((data) {
-          var object = convertJsObjectToMap(data);
-          //TODO : ID
-          if (onInAppClick != null) {
-            onInAppClick!(object, "");
-          }
-          print(object);
-        })
-      ]);
-      js_util.callMethod(notification, WEB_METHOD_NAME_NOTIFICATION_ON_OPEN, [
-        js_util.allowInterop((data) {
-          var object = convertJsObjectToMap(data);
-          if (onInAppShown != null) {
-            onInAppShown!(object);
-          }
-        })
-      ]);
-      js_util.callMethod(notification, WEB_METHOD_NAME_NOTIFICATION_ON_CLOSE, [
-        js_util.allowInterop((data) {
-          print("data $data");
-          var object = convertJsObjectToMap(data);
-          if (onInAppDismiss != null) {
-            onInAppDismiss!(object);
-          }
-        })
-      ]);
-    }
   }
 
   void webEngageInitialize() {
@@ -96,8 +62,7 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
 
   @override
   Future<void> setUserAttributes(Map userAttributeValue) {
-    //TODO : need to check
-    this.performUserAttributeAction(userAttributeValue);
+    this.performUserAttributeAction(js_util.jsify(userAttributeValue));
     return Future.value();
   }
 
@@ -115,6 +80,7 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
 
   @override
   Future<void> setUserDevicePushOptIn(bool status) {
+    // TODO : NOT WORKING
     this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_PUSH_OPT_IN, status]);
     return Future.value();
   }
@@ -163,6 +129,7 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
 
   @override
   Future<void> setUserOptIn(String channel, bool optIn) {
+    // TODO : Need to check
     this.performUserAttributeAction([channel, optIn]);
     return Future.value();
   }
@@ -175,7 +142,7 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
 
   @override
   Future<void> startGAIDTracking() {
-    Logger.e("startGAIDTracking : : Not supported in Web Platform");
+    Logger.e("startGAIDTracking : Not supported in Web Platform");
     return Future.value();
   }
 
@@ -194,6 +161,7 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
   @override
   Future<void> trackScreen(String screenName,
       [Map<String, dynamic>? screenData]) {
+    // TODO : not working
     this.performTrackScreen(screenName, screenData);
     return Future.value();
   }
@@ -208,5 +176,11 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
   Future<void> userLogout() {
     this.performUserAction(WEB_METHOD_NAME_USER_LOGOUT, []);
     return Future.value();
+  }
+
+  @override
+  WEWeb? web() {
+    if (_web == null) _web = WEWebImplementation(webengage);
+    return _web;
   }
 }

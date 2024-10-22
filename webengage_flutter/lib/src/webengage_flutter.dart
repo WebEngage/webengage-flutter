@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
-
 import '../webengage_flutter.dart';
 
 /// A Flutter plugin for integrating WebEngage SDK into your Flutter applications.
@@ -189,5 +187,9 @@ class WebEngagePlugin {
   /// Returns a Future<void> indicating completion, or does nothing if the platform is not Android.
   static Future<void> startGAIDTracking() async {
     return await _manager.startGAIDTracking();
+  }
+
+  static WEWeb? web() {
+    return _manager.web();
   }
 }
