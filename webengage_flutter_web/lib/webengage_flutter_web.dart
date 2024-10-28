@@ -3,16 +3,16 @@ import 'dart:js_util' as js_util;
 
 import 'package:flutter/src/services/message_codec.dart';
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
-import 'package:webengage_flutter_web/src/extension.dart';
+import 'package:webengage_flutter_web/src/extension/we_extension.dart';
 import 'package:webengage_flutter_web/src/model/we_web.dart';
-import 'package:webengage_flutter_web/src/utils/constants.dart';
+import 'package:webengage_flutter_web/src/utils/we_constants.dart';
 
-class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
+class WebengageFlutterWeb extends WEMethodChannel {
   var webengage, user;
   WEWeb? _web;
 
   static void registerWith([Object? registrar]) {
-    WebEngageFlutterPlatform.instance = WebengageFlutterWeb();
+    WEPlatformInterface.instance = WebengageFlutterWeb();
   }
 
   @override
@@ -27,15 +27,14 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
 
   @override
   Future<void> platformCallHandler(MethodCall call) {
-    // TODO: implement platformCallHandler
-    throw UnimplementedError();
+    WELogger.e("platformCallHandler $WEB_METHOD_NOT_SUPPORTED");
+    return Future.value();
   }
 
   @override
   @override
   Future<void> setSecureToken(String userId, String secureToken) {
-    print("$userId $secureToken");
-    this.performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
+    performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
     return Future.value();
   }
 
@@ -45,79 +44,79 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
       MessageHandler onInAppShown,
       MessageHandler onInAppDismiss,
       MessageHandler onInAppPrepared) {
-    // TODO: implement setUpInAppCallbacks
+    WELogger.i("setUpInAppCallbacks $WEB_METHOD_NOT_SUPPORTED");
   }
 
   @override
   void setUpPushCallbacks(MessageHandlerPushClick onPushClick,
       MessageHandlerPushClick onPushActionClick) {
-    // TODO: implement setUpPushCallbacks
+    WELogger.i("setUpPushCallbacks $WEB_METHOD_NOT_SUPPORTED");
   }
 
   @override
   Future<void> setUserAttribute(String attributeName, userAttributeValue) {
-    this.performUserAttributeAction([attributeName, userAttributeValue]);
+    performUserAttributeAction([attributeName, userAttributeValue]);
     return Future.value();
   }
 
   @override
   Future<void> setUserAttributes(Map userAttributeValue) {
-    this.performUserAttributeAction(js_util.jsify(userAttributeValue));
+    performUserAttributeAction(js_util.jsify(userAttributeValue));
     return Future.value();
   }
 
   @override
   Future<void> setUserBirthDate(String birthDate) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_BIRTH_DATE, birthDate]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_BIRTH_DATE, birthDate]);
     return Future.value();
   }
 
   @override
   Future<void> setUserCompany(String company) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_COMPANY, company]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_COMPANY, company]);
     return Future.value();
   }
 
   @override
   Future<void> setUserDevicePushOptIn(bool status) {
     // TODO : NOT WORKING
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_PUSH_OPT_IN, status]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_PUSH_OPT_IN, status]);
     return Future.value();
   }
 
   @override
   Future<void> setUserEmail(String email) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_EMAIL, email]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_EMAIL, email]);
     return Future.value();
   }
 
   @override
   Future<void> setUserFirstName(String firstName) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_FIRST_NAME, firstName]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_FIRST_NAME, firstName]);
     return Future.value();
   }
 
   @override
   Future<void> setUserGender(String gender) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_GENDER, gender]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_GENDER, gender]);
     return Future.value();
   }
 
   @override
   Future<void> setUserHashedEmail(String email) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_HASH_EMAIL, email]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_HASH_EMAIL, email]);
     return Future.value();
   }
 
   @override
   Future<void> setUserHashedPhone(String phone) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_HASH_PHONE, phone]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_HASH_PHONE, phone]);
     return Future.value();
   }
 
   @override
   Future<void> setUserLastName(String lastName) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_LAST_NAME, lastName]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_LAST_NAME, lastName]);
     return Future.value();
   }
 
@@ -130,19 +129,19 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
   @override
   Future<void> setUserOptIn(String channel, bool optIn) {
     // TODO : Need to check
-    this.performUserAttributeAction([channel, optIn]);
+    performUserAttributeAction([channel, optIn]);
     return Future.value();
   }
 
   @override
   Future<void> setUserPhone(String phone) {
-    this.performUserAttributeAction([WEB_ATTRIBUTE_NAME_PHONE, phone]);
+    performUserAttributeAction([WEB_ATTRIBUTE_NAME_PHONE, phone]);
     return Future.value();
   }
 
   @override
   Future<void> startGAIDTracking() {
-    Logger.e("startGAIDTracking : Not supported in Web Platform");
+    WELogger.e("startGAIDTracking $WEB_METHOD_NOT_SUPPORTED");
     return Future.value();
   }
 
@@ -154,7 +153,7 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
   @override
   Future<void> trackEvent(String eventName,
       [Map<String, dynamic>? attributes]) {
-    this.performTrackEvent(eventName, attributes);
+    performTrackEvent(eventName, attributes);
     return Future.value();
   }
 
@@ -162,25 +161,25 @@ class WebengageFlutterWeb extends MethodChannelWebEngageFlutter {
   Future<void> trackScreen(String screenName,
       [Map<String, dynamic>? screenData]) {
     // TODO : not working
-    this.performTrackScreen(screenName, screenData);
+    performTrackScreen(screenName, screenData);
     return Future.value();
   }
 
   @override
   Future<void> userLogin(String userId, [String? secureToken]) {
-    this.performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
+    performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
     return Future.value();
   }
 
   @override
   Future<void> userLogout() {
-    this.performUserAction(WEB_METHOD_NAME_USER_LOGOUT, []);
+    performUserAction(WEB_METHOD_NAME_USER_LOGOUT, []);
     return Future.value();
   }
 
   @override
   WEWeb? web() {
-    if (_web == null) _web = WEWebImplementation(webengage);
+    _web ??= WEWebImplementation(webengage);
     return _web;
   }
 }

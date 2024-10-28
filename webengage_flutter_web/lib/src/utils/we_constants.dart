@@ -27,3 +27,5 @@ const String WEB_ATTRIBUTE_NAME_EMAIL_OPT_IN = "we_email_opt_in";
 const String WEB_ATTRIBUTE_NAME_SMS_OPT_IN = "we_sms_opt_in";
 const String WEB_ATTRIBUTE_NAME_WHATSAPP_OPT_IN = "we_whatsapp_opt_in";
 const String WEB_ATTRIBUTE_NAME_PUSH_OPT_IN = "we_push_opt_in";
+
+const String WEB_METHOD_NOT_SUPPORTED = ": Not supported in Web Platform";

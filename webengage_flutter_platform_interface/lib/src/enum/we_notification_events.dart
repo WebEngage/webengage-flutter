@@ -1,6 +1,6 @@
-enum NotificationEventType { onOpen, onClose, onClick }
+enum WENotificationActionType { onOpen, onClose, onClick }
 
-enum WebPushEventType {
+enum WEWebPushEvent {
   onWindowViewed,
   onWindowAllowed,
   onWindowDenied,

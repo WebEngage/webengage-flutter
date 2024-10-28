@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart' hide MessageHandler;
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 
-import '../webengage_flutter_android.dart';
+import '../../webengage_flutter_android.dart';
 
-extension WebEngageChannelExt on WebEngageFlutterAndroid {
+extension WEChannelExt on WEFlutterAndroid {
   void handlePushClick(MethodCall call) {
     Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
     String? deepLink = message?[PAYLOAD][URI];

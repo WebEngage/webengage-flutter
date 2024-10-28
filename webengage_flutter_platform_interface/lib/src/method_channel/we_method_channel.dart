@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/services.dart' hide MessageHandler;
 
-import '../webengage_flutter_platform_interface.dart';
+import '../../webengage_flutter_platform_interface.dart';
 
-class MethodChannelWebEngageFlutter extends WebEngageFlutterPlatform {
+class WEMethodChannel extends WEPlatformInterface {
   MessageHandlerPushClick? onPushClick;
   MessageHandlerPushClick? onPushActionClick;
   MessageHandlerInAppClick? onInAppClick;
@@ -229,7 +229,7 @@ class MethodChannelWebEngageFlutter extends WebEngageFlutterPlatform {
 
   @override
   WEWeb? web() {
-    Logger.e("web : : Not supported in Android/iOS Platform");
+    WELogger.e("web : : Not supported in Android/iOS Platform");
     return null;
   }
 }

@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
 class _MyAppState extends State<MyApp> {
@@ -46,45 +48,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    initPlatformState();
     initWebEngage();
-    handleWeb();
-  }
-
-  void handleWeb() {
-    WebEngagePlugin.web()?.onWebEngageReady(() {
-      WebEngagePlugin.web()
-          ?.handleNotificationEvent(WENotificationActionType.onClose, (data) {
-        print("Main.dart close $data");
-      });
-      WebEngagePlugin.web()
-          ?.handleNotificationEvent(WENotificationActionType.onOpen, (data) {
-        print("Main.dart open $data");
-      });
-      WebEngagePlugin.web()?.onSessionStarted(() {
-        print("Main.dart onSession Started");
-      });
-      WebEngagePlugin.web()?.checkPushNotificationSupport((bool) {
-        print("Main.dart Supported $bool");
-      });
-      WebEngagePlugin.web()?.setOption("webpush.disablePrompt", false);
-      WebEngagePlugin.web()?.setOption("webpush.registerServiceWorker", true);
-      WebEngagePlugin.web()?.checkSubscriptionStatus((bool) {
-        print("Main.dart checkSubscriptionStatus $bool");
-        if (!bool) {
-          WebEngagePlugin.web()?.onPushSubscribe(() {
-            print("Subscribe");
-          });
-        }
-      });
-      WebEngagePlugin.web()?.handleWebPushEvent(WEWebPushEvent.onWindowAllowed,
-          () {
-        print("Main.dart register");
-      });
-    });
   }
 
   void initWebEngage() {
-    _webEngagePlugin = WebEngagePlugin();
+    _webEngagePlugin = new WebEngagePlugin();
     _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
     _webEngagePlugin.setUpInAppCallbacks(
         _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
@@ -109,6 +78,20 @@ class _MyAppState extends State<MyApp> {
         data = "${event}";
       });
     });
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    if (Platform.isAndroid) {
+      if (await Permission.notification.request().isGranted) {
+        // Either the permission was already granted before or the user just granted it.
+        print("notification Permission is granted");
+        WebEngagePlugin.setUserDevicePushOptIn(true);
+      } else {
+        print("notification Permission is denied.");
+        WebEngagePlugin.setUserDevicePushOptIn(false);
+      }
+    }
   }
 
   var anonymousId = "null";
@@ -152,8 +135,7 @@ class _MyAppState extends State<MyApp> {
                     WebEngagePlugin.userLogin(username);
                   } else {
                     // loginWithsecureToken
-                    print(
-                        "WebEngage: Login with secureToken $username $secureToken");
+                    print("WebEngage: Login with secureToken");
                     WebEngagePlugin.userLogin(username, secureToken);
                   }
                 }
@@ -179,11 +161,6 @@ class _MyAppState extends State<MyApp> {
           ),
           body: ListView(
             children: <Widget>[
-              ElevatedButton(
-                  onPressed: () {
-                    handleWeb();
-                  },
-                  child: Text("WEB ")),
               new ListTile(
                 title: Text("$data"),
                 onTap: () {
@@ -219,21 +196,21 @@ class _MyAppState extends State<MyApp> {
               new ListTile(
                 title: Text("Set FirstName"),
                 onTap: () {
-                  WebEngagePlugin.setUserFirstName('Milind');
+                  WebEngagePlugin.setUserFirstName('Sourabh');
                   showToast("User FirstName- Sourabh");
                 },
               ),
               new ListTile(
                 title: Text("Set LastName"),
                 onTap: () {
-                  WebEngagePlugin.setUserLastName('K');
+                  WebEngagePlugin.setUserLastName('Gupta');
                   showToast("LastName Gupta");
                 },
               ),
               new ListTile(
                 title: Text("Set UserEmail"),
                 onTap: () {
-                  WebEngagePlugin.setUserEmail('mk@gmail.com');
+                  WebEngagePlugin.setUserEmail('ram@gmail.com');
                   showToast("Email - ram@gmail.com");
                 },
               ),
@@ -459,12 +436,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   void subscribeToAnonymousIDCallback() {
-    // _webEngagePlugin.anonymousActionStream.listen((event) {
-    //   //  var message = event as Map<String,dynamic>;
-    //   this.setState(() {
-    //     anonymousId  =  "${event}";
-    //   });
-    // });
+    _webEngagePlugin.anonymousActionStream.listen((event) {
+      //  var message = event as Map<String,dynamic>;
+      this.setState(() {
+        anonymousId = "${event}";
+      });
+    });
   }
 
   final navigatorKey = GlobalKey<NavigatorState>();

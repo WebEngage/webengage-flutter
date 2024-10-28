@@ -1,13 +1,13 @@
 import 'dart:js_util' as js_util;
 
-import 'package:webengage_flutter_web/src/utils/constants.dart';
+import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
+import 'package:webengage_flutter_web/src/utils/we_constants.dart';
 
-import '../webengage_flutter_web.dart';
+import '../../webengage_flutter_web.dart';
 
-extension WebengageFlutterWebExtension on WebengageFlutterWeb {
+extension WEWebExtension on WebengageFlutterWeb {
   Future<void> performUserAction(String action, dynamic args) async {
     user = js_util.getProperty(webengage, WEB_METHOD_NAME_USER);
-    print("performUserAction $action $args");
     if (user != null) {
       try {
         if (args is! List) {
@@ -15,17 +15,16 @@ extension WebengageFlutterWebExtension on WebengageFlutterWeb {
         }
         js_util.callMethod(user, action, args);
       } catch (e) {
-        print("Error calling $action: $e");
+        WELogger.e("Error calling $action: $e");
       }
     } else {
-      print("User object is null.");
+      WELogger.e("User object is null.");
     }
     return Future.value();
   }
 
   Future<void> performUserAttributeAction(dynamic args) async {
     var action = WEB_METHOD_NAME_SET_ATTRIBUTE;
-    print("performUserAction ${WEB_METHOD_NAME_SET_ATTRIBUTE} $args");
     if (user != null) {
       try {
         if (args is! List) {
@@ -33,17 +32,16 @@ extension WebengageFlutterWebExtension on WebengageFlutterWeb {
         }
         js_util.callMethod(user, action, args);
       } catch (e) {
-        print("Error calling $action: $e");
+        WELogger.e("Error calling $action: $e");
       }
     } else {
-      print("User object is null.");
+      WELogger.e("User object is null.");
     }
     return Future.value();
   }
 
   Future<void> performTrackEvent(String eventName, dynamic eventData) async {
     var action = WEB_METHOD_NAME_TRACK;
-    print("performUserAction track $eventName $eventData");
     if (webengage != null) {
       try {
         if (eventData != null) {
@@ -53,17 +51,16 @@ extension WebengageFlutterWebExtension on WebengageFlutterWeb {
           js_util.callMethod(webengage, action, [eventName]);
         }
       } catch (e) {
-        print("Error calling $action: $e");
+        WELogger.e("Error calling $action: $e");
       }
     } else {
-      print("User object is null.");
+      WELogger.e("User object is null.");
     }
     return Future.value();
   }
 
   Future<void> performTrackScreen(String screenName, dynamic screenData) async {
     var action = WEB_METHOD_NAME_SCREEN;
-    print("performUserAction track $screenName $screenData");
     if (webengage != null) {
       try {
         if (screenData != null) {
@@ -73,10 +70,10 @@ extension WebengageFlutterWebExtension on WebengageFlutterWeb {
           js_util.callMethod(webengage, action, [screenName]);
         }
       } catch (e) {
-        print("Error calling $action: $e");
+        WELogger.e("Error calling $action: $e");
       }
     } else {
-      print("User object is null.");
+      WELogger.e("User object is null.");
     }
     return Future.value();
   }

@@ -1,5 +1,5 @@
-import '../enum/notification_event_type.dart';
-import '../enum/survey_event_type.dart';
+import '../enum/we_notification_events.dart';
+import '../enum/we_survey_event.dart';
 
 abstract class WEWeb {
   void onSessionStarted(Function callback);
@@ -12,11 +12,11 @@ abstract class WEWeb {
 
   void onWebEngageReady(Function callback);
 
-  void handleSurveyEvent(SurveyEventType eventType, callback);
+  void handleSurveyEvent(WESurveyEventType eventType, callback);
 
-  void handleNotificationEvent(NotificationEventType eventType, callback);
+  void handleNotificationEvent(WENotificationActionType eventType, callback);
 
-  void handleWebPushEvent(WebPushEventType eventType, Function callback);
+  void handleWebPushEvent(WEWebPushEvent eventType, Function callback);
 
   void promptPushNotification();
 

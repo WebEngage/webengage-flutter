@@ -2,8 +2,8 @@ import 'dart:js_util' as js_util;
 
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 
-import '../utils/Utils.dart';
-import '../utils/constants.dart';
+import '../utils/we_constants.dart';
+import '../utils/we_utils.dart';
 
 class WEWebImplementation extends WEWeb {
   final dynamic webengage;
@@ -12,7 +12,7 @@ class WEWebImplementation extends WEWeb {
   WEWebImplementation(this.webengage);
 
   @override
-  void handleSurveyEvent(SurveyEventType eventType, callback) {
+  void handleSurveyEvent(WESurveyEventType eventType, callback) {
     var survey = js_util.getProperty(webengage, WEB_METHOD_NAME_SURVEY);
     if (survey != null) {
       _addCallback(survey, eventType.name, callback);
@@ -25,10 +25,9 @@ class WEWebImplementation extends WEWeb {
     var onReady = js_util.getProperty(webengage, 'onReady');
 
     if (onReady != null && _onReadyCallbacks.length == 1) {
-      // Ensuring we only bind `onReady` once
       js_util.callMethod(webengage, 'onReady', [
         js_util.allowInterop(() {
-          Logger.w("onWebEngageReady");
+          WELogger.w("onWebEngageReady");
           for (var cb in _onReadyCallbacks) {
             cb(); // Trigger all registered callbacks
           }
@@ -38,7 +37,9 @@ class WEWebImplementation extends WEWeb {
   }
 
   @override
-  void setNotificationOption(optionKey, value) {}
+  void setNotificationOption(optionKey, value) {
+    js_util.callMethod(webengage, 'notification.options', [optionKey, value]);
+  }
 
   @override
   void setOption(optionKey, value) {
@@ -49,7 +50,7 @@ class WEWebImplementation extends WEWeb {
   void setSurveyOption(optionKey, value) {}
 
   @override
-  void handleNotificationEvent(NotificationEventType eventType, callback) {
+  void handleNotificationEvent(WENotificationActionType eventType, callback) {
     var notification =
         js_util.getProperty(webengage, WEB_METHOD_NAME_NOTIFICATION);
     if (notification != null) {
@@ -75,19 +76,19 @@ class WEWebImplementation extends WEWeb {
       js_util.callMethod(webengage, WEB_METHOD_NAME_ON_SESSION_STARTED,
           [js_util.allowInterop(callback)]);
     } else {
-      Logger.w(
+      WELogger.w(
           "WebEngage object is null or onSessionStarted method not available.");
     }
   }
 
   @override
-  void handleWebPushEvent(WebPushEventType eventType, Function callback) {
+  void handleWebPushEvent(WEWebPushEvent eventType, Function callback) {
     var eventMap = {
-      WebPushEventType.onWindowViewed: 'webpush.onWindowViewed',
-      WebPushEventType.onWindowAllowed: 'webpush.onWindowAllowed',
-      WebPushEventType.onWindowDenied: 'webpush.onWindowDenied',
-      WebPushEventType.onPushRegistered: 'webpush.onPushRegistered',
-      WebPushEventType.onPushUnregistered: 'webpush.onPushUnregistered',
+      WEWebPushEvent.onWindowViewed: 'webpush.onWindowViewed',
+      WEWebPushEvent.onWindowAllowed: 'webpush.onWindowAllowed',
+      WEWebPushEvent.onWindowDenied: 'webpush.onWindowDenied',
+      WEWebPushEvent.onPushRegistered: 'webpush.onPushRegistered',
+      WEWebPushEvent.onPushUnregistered: 'webpush.onPushUnregistered',
     };
 
     var eventName = eventMap[eventType];
@@ -95,7 +96,7 @@ class WEWebImplementation extends WEWeb {
       js_util.callMethod(webengage, WEB_METHOD_NAME_OPTIONS,
           [eventName, js_util.allowInterop(callback)]);
     } else {
-      Logger.w("WebEngage object is null or options method not available.");
+      WELogger.w("WebEngage object is null or options method not available.");
     }
   }
 
@@ -109,7 +110,6 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void onPushSubscribe(Function callback) {
-    Logger.w("onPushSubscribe calling");
     var webpush = js_util.getProperty(webengage, 'webpush');
     if (webpush != null) {
       js_util
@@ -119,12 +119,10 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void checkSubscriptionStatus(Function(bool) callback) {
-    Logger.w("Checking... checkSubscriptionStatus");
-    Logger.w("Checking... onWebEngageReady");
     var webpush = js_util.getProperty(webengage, 'webpush');
     if (webpush != null) {
       var subscribed = js_util.callMethod(webpush, 'isSubscribed', []);
-      Logger.e("Checking... $subscribed");
+      WELogger.e("Checking... $subscribed");
       callback(subscribed);
     }
   }

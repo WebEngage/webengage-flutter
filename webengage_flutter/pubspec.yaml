@@ -17,6 +17,8 @@ dependencies:
     path: ../webengage_flutter_android
   webengage_flutter_web:
     path: ../webengage_flutter_web
+  webengage_flutter_ios:
+    path: ../webengage_flutter_ios
 
 
 
@@ -30,6 +32,6 @@ flutter:
       android:
         default_package: webengage_flutter_android
       ios:
-        pluginClass: WebEngagePlugin
+        default_package: webengage_flutter_ios
       web:
         default_package: webengage_flutter_web

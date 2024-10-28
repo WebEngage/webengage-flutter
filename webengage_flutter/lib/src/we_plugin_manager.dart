@@ -5,7 +5,7 @@ import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_
 
 /// A Flutter plugin for integrating WebEngage SDK into your Flutter applications.
 class WePluginManager {
-  WebEngageFlutterPlatform get _platform => WebEngageFlutterPlatform.instance;
+  WEPlatformInterface get _platform => WEPlatformInterface.instance;
 
   static final WePluginManager _webengagePlugin =
       new WePluginManager._internal();

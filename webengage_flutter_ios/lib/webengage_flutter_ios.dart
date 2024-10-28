@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/services.dart' hide MessageHandler;
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 
-import '/src/we_extension/we_extension.dart';
+import 'src/we_extension/we_extension.dart';
 
-class WEFlutterAndroid extends WEMethodChannel {
+class WEFlutterIos extends WEMethodChannel {
   static void registerWith() {
-    WEPlatformInterface.instance = WEFlutterAndroid();
+    WEPlatformInterface.instance = WEFlutterIos();
   }
 
   @override
@@ -18,6 +18,7 @@ class WEFlutterAndroid extends WEMethodChannel {
 
   @override
   Future<void> platformCallHandler(MethodCall call) {
+    WELogger.w("platformCallHandler ${call.method}");
     switch (call.method) {
       case callbackOnPushClick:
       case callbackOnPushActionClick:

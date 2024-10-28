@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../webengage_flutter_platform_interface.dart';
+import '../../webengage_flutter_platform_interface.dart';
 
 typedef MessageHandler<T> = void Function(Map<String, T>? message);
 typedef MessageHandlerInAppClick<T> = void Function(
@@ -9,18 +9,18 @@ typedef MessageHandlerInAppClick<T> = void Function(
 typedef MessageHandlerPushClick<T> = void Function(
     Map<String, T>? message, String? s);
 
-abstract class WebEngageFlutterPlatform extends PlatformInterface {
-  WebEngageFlutterPlatform() : super(token: _token) {
-    print("WebEngageFlutterPlatform called ${hashCode} ${_token.hashCode}");
+abstract class WEPlatformInterface extends PlatformInterface {
+  WEPlatformInterface() : super(token: _token) {
+    WELogger.v("WebEngageFlutterPlatform");
   }
 
   static final Object _token = Object();
 
-  static WebEngageFlutterPlatform _instance = MethodChannelWebEngageFlutter();
+  static WEPlatformInterface _instance = WEMethodChannel();
 
-  static WebEngageFlutterPlatform get instance => _instance;
+  static WEPlatformInterface get instance => _instance;
 
-  static set instance(WebEngageFlutterPlatform instance) {
+  static set instance(WEPlatformInterface instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }

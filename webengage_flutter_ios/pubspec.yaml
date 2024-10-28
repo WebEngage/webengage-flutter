@@ -1,4 +1,4 @@
-name: webengage_flutter_android
+name: webengage_flutter_ios
 description: "A new Flutter project."
 version: 0.0.1
 homepage:
@@ -16,14 +16,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  plugin_platform_interface: ^2.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
   plugin:
-    implements: webengage_flutter
     platforms:
-      android:
-        package: com.webengage.webengage_plugin
+      ios:
         pluginClass: WebEngagePlugin
-        dartPluginClass: WEFlutterAndroid
+        dartPluginClass: WEFlutterIos
+
 
