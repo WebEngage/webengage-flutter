@@ -5,7 +5,7 @@ import 'package:webengage_flutter_web/src/utils/we_constants.dart';
 
 import '../../webengage_flutter_web.dart';
 
-extension WEWebExtension on WebengageFlutterWeb {
+extension WEWebExtension on WEFlutterWeb {
   Future<void> performUserAction(String action, dynamic args) async {
     user = js_util.getProperty(webengage, WEB_METHOD_NAME_USER);
     if (user != null) {

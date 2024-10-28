@@ -7,12 +7,12 @@ import 'package:webengage_flutter_web/src/extension/we_extension.dart';
 import 'package:webengage_flutter_web/src/model/we_web.dart';
 import 'package:webengage_flutter_web/src/utils/we_constants.dart';
 
-class WebengageFlutterWeb extends WEMethodChannel {
+class WEFlutterWeb extends WEMethodChannel {
   var webengage, user;
   WEWeb? _web;
 
   static void registerWith([Object? registrar]) {
-    WEPlatformInterface.instance = WebengageFlutterWeb();
+    WEPlatformInterface.instance = WEFlutterWeb();
   }
 
   @override
