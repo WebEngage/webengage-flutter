@@ -1,5 +1,7 @@
 import '../enum/we_notification_events.dart';
 import '../enum/we_survey_event.dart';
+import '../enum/we_web_push_event.dart';
+
 
 abstract class WEWeb {
   void onSessionStarted(Function callback);

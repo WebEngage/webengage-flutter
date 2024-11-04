@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
@@ -47,7 +47,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initWebEngage();
-    handleWeb();
   }
 
   void handleWeb() {
@@ -85,14 +84,18 @@ class _MyAppState extends State<MyApp> {
 
   void initWebEngage() {
     _webEngagePlugin = WebEngagePlugin();
-    _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
-    _webEngagePlugin.setUpInAppCallbacks(
-        _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
-    _webEngagePlugin.tokenInvalidatedCallback(_onTokenInvalidated);
-    subscribeToPushCallbacks();
-    subscribeToTrackDeeplink();
-    subscribeToAnonymousIDCallback();
-    _listenToAnonymousID();
+   // if(Platform.isAndroid || Platform.isIOS) {
+      _webEngagePlugin.setUpPushCallbacks(_onPushClick, _onPushActionClick);
+      _webEngagePlugin.setUpInAppCallbacks(
+          _onInAppClick, _onInAppShown, _onInAppDismiss, _onInAppPrepared);
+      _webEngagePlugin.tokenInvalidatedCallback(_onTokenInvalidated);
+      subscribeToPushCallbacks();
+      subscribeToTrackDeeplink();
+      subscribeToAnonymousIDCallback();
+      _listenToAnonymousID();
+   // } else {
+      handleWeb();
+   // }
   }
 
   var data = "";
