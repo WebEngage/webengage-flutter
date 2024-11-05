@@ -29,3 +29,10 @@ const String WEB_ATTRIBUTE_NAME_WHATSAPP_OPT_IN = "we_whatsapp_opt_in";
 const String WEB_ATTRIBUTE_NAME_PUSH_OPT_IN = "we_push_opt_in";
 
 const String WEB_METHOD_NOT_SUPPORTED = ": Not supported in Web Platform";
+
+const String WEB_CHANNEL_PUSH = "push";
+const String WEB_CHANNEL_SMS = "sms";
+const String WEB_CHANNEL_IN_APP = "in_app";
+const String WEB_CHANNEL_EMAIL = "email";
+const String WEB_CHANNEL_WHATSAPP = "whatsapp";
+const String WEB_CHANNEL_VIBER = "viber";

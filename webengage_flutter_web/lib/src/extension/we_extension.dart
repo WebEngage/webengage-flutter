@@ -25,6 +25,7 @@ extension WEWebExtension on WEFlutterWeb {
 
   Future<void> performUserAttributeAction(dynamic args) async {
     var action = WEB_METHOD_NAME_SET_ATTRIBUTE;
+    user = js_util.getProperty(webengage, WEB_METHOD_NAME_USER);
     if (user != null) {
       try {
         if (args is! List) {

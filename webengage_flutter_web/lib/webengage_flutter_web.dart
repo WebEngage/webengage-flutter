@@ -22,7 +22,6 @@ class WEFlutterWeb extends WEMethodChannel {
 
   void webEngageInitialize() {
     webengage = js_util.getProperty(window, WEB_WEBENGAGE);
-    user = js_util.getProperty(webengage, WEB_METHOD_NAME_USER);
   }
 
   @override
@@ -79,8 +78,7 @@ class WEFlutterWeb extends WEMethodChannel {
 
   @override
   Future<void> setUserDevicePushOptIn(bool status) {
-    // TODO : NOT WORKING
-    performUserAttributeAction([WEB_ATTRIBUTE_NAME_PUSH_OPT_IN, status]);
+    setUserOptIn(WEB_CHANNEL_PUSH, status);
     return Future.value();
   }
 
@@ -122,13 +120,36 @@ class WEFlutterWeb extends WEMethodChannel {
 
   @override
   Future<void> setUserLocation(double lat, double lng) {
-    // TODO : how to pass it
+    WELogger.e("setUserLocation $WEB_METHOD_NOT_SUPPORTED");
     return Future.value();
   }
 
   @override
   Future<void> setUserOptIn(String channel, bool optIn) {
-    // TODO : Need to check
+    switch (channel.toLowerCase()) {
+      case WEB_CHANNEL_PUSH:
+      case WEB_CHANNEL_IN_APP:
+      case WEB_CHANNEL_VIBER:
+        WELogger.e("setUserOptIn $channel $WEB_METHOD_NOT_SUPPORTED");
+        return Future.value();
+
+      case WEB_CHANNEL_SMS:
+        channel = WEB_ATTRIBUTE_NAME_SMS_OPT_IN;
+        break;
+
+      case WEB_CHANNEL_EMAIL:
+        channel = WEB_ATTRIBUTE_NAME_EMAIL_OPT_IN;
+        break;
+
+      case WEB_CHANNEL_WHATSAPP:
+        channel = WEB_ATTRIBUTE_NAME_WHATSAPP_OPT_IN;
+        break;
+
+      default:
+        WELogger.e("Unknown channel: $channel");
+        return Future.value();
+    }
+    WELogger.i("channel: $channel $optIn");
     performUserAttributeAction([channel, optIn]);
     return Future.value();
   }
@@ -147,7 +168,14 @@ class WEFlutterWeb extends WEMethodChannel {
 
   @override
   void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
-    // TODO: implement tokenInvalidatedCallback
+    var options = js_util.getProperty(webengage, 'options');
+    if (options != null) {
+      js_util.callMethod(options, 'auth.tokenInvalidatedCallback', [
+        js_util.allowInterop(() {
+          onTokenInvalidated(null);
+        })
+      ]);
+    }
   }
 
   @override
