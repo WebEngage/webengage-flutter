@@ -9,7 +9,7 @@
 #import "WebEngageConstants.h"
 
 static FlutterMethodChannel* channel = nil;
-NSString * const WEGPluginVersion = @"1.5.0";
+NSString * const WEGPluginVersion = @"1.6.0";
 NSString * const DATE_FORMAT = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 int const DATE_FORMAT_LENGTH = 24;
 
