@@ -5,12 +5,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
 import 'package:webengage_flutter/push_payload.dart';
 
 import 'constants.dart';
-import 'dart:io' show Platform;
 
 typedef MessageHandler<T> = void Function(Map<String, T>? message);
 typedef MessageHandlerInAppClick<T> = void Function(
@@ -386,7 +386,23 @@ class WebEngagePlugin {
     if (Platform.isAndroid) {
       return await _channel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
     } else {
+      print("startGAIDTracking : Not Supported for iOS platform.");
       return;
+    }
+  }
+
+  static void onPushMessageReceive(Map<String, dynamic>? data) {
+    if (Platform.isAndroid && data != null) {
+      _channel
+          .invokeMethod(METHOD_NAME_ON_PUSH_MESSAGE_RECEIVED, {"data": data});
+    }
+  }
+
+  static void setPushToken(String pushToken) {
+    if (Platform.isAndroid) {
+      _channel.invokeMethod(METHOD_NAME_ON_PUSH_TOKEN, pushToken);
+    } else {
+      print("setPushToken : Not Supported for iOS platform.");
     }
   }
 }

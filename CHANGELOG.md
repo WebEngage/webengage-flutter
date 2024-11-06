@@ -1,5 +1,9 @@
 ## CHANGE LOG
 
+### Version 1.6.0 (Nov 6, 2024)
+
+- Added direct push notification support for Android via the plugin.
+
 ### Version 1.5.0 (July 18, 2024)
 
 - Separated the location module from the core for iOS.
