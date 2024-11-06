@@ -544,10 +544,9 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
 
     private void onPushMessageReceive(MethodCall call) {
-        Map<String, Object> arguments = call.arguments();
-        Map<String, String> data = (Map<String, String>) call.argument("data");
+        Map<String, String> data = call.argument("data");
         if (data != null) {
-            if (data.containsKey("source") && "webengage".equals(data.get("source"))) {
+            if ("webengage".equals(data.get("source"))) {
                 WebEngage.get().receive(data);
             }
         }
