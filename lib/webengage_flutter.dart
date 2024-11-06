@@ -386,6 +386,7 @@ class WebEngagePlugin {
     if (Platform.isAndroid) {
       return await _channel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
     } else {
+      print("startGAIDTracking : Not Supported for iOS platform.");
       return;
     }
   }
@@ -397,7 +398,11 @@ class WebEngagePlugin {
     }
   }
 
-  static void setPushToken(String pushToken) async {
-    return await _channel.invokeMethod(METHOD_NAME_ON_PUSH_TOKEN, pushToken);
+  static void setPushToken(String pushToken) {
+    if (Platform.isAndroid) {
+      _channel.invokeMethod(METHOD_NAME_ON_PUSH_TOKEN, pushToken);
+    } else {
+      print("setPushToken : Not Supported for iOS platform.");
+    }
   }
 }

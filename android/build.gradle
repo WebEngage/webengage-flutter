@@ -23,7 +23,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 33
-
+    namespace 'com.webengage.webengage_plugin'
     defaultConfig {
         minSdkVersion 21
         manifestPlaceholders = [we_fl_version: readVersion()]
