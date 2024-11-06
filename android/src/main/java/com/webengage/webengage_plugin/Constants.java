@@ -46,6 +46,8 @@ public interface Constants {
         String METHOD_NAME_ON_TOKEN_INVALIDATED = "onTokenInvalidated";
         String METHOD_NAME_SET_USER_LOGIN_WITH_SECURE_TOKEN = "userLoginWithSecureToken";
         String METHOD_NAME_SET_SECURE_TOKEN = "setSecureToken";
+        String METHOD_NAME_ON_PUSH_MESSAGE_RECEIVED = "onPushMessageReceive";
+        String METHOD_NAME_ON_PUSH_TOKEN = "pushToken";
      }
 
     interface PARAM {
