@@ -62,6 +62,17 @@ class WePluginManager {
     _platform.setUpPushCallbacks(onPushClick, onPushActionClick);
   }
 
+  /// Sets the callback for handling push notification click events in the app.
+  ///
+  /// This method allows you to define a callback function, [wePushNotificationClick],
+  /// that will be triggered whenever a push notification click is detected.
+  /// The callback provides access to the notification payload data, allowing
+  /// for custom handling of user interactions with push notifications.
+  void setWEPushNotificationClick(
+      WEPushNotificationClick wePushNotificationClick) {
+    _platform.setWEPushNotificationClick(wePushNotificationClick);
+  }
+
   /// Sets up callbacks for in-app notification events.
   ///
   /// [onInAppClick]: Callback function for in-app notification click events.

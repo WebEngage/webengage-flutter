@@ -237,6 +237,6 @@ class WEMethodChannel extends WEPlatformInterface {
   @override
   void setWEPushNotificationClick(
       WEPushNotificationClick wePushNotificationClick) {
-    this.onWEPushNotificationClick = wePushNotificationClick;
+    onWEPushNotificationClick = wePushNotificationClick;
   }
 }

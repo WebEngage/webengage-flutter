@@ -60,6 +60,10 @@ class WebEngagePlugin {
     _manager.setUpPushCallbacks(onPushClick, onPushActionClick);
   }
 
+  void setUpPushCallbacksV2(WEPushNotificationClick wePushNotificationClick) {
+    _manager.setWEPushNotificationClick(wePushNotificationClick);
+  }
+
   /// Sets up callbacks for in-app notification events.
   ///
   /// [onInAppClick]: Callback function for in-app notification click events.
@@ -82,6 +86,8 @@ class WebEngagePlugin {
   void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
     _manager.tokenInvalidatedCallback(onTokenInvalidated);
   }
+
+
 
   /// Initiates a user login action with an optional secure token.
   ///
