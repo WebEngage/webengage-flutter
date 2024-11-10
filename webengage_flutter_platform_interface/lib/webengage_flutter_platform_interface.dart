@@ -8,3 +8,4 @@ export 'src/platform/we_web_platform.dart';
 export 'src/utils/we_constants.dart';
 export 'src/utils/we_logger.dart';
 export 'src/utils/we_utils.dart';
+export 'src/we_extension/we_extension.dart';

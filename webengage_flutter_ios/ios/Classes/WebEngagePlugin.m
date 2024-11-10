@@ -315,9 +315,38 @@ static WebEngagePlugin *_shared = nil;
 }
 
 -(void)WEGHandleDeeplink:(NSString *)deeplink userData:(NSDictionary *)data{
+    //Support for backward compatibility -start
     NSDictionary *payload = @{@"deeplink":deeplink,@"data":data};
     [channel invokeMethod:METHOD_NAME_ON_PUSH_CLICK arguments:payload];
+    // -end
+
+    if (data && [data isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *splitCustomData = [self splitCustomDataFromArray:data[@"customData"]];
+        NSDictionary *advancePayload = @{PARAM_PLATFORM:@"iOS",PARAM_PAYLOAD:@{@"data": splitCustomData ?: [NSNull null],@"deeplink": deeplink ?: [NSNull null]}};
+        [channel invokeMethod:METHOD_NAME_OPTIMIZED_ON_PUSH_CLICK arguments:advancePayload];
+    } else {
+        NSLog(@"Error: userData is nil or not a dictionary");
+    }
 }
+
+- (NSDictionary *)splitCustomDataFromArray:(NSArray *)customData {
+    NSMutableDictionary *customDataDictionary = [NSMutableDictionary dictionary];
+
+    for (NSDictionary *customItem in customData) {
+        NSString *key = customItem[@"key"];
+        id value = customItem[@"value"];
+
+        // Check if key is not nil and value is not nil
+        if (key && value) {
+            // Use the value if it's not nil, otherwise use an empty string
+            NSString *safeValue = (value != nil) ? value : @"";
+            customDataDictionary[key] = safeValue;
+        }
+    }
+
+    return [customDataDictionary copy];
+}
+
 
 -(NSDictionary *)notificationPrepared:(NSDictionary<NSString *,id> *)inAppNotificationData shouldStop:(BOOL *)stopRendering{
     [channel invokeMethod:METHOD_NAME_ON_INAPP_PREPARED arguments:inAppNotificationData];

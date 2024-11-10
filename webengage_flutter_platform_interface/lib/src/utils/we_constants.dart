@@ -41,6 +41,9 @@ const String callbackOnInAppPrepared = "onInAppPrepared";
 const String callbackOnAnonymousIdChanged = "onAnonymousIdChanged";
 const String callbackOnTokenInvalidated = "onTokenInvalidated";
 
+const String callbackOnPushClickV2 = "onPushClickV2";
+const String callbackOnPushActionClickV2 = "onPushActionClickV2";
+
 const String CHANNEL = "channel";
 const String OPTIN = "optIn";
 const String LAT = "lat";

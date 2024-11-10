@@ -47,6 +47,8 @@
 #define PARAM_PAYLOAD @"payload"
 #define PARAM_PLATFORM_VALUE @"iOS"
 #define METHOD_NAME_ON_TOKEN_INVALIDATED @"onTokenInvalidated"
+#define METHOD_NAME_OPTIMIZED_ON_PUSH_CLICK @"onPushClickV2"
+
 
 #define CHANNEL @"channel"
 #define OPTIN @"optIn"

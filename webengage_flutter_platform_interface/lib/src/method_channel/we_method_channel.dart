@@ -12,6 +12,7 @@ class WEMethodChannel extends WEPlatformInterface {
   MessageHandler? onInAppDismiss;
   MessageHandler? onInAppPrepared;
   MessageHandler? onTokenInvalidated;
+  WEPushNotificationClick? onWEPushNotificationClick;
 
   MethodChannel methodChannel = const MethodChannel(channelName);
 
@@ -231,5 +232,11 @@ class WEMethodChannel extends WEPlatformInterface {
   WEWeb? web() {
     WELogger.e("web : : Not supported in Android/iOS Platform");
     return null;
+  }
+
+  @override
+  void setWEPushNotificationClick(
+      WEPushNotificationClick wePushNotificationClick) {
+    this.onWEPushNotificationClick = wePushNotificationClick;
   }
 }

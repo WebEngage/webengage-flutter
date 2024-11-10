@@ -40,9 +40,17 @@ public class FlutterPushMessageCallback implements PushNotificationCallbacks {
     @Override
     public boolean onPushNotificationClicked(Context context, PushNotificationData pushNotificationData) {
         String uri = pushNotificationData.getPrimeCallToAction().getAction();
+        Map<String, Object> mapV2 = new HashMap<>();
+
         Map<String, Object> map = Utils.bundleToMap(pushNotificationData.getCustomData());
+        mapV2.put("data",map);
+        mapV2.put("deeplink",uri);
+
+
         map.put("uri", uri);
         WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_PUSH_CLICK, map);
+        WECallbackRegistry.getInstance().passCallback(METHOD_NAME_ON_PUSH_CLICK_V2, mapV2);
+
 
         return false;
     }

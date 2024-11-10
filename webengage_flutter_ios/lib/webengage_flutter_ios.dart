@@ -18,8 +18,11 @@ class WEFlutterIos extends WEMethodChannel {
 
   @override
   Future<void> platformCallHandler(MethodCall call) {
-    WELogger.w("platformCallHandler ${call.method}");
     switch (call.method) {
+      case callbackOnPushClickV2:
+      case callbackOnPushActionClickV2:
+        handlePushClickV2(call);
+        break;
       case callbackOnPushClick:
       case callbackOnPushActionClick:
         handlePushClick(call);
