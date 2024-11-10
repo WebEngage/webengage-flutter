@@ -7,4 +7,4 @@ export 'src/platform/we_platform_interface.dart';
 export 'src/platform/we_web_platform.dart';
 export 'src/utils/we_constants.dart';
 export 'src/utils/we_logger.dart';
-
+export 'src/utils/we_utils.dart';
