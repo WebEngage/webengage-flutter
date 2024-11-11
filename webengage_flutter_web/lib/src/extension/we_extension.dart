@@ -65,7 +65,7 @@ extension WEWebExtension on WEFlutterWeb {
     if (webengage != null) {
       try {
         if (screenData != null) {
-          var jsEventData = js_util.jsify(screenName);
+          var jsEventData = js_util.jsify(screenData);
           js_util.callMethod(webengage, action, [screenName, jsEventData]);
         } else {
           js_util.callMethod(webengage, action, [screenName]);
