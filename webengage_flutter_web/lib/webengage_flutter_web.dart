@@ -188,7 +188,6 @@ class WEFlutterWeb extends WEMethodChannel {
   @override
   Future<void> trackScreen(String screenName,
       [Map<String, dynamic>? screenData]) {
-    // TODO : not working
     performTrackScreen(screenName, screenData);
     return Future.value();
   }

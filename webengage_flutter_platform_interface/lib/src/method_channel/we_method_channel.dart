@@ -230,7 +230,7 @@ class WEMethodChannel extends WEPlatformInterface {
 
   @override
   WEWeb? web() {
-    WELogger.e("web : : Not supported in Android/iOS Platform");
+    WELogger.v("web : : Not supported in Android/iOS Platform");
     return null;
   }
 

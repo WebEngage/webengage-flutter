@@ -93,6 +93,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
             case METHOD_NAME_SET_USER_LOGOUT:
                 userLogout();
+                result.success(null);
                 break;
 
 
@@ -161,6 +162,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
             case METHOD_NAME_INITIALISE:
                 onInitialised();
+                result.success(null);
                 break;
 
             case METHOD_NAME_SET_USER_ATTRIBUTE:
@@ -201,13 +203,14 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
             case METHOD_NAME_START_GAID_TRACKING :
                 startGAIDTracking();
+                result.success(null);
                 break;
             default:
                 result.notImplemented();
                 return;
 
         }
-        result.success(null);
+    //    result.success("");
     }
 
     /**
@@ -492,6 +495,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
 
     @Override
     public void sendOrQueueCallback(String methodName, Map<String, Object> message) {
+        Log.e(TAG, "sendOrQueueCallback ");
         if (isInitialised) {
             sendCallback(methodName, message);
         } else {
@@ -506,6 +510,7 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
      *  to null channel during transition from background to foreground state
      */
     void sendCallback(final String methodName, final Map<String, Object> message) {
+        Log.e(TAG, "sendCallback ");
         if (channel == null)
             return;
         final Map<String, Object> messagePayload = new HashMap<>();

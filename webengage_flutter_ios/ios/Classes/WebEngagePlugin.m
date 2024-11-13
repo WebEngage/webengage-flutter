@@ -86,12 +86,12 @@ static WebEngagePlugin *_shared = nil;
     } else if ([METHOD_NAME_INITIALISE isEqualToString:call.method]) {
         NSDictionary *payload = @{@"anonymousUserID":_anonymousId};
         [channel invokeMethod:METHOD_NAME_ON_ANONYMOUS_ID_CHANGED arguments:payload];
+        result(nil);
         NSLog(@"METHOD_NAME_INITIALISE");
     } else {
         result(FlutterMethodNotImplemented);
         return;
     }
-    result(nil);
 }
 
 - (void) initialisePlugin:(FlutterMethodCall *)call withResult:(FlutterResult)result {
@@ -381,6 +381,5 @@ static WebEngagePlugin *_shared = nil;
     WegVersionKey key = WegVersionKeyFL;
     [[WebEngage sharedInstance] setVersionForChildSDK:WEGPluginVersion forKey:key];;
  }
-
 
 @end
