@@ -1,8 +1,0 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.webengage.webengage_plugin">
-    <application>
-        <meta-data
-            android:name="com.webengage.child.fl"
-            android:value="fl:${we_fl_version}" />
-    </application>
-</manifest>
