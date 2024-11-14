@@ -1,0 +1,37 @@
+name: dev_sample_app
+description: A new Flutter project.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  webengage_flutter:
+    path: ../webengage_flutter
+  shared_preferences: ^2.0.8
+  we_notificationinbox_flutter: ^1.0.0
+
+  cupertino_icons: ^1.0.2
+  we_personalization_flutter: ^1.0.3
+  fluttertoast: ^8.2.4
+  permission_handler:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+dependency_overrides:
+  win32: ^5.5.3
+
+flutter:
+
+  uses-material-design: true
+
