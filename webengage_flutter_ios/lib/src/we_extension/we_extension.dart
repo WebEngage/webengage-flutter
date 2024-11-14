@@ -35,7 +35,7 @@ extension WEChannelExt on WEFlutterIos {
 
   void onAnonymousIdChanged(MethodCall call) {
     Map<String, dynamic>? message = call.arguments.cast<String, dynamic>();
-    anonymousIDStream.sink.add(message?[PAYLOAD].cast<String, dynamic>());
+    anonymousIDStream.sink.add(message);
   }
 
   void trackDeeplinkCallback(MethodCall call) {

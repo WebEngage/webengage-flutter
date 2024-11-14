@@ -1,6 +1,6 @@
 name: webengage_flutter
 description: The WebEngage Flutter SDK offers solutions for mobile customer engagement, analytics, and retention.
-version: 1.5.0
+version: 2.0.0-beta.1
 homepage: https://webengage.com/
 repository: https://github.com/WebEngage/webengage-flutter
 
