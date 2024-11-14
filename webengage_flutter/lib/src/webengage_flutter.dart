@@ -87,8 +87,6 @@ class WebEngagePlugin {
     _manager.tokenInvalidatedCallback(onTokenInvalidated);
   }
 
-
-
   /// Initiates a user login action with an optional secure token.
   ///
   /// [userId]: The unique identifier for the user.
@@ -193,6 +191,14 @@ class WebEngagePlugin {
   /// Returns a Future<void> indicating completion, or does nothing if the platform is not Android.
   static Future<void> startGAIDTracking() async {
     return await _manager.startGAIDTracking();
+  }
+
+  static void onPushMessageReceive(Map<String, dynamic>? data) {
+    _manager.onPushMessageReceive(data);
+  }
+
+  static void setPushToken(String pushToken) {
+    _manager.setPushToken(pushToken);
   }
 
   static WEWeb? web() {

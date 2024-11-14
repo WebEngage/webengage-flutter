@@ -183,4 +183,15 @@ class WEFlutterAndroid extends WEMethodChannel {
   Future<void> userLogout() async {
     return await super.userLogout();
   }
+
+  @override
+  void onPushMessageReceive(Map<String, dynamic>? data) {
+    methodChannel
+        .invokeMethod(METHOD_NAME_ON_PUSH_MESSAGE_RECEIVED, {"data": data});
+  }
+
+  @override
+  void setPushToken(String pushToken) {
+    methodChannel.invokeMethod(METHOD_NAME_ON_PUSH_TOKEN, pushToken);
+  }
 }

@@ -27,6 +27,8 @@ const String METHOD_NAME_SET_USER_DATE_ATTRIBUTE = "setUserDateAttribute";
 const String METHOD_NAME_SET_USER_LIST_ATTRIBUTE = "setUserListAttribute";
 const String METHOD_NAME_SET_USER_MAP_ATTRIBUTE = "setUserMapAttribute";
 const String METHOD_NAME_SET_USER_DEVICE_PUSH_OPT_IN = "setDevicePushOptIn";
+const String METHOD_NAME_ON_PUSH_MESSAGE_RECEIVED = "onPushMessageReceive";
+const String METHOD_NAME_ON_PUSH_TOKEN = "pushToken";
 
 const String METHOD_NAME_TRACK_EVENT = "trackEvent";
 const String METHOD_NAME_TRACK_SCREEN = "trackScreen";
@@ -60,3 +62,7 @@ const String SELECTED_ACTION_ID = "selectedActionId";
 const String METHOD_TRACK_DEEPLINK_URL = "onTrackDeeplinkURL";
 const String USERID = "userIdentifier";
 const String SECURE_TOKEN = "secureToken";
+
+const String IOS_METHOD_NOT_SUPPORTED = ": Not supported in iOS Platform";
+const String ANDROID_METHOD_NOT_SUPPORTED =
+    ": Not supported in Android Platform";

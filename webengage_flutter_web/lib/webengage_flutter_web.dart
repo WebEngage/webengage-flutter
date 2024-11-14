@@ -209,4 +209,14 @@ class WEFlutterWeb extends WEMethodChannel {
     _web ??= WEWebImplementation(webengage);
     return _web;
   }
+
+  @override
+  void onPushMessageReceive(Map<String, dynamic>? data) {
+    WELogger.i("onPushMessageReceive : $WEB_METHOD_NOT_SUPPORTED");
+  }
+
+  @override
+  void setPushToken(String pushToken) {
+    WELogger.i("setPushToken : $WEB_METHOD_NOT_SUPPORTED");
+  }
 }

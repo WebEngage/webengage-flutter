@@ -49,6 +49,9 @@ public interface Constants {
 
         String METHOD_NAME_ON_PUSH_CLICK_V2 = "onPushClickV2";
         String METHOD_NAME_ON_PUSH_ACTION_CLICK_V2 = "onPushActionClickV2";
+
+        String METHOD_NAME_ON_PUSH_MESSAGE_RECEIVED = "onPushMessageReceive";
+        String METHOD_NAME_ON_PUSH_TOKEN = "pushToken";
      }
 
     interface PARAM {

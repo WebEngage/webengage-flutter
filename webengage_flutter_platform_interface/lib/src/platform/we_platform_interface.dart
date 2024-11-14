@@ -102,5 +102,9 @@ abstract class WEPlatformInterface extends PlatformInterface {
 
   Future<void> platformCallHandler(MethodCall call);
 
+  void onPushMessageReceive(Map<String, dynamic>? data);
+
+  void setPushToken(String pushToken);
+
   WEWeb? web();
 }

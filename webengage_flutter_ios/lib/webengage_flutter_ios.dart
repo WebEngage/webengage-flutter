@@ -103,7 +103,8 @@ class WEFlutterIos extends WEMethodChannel {
 
   @override
   Future<void> setUserDevicePushOptIn(bool status) async {
-    return await super.setUserDevicePushOptIn(status);
+    WELogger.i("setUserDevicePushOptIn $IOS_METHOD_NOT_SUPPORTED");
+    return Future.value();
   }
 
   @override
@@ -153,7 +154,8 @@ class WEFlutterIos extends WEMethodChannel {
 
   @override
   Future<void> startGAIDTracking() async {
-    return await methodChannel.invokeMethod(METHOD_NAME_START_GAID_TRACKING);
+    WELogger.i("startGAIDTracking $IOS_METHOD_NOT_SUPPORTED");
+    return Future.value();
   }
 
   @override
@@ -181,5 +183,15 @@ class WEFlutterIos extends WEMethodChannel {
   @override
   Future<void> userLogout() async {
     return await super.userLogout();
+  }
+
+  @override
+  void onPushMessageReceive(Map<String, dynamic>? data) {
+    WELogger.i("onPushMessageReceive $IOS_METHOD_NOT_SUPPORTED");
+  }
+
+  @override
+  void setPushToken(String pushToken) {
+    WELogger.i("setPushToken $IOS_METHOD_NOT_SUPPORTED");
   }
 }

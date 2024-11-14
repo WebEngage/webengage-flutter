@@ -205,6 +205,15 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
                 startGAIDTracking();
                 result.success(null);
                 break;
+
+            case METHOD_NAME_ON_PUSH_MESSAGE_RECEIVED:
+                onPushMessageReceive(call);
+                break;
+
+            case METHOD_NAME_ON_PUSH_TOKEN:
+                setPushToken(call);
+                break;
+
             default:
                 result.notImplemented();
                 return;
@@ -561,5 +570,21 @@ public class WebEngagePlugin implements FlutterPlugin, MethodCallHandler, Activi
     public void onDetachedFromActivity() {
         WECallbackRegistry.getInstance().unRegister(this);
         activity = null;
+    }
+
+    private void onPushMessageReceive(MethodCall call) {
+        Map<String, String> data = call.argument("data");
+        if (data != null) {
+            if ("webengage".equals(data.get("source"))) {
+                WebEngage.get().receive(data);
+            }
+        }
+    }
+
+    private void setPushToken(MethodCall call) {
+        String token = call.arguments();
+        if (token != null) {
+            WebEngage.get().setRegistrationID(token);
+        }
     }
 }

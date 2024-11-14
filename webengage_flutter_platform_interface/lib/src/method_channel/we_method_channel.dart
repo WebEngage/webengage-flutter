@@ -239,4 +239,15 @@ class WEMethodChannel extends WEPlatformInterface {
       WEPushNotificationClick wePushNotificationClick) {
     onWEPushNotificationClick = wePushNotificationClick;
   }
+
+  @override
+  void onPushMessageReceive(Map<String, dynamic>? data) {
+    methodChannel
+        .invokeMethod(METHOD_NAME_ON_PUSH_MESSAGE_RECEIVED, {"data": data});
+  }
+
+  @override
+  void setPushToken(String pushToken) {
+    methodChannel.invokeMethod(METHOD_NAME_ON_PUSH_TOKEN, pushToken);
+  }
 }

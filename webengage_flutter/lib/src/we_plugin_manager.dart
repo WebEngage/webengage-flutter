@@ -216,6 +216,14 @@ class WePluginManager {
     return await _platform.startGAIDTracking();
   }
 
+  void onPushMessageReceive(Map<String, dynamic>? data) {
+    _platform.onPushMessageReceive(data);
+  }
+
+  void setPushToken(String pushToken) {
+    _platform.setPushToken(pushToken);
+  }
+
   WEWeb? web() {
     return _platform.web();
   }
