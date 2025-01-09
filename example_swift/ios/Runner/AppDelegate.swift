@@ -2,8 +2,8 @@ import UIKit
 import Flutter
 import WebEngage
 import webengage_flutter
-
-@UIApplicationMain
+import FirebaseMessaging
+@main
 @objc class AppDelegate: FlutterAppDelegate {
     var bridge:WebEngagePlugin? = nil
     override func application(
@@ -17,6 +17,12 @@ import webengage_flutter
           // Push notification delegates
         WebEngage.sharedInstance().pushNotificationDelegate = self.bridge
         WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions, notificationDelegate: self.bridge)
+        FirebaseApp.initialize()
+        if #available(iOS 10.0, *) {
+            
+          UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+        }
+          
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
@@ -31,5 +37,33 @@ import webengage_flutter
             }
         }
         return true
+    }
+}
+
+
+extension AppDelegate {
+
+    @available(iOS 10.0, *)
+    override func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+
+        print("center: ", center, "\nnotification: ", notification)
+
+        WEGManualIntegration.userNotificationCenter(center, willPresent: notification)
+
+        completionHandler([.alert, .badge, .sound])
+    }
+
+    @available(iOS 10.0, *)
+    override func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+
+        print("center: ", center, " response: ", response)
+
+        WEGManualIntegration.userNotificationCenter(center, didReceive: response)
+
+        completionHandler()
     }
 }

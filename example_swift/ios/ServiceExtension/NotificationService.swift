@@ -6,7 +6,7 @@
 //
 
 import UserNotifications
-import WebEngageBannerPush
+import WEServiceExtension
 
 class NotificationService: WEXPushNotificationService {
 }

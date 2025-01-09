@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '11.0'
+# platform :ios, '12.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -39,19 +39,34 @@ end
 target 'ServiceExtension' do
   use_frameworks!
 #    platform :ios, '10.0'
-    pod 'WebEngageBannerPush'
+    pod 'WEServiceExtension'
 end
 
 # ContentExtension Target
 target 'ContentExtension' do
   use_frameworks!
 #  platform :ios, '10.0'
-  pod 'WebEngageAppEx/ContentExtension'
+  pod 'WEContentExtension'
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
   end
-end
 
+  ################  Awesome Notifications pod modification  ###################
+  # Define the path to the Awesome Notifications pod script
+  awesome_pod_file = File.expand_path(File.join('plugins', 'awesome_notifications', 'ios', 'Scripts', 'AwesomePodFile'), '.symlinks')
+
+  # Ensure the file exists before requiring it
+  if File.exist?(awesome_pod_file)
+    require awesome_pod_file
+    # Update pod build settings
+    update_awesome_pod_build_settings(installer)
+    # Update main target settings
+    update_awesome_main_target_settings('Runner', File.dirname(File.realpath(__FILE__)), flutter_root)
+  else
+    puts "Warning: Awesome Notifications pod file not found at #{awesome_pod_file}. Skipping configuration."
+  end
+  ################  Awesome Notifications pod modification  ###################
+end

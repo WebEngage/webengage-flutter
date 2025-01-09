@@ -8,7 +8,7 @@
 import UIKit
 import UserNotifications
 import UserNotificationsUI
-import WebEngageAppEx
+import WEContentExtension
 
 class NotificationViewController: WEXRichPushNotificationViewController {
 }
