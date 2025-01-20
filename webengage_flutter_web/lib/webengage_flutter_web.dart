@@ -6,9 +6,9 @@ import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_
 import 'package:webengage_flutter_web/src/extension/we_extension.dart';
 import 'package:webengage_flutter_web/src/model/we_web.dart';
 import 'package:webengage_flutter_web/src/utils/we_constants.dart';
+import 'package:webengage_flutter_web/src/utils/we_utils.dart';
 
 class WEFlutterWeb extends WEMethodChannel {
-  var webengage, user;
   WEWeb? _web;
 
   static void registerWith([Object? registrar]) {
@@ -21,7 +21,8 @@ class WEFlutterWeb extends WEMethodChannel {
   }
 
   void webEngageInitialize() {
-    webengage = js_util.getProperty(window, WEB_WEBENGAGE);
+    WEWebUtils().init(window);
+    WEWebUtils().getWebEngageInstance();
   }
 
   @override
@@ -168,7 +169,11 @@ class WEFlutterWeb extends WEMethodChannel {
 
   @override
   void tokenInvalidatedCallback(MessageHandler onTokenInvalidated) {
-    var options = js_util.getProperty(webengage, 'options');
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    var options = js_util.getProperty(instance, 'options');
     if (options != null) {
       js_util.callMethod(options, 'auth.tokenInvalidatedCallback', [
         js_util.allowInterop(() {
@@ -206,7 +211,7 @@ class WEFlutterWeb extends WEMethodChannel {
 
   @override
   WEWeb? web() {
-    _web ??= WEWebImplementation(webengage);
+    _web ??= WEWebImplementation();
     return _web;
   }
 

@@ -6,14 +6,17 @@ import '../utils/we_constants.dart';
 import '../utils/we_utils.dart';
 
 class WEWebImplementation extends WEWeb {
-  final dynamic webengage;
   List<Function> _onReadyCallbacks = [];
 
-  WEWebImplementation(this.webengage);
+  WEWebImplementation();
 
   @override
   void handleSurveyEvent(WESurveyEventType eventType, callback) {
-    var survey = js_util.getProperty(webengage, WEB_METHOD_NAME_SURVEY);
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    var survey = js_util.getProperty(instance, WEB_METHOD_NAME_SURVEY);
     if (survey != null) {
       _addCallback(survey, eventType.name, callback);
     }
@@ -22,10 +25,14 @@ class WEWebImplementation extends WEWeb {
   @override
   void onWebEngageReady(Function callback) {
     _onReadyCallbacks.add(callback);
-    var onReady = js_util.getProperty(webengage, 'onReady');
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    var onReady = js_util.getProperty(instance, 'onReady');
 
     if (onReady != null && _onReadyCallbacks.length == 1) {
-      js_util.callMethod(webengage, 'onReady', [
+      js_util.callMethod(instance, 'onReady', [
         js_util.allowInterop(() {
           WELogger.w("onWebEngageReady");
           for (var cb in _onReadyCallbacks) {
@@ -38,12 +45,20 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void setNotificationOption(optionKey, value) {
-    js_util.callMethod(webengage, 'notification.options', [optionKey, value]);
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    js_util.callMethod(instance, 'notification.options', [optionKey, value]);
   }
 
   @override
   void setOption(optionKey, value) {
-    js_util.callMethod(webengage, WEB_METHOD_NAME_OPTIONS, [optionKey, value]);
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    js_util.callMethod(instance, WEB_METHOD_NAME_OPTIONS, [optionKey, value]);
   }
 
   @override
@@ -51,8 +66,12 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void handleNotificationEvent(WENotificationActionType eventType, callback) {
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
     var notification =
-        js_util.getProperty(webengage, WEB_METHOD_NAME_NOTIFICATION);
+        js_util.getProperty(instance, WEB_METHOD_NAME_NOTIFICATION);
     if (notification != null) {
       _addCallback(notification, eventType.name, callback);
     }
@@ -70,10 +89,14 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void onSessionStarted(Function callback) {
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
     var sessionStarted =
-        js_util.getProperty(webengage, WEB_METHOD_NAME_ON_SESSION_STARTED);
+        js_util.getProperty(instance, WEB_METHOD_NAME_ON_SESSION_STARTED);
     if (sessionStarted != null) {
-      js_util.callMethod(webengage, WEB_METHOD_NAME_ON_SESSION_STARTED,
+      js_util.callMethod(instance, WEB_METHOD_NAME_ON_SESSION_STARTED,
           [js_util.allowInterop(callback)]);
     } else {
       WELogger.w(
@@ -83,6 +106,10 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void handleWebPushEvent(WEWebPushEvent eventType, Function callback) {
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
     var eventMap = {
       WEWebPushEvent.onWindowViewed: 'webpush.onWindowViewed',
       WEWebPushEvent.onWindowAllowed: 'webpush.onWindowAllowed',
@@ -93,7 +120,7 @@ class WEWebImplementation extends WEWeb {
 
     var eventName = eventMap[eventType];
     if (eventName != null) {
-      js_util.callMethod(webengage, WEB_METHOD_NAME_OPTIONS,
+      js_util.callMethod(instance, WEB_METHOD_NAME_OPTIONS,
           [eventName, js_util.allowInterop(callback)]);
     } else {
       WELogger.w("WebEngage object is null or options method not available.");
@@ -102,7 +129,11 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void promptPushNotification() {
-    var webpush = js_util.getProperty(webengage, 'webpush');
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    var webpush = js_util.getProperty(instance, 'webpush');
     if (webpush != null) {
       js_util.callMethod(webpush, 'prompt', []);
     }
@@ -110,7 +141,11 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void onPushSubscribe(Function callback) {
-    var webpush = js_util.getProperty(webengage, 'webpush');
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    var webpush = js_util.getProperty(instance, 'webpush');
     if (webpush != null) {
       js_util
           .callMethod(webpush, 'onSubscribe', [js_util.allowInterop(callback)]);
@@ -119,7 +154,11 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void checkSubscriptionStatus(Function(bool) callback) {
-    var webpush = js_util.getProperty(webengage, 'webpush');
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    var webpush = js_util.getProperty(instance, 'webpush');
     if (webpush != null) {
       var subscribed = js_util.callMethod(webpush, 'isSubscribed', []);
       WELogger.e("Checking... $subscribed");
@@ -129,7 +168,11 @@ class WEWebImplementation extends WEWeb {
 
   @override
   void checkPushNotificationSupport(Function(bool) callback) {
-    var webpush = js_util.getProperty(webengage, 'webpush');
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return;
+    }
+    var webpush = js_util.getProperty(instance, 'webpush');
     if (webpush != null) {
       js_util.callMethod(webpush, 'isPushNotificationsSupported',
           [js_util.allowInterop(callback)]);

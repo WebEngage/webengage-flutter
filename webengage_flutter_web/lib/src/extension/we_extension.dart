@@ -4,10 +4,15 @@ import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_
 import 'package:webengage_flutter_web/src/utils/we_constants.dart';
 
 import '../../webengage_flutter_web.dart';
+import '../utils/we_utils.dart';
 
 extension WEWebExtension on WEFlutterWeb {
   Future<void> performUserAction(String action, dynamic args) async {
-    user = js_util.getProperty(webengage, WEB_METHOD_NAME_USER);
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return Future.value();
+    }
+    dynamic user = js_util.getProperty(instance, WEB_METHOD_NAME_USER);
     if (user != null) {
       try {
         if (args is! List) {
@@ -24,8 +29,12 @@ extension WEWebExtension on WEFlutterWeb {
   }
 
   Future<void> performUserAttributeAction(dynamic args) async {
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return Future.value();
+    }
     var action = WEB_METHOD_NAME_SET_ATTRIBUTE;
-    user = js_util.getProperty(webengage, WEB_METHOD_NAME_USER);
+    dynamic user = js_util.getProperty(instance, WEB_METHOD_NAME_USER);
     if (user != null) {
       try {
         if (args is! List) {
@@ -42,14 +51,18 @@ extension WEWebExtension on WEFlutterWeb {
   }
 
   Future<void> performTrackEvent(String eventName, dynamic eventData) async {
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return Future.value();
+    }
     var action = WEB_METHOD_NAME_TRACK;
-    if (webengage != null) {
+    if (instance != null) {
       try {
         if (eventData != null) {
           var jsEventData = js_util.jsify(eventData);
-          js_util.callMethod(webengage, action, [eventName, jsEventData]);
+          js_util.callMethod(instance, action, [eventName, jsEventData]);
         } else {
-          js_util.callMethod(webengage, action, [eventName]);
+          js_util.callMethod(instance, action, [eventName]);
         }
       } catch (e) {
         WELogger.e("Error calling $action: $e");
@@ -61,14 +74,18 @@ extension WEWebExtension on WEFlutterWeb {
   }
 
   Future<void> performTrackScreen(String screenName, dynamic screenData) async {
+    var instance = WEWebUtils().getWebEngageInstance();
+    if (!WEWebUtils().isWebEngageAdded()) {
+      return Future.value();
+    }
     var action = WEB_METHOD_NAME_SCREEN;
-    if (webengage != null) {
+    if (instance != null) {
       try {
         if (screenData != null) {
           var jsEventData = js_util.jsify(screenData);
-          js_util.callMethod(webengage, action, [screenName, jsEventData]);
+          js_util.callMethod(instance, action, [screenName, jsEventData]);
         } else {
-          js_util.callMethod(webengage, action, [screenName]);
+          js_util.callMethod(instance, action, [screenName]);
         }
       } catch (e) {
         WELogger.e("Error calling $action: $e");
