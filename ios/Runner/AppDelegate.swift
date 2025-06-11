@@ -14,9 +14,9 @@ import UserNotifications
   ) -> Bool {
 
       bridge = WebEngagePlugin()
-      WebEngage.sharedInstance().pushNotificationDelegate = bridge.self
+      WebEngage.sharedInstance().pushNotificationDelegate = self.bridge
       GeneratedPluginRegistrant.register(with: self)
-      WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions, notificationDelegate: bridge.self)
+      WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions, notificationDelegate: self.bridge)
       if #available(iOS 10.0, *) {
         UNUserNotificationCenter.current().delegate = self
       }
