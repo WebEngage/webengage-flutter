@@ -3,9 +3,7 @@ package com.webengage.webengage_plugin_example;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+
 import com.webengage.sdk.android.LocationTrackingStrategy;
 import com.webengage.sdk.android.PushUtils;
 import com.webengage.sdk.android.WebEngage;
@@ -30,19 +28,13 @@ public class MainApplication extends FlutterApplication {
         super.onCreate();
         Log.d("webengage", "MainApplicationstarts");
         WebEngageConfig webEngageConfig = new WebEngageConfig.Builder()
-                .setWebEngageKey("YOUR_WEBENGAGE_LICENSE_CODE")
+                .setWebEngageKey("d3a4b5a9")
                 .setAutoGCMRegistrationFlag(false)
                 .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
                 .setDebugMode(true) // only in development mode
                 .setAutoGAIDTracking(true)
                 .build();
         WebengageInitializer.initialize(this, webEngageConfig);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String token = instanceIdResult.getToken();
-                WebEngage.get().setRegistrationID(token);
-            }
-        });
+
     }
 }
