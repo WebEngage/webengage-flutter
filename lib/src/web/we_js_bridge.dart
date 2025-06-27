@@ -99,8 +99,8 @@ class WebEngageJSBridge {
 /// Holds constants used for WebEngage JS bridge.
 class _Constants {
   static const String jsChannelName = "webengage_flutter";
-  static const String methodLogin = "Login";
-  static const String methodLogout = "Logout";
+  static const String methodLogin = "login";
+  static const String methodLogout = "logout";
   static const String methodScreen = "screen";
   static const String methodSetAttribute = "setAttribute";
   static const String methodTrackEvent = "trackEvent";
