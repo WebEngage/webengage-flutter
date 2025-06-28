@@ -1,5 +1,10 @@
 ## CHANGE LOG
 
+### Version 1.7.0 (June 28, 2025)
+
+- Introduced `WebEngageJSBridge` to handle JavaScript method dispatching from WebViews.
+- Added unified support for both `webview_flutter` and `flutter_inappwebview` to enable seamless WebEngage integration in WebView-based environments.
+
 ### Version 1.6.0 (Nov 6, 2024)
 
 - Added direct push notification support for Android via the plugin.

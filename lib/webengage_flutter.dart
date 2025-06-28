@@ -12,6 +12,8 @@ import 'package:webengage_flutter/push_payload.dart';
 
 import 'constants.dart';
 
+export 'src/web/we_js_bridge.dart';
+
 typedef MessageHandler<T> = void Function(Map<String, T>? message);
 typedef MessageHandlerInAppClick<T> = void Function(
     Map<String, T>? message, String? s);

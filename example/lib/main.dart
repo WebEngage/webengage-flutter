@@ -1,11 +1,26 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
-import 'package:intl/intl.dart';
+
+import 'src/screen/screen_webview.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  WebEngagePlugin.onPushMessageReceive(message.data);
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  runApp(MaterialApp(home: MyApp()));
+}
 
 class _MyAppState extends State<MyApp> {
   late WebEngagePlugin _webEngagePlugin;
@@ -51,6 +66,20 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
     initWebEngage();
+    getToken();
+  }
+
+  Future<void> getToken() async {
+    var token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      WebEngagePlugin.setPushToken(token);
+    }
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+      WebEngagePlugin.setPushToken(token);
+    }).onError((err) {});
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      WebEngagePlugin.onPushMessageReceive(message.data);
+    });
   }
 
   void initWebEngage() {
@@ -168,6 +197,30 @@ class _MyAppState extends State<MyApp> {
                   setState(() {
                     data = data;
                   });
+                },
+              ),
+              new ListTile(
+                title: Text("Open webview_flutter "),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => WebViewScreen(
+                              webViewType: WebViewType.webview_flutter,
+                            )),
+                  );
+                },
+              ),
+              new ListTile(
+                title: Text("Open flutter_inappwebview"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => WebViewScreen(
+                              webViewType: WebViewType.flutter_inappwebview,
+                            )),
+                  );
                 },
               ),
               new ListTile(
@@ -470,11 +523,6 @@ class _MyAppState extends State<MyApp> {
               ));
         });
   }
-}
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
