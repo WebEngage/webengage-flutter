@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'webengage_flutter'
-  s.version          = '1.6.0'
+  s.version          = '1.7.0'
   s.summary          = 'WebEngage Flutter iOS SDK.'
   s.description      = <<-DESC
   WebEngage Flutter iOS SDK.
