@@ -1,15 +1,32 @@
 # webengage_flutter_platform_interface
 
-A new Flutter project.
+A common platform interface for the WebEngage Flutter plugin.  
+This package defines the shared API contract that all WebEngage Flutter
+platform implementations must follow.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## Overview
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+`webengage_flutter_platform_interface` is part of the **WebEngage Flutter SDK**
+federated plugin architecture.
+
+It contains:
+- Abstract classes and method definitions
+- Shared data models and enums
+- Platform-agnostic API contracts
+
+This package **does not contain any platform-specific code** and is **not meant
+to be used directly by Flutter applications**.
+
+---
+
+## Architecture
+
+This package is used by the following WebEngage Flutter plugins:
+
+- `webengage_flutter` (main plugin)
+- `webengage_flutter_android`
+- `webengage_flutter_ios`
+- `webengage_flutter_web`
 
