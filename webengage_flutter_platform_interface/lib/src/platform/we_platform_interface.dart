@@ -8,7 +8,7 @@ typedef MessageHandlerInAppClick<T> = void Function(
     Map<String, T>? message, String? s);
 typedef MessageHandlerPushClick<T> = void Function(
     Map<String, T>? message, String? s);
-typedef void WEPushNotificationClick(PushPayload pushPayload);
+typedef WEPushNotificationClick = void Function(PushPayload pushPayload);
 
 abstract class WEPlatformInterface extends PlatformInterface {
   WEPlatformInterface() : super(token: _token) {

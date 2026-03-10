@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../../webengage_flutter_platform_interface.dart';
@@ -20,6 +21,10 @@ extension WEChannelExt on WEMethodChannel {
             ..customData = customData?.cast<String, dynamic>(),
         );
       }
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print("Catch Block : $e");
+      }
+    }
   }
 }
