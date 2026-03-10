@@ -9,8 +9,8 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'WebEngage' => 'mobile@webengage.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'webengage-flutter/Sources/webengage-flutter/**/*.{h,m}'
+  s.public_header_files = 'webengage-flutter/Sources/webengage-flutter/include/**/*.h'
   s.dependency 'Flutter'
   if ENV['WEBENGAGE_USE_CORE'] == 'true'
        s.dependency 'WebEngage/Core','>= 6.10.0'

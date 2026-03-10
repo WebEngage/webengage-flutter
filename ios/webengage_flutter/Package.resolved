@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "webengagespm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ShubhamN123/WebEngageSPM.git",
+      "state" : {
+        "revision" : "35e2f9e4eff7ef7bc38190471b9d9985be261d15",
+        "version" : "1.0.1"
+      }
+    }
+  ],
+  "version" : 2
+}

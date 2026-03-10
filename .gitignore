@@ -4,8 +4,10 @@
 .packages
 .pub/
 
-build/
+.build/
 
 .idea
 .vscode
 google-services.json
+.build/
+.example_swift/build/ios/XCBuildData/PIFCache/target

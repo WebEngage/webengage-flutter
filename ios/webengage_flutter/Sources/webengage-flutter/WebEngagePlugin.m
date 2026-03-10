@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License, which can be
 // found in the LICENSE file.
 
-#import "WebEngagePlugin.h"
+#import "./include/webengage-flutter/WebEngagePlugin.h"
 #import <WebEngage/WebEngage.h>
 #import "WebEngageConstants.h"
 
