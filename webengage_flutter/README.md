@@ -1,4 +1,4 @@
-# WebEngage Flutter SDK
+# WebEngage Flutter SDK - Beta02
 
 For more information checkout our [website](https://webengage.com/) and [documentation](https://docs.webengage.com/docs/flutter).
 
