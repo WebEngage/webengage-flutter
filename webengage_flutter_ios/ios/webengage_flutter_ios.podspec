@@ -9,15 +9,15 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'WebEngage' => 'mobile@webengage.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'webengage_flutter_ios/Sources/webengage_flutter_ios/**/*.{h,m}'
+  s.public_header_files = 'webengage_flutter_ios/Sources/webengage_flutter_ios/include/**/*.h'
   s.dependency 'Flutter'
   if ENV['WEBENGAGE_USE_CORE'] == 'true'
        s.dependency 'WebEngage/Core','>= 6.10.0'
   else
        s.dependency 'WebEngage','>= 6.10.0'
   end
-  s.platform = :ios, '10.0'
+  s.platform = :ios, '13.0'
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 end
