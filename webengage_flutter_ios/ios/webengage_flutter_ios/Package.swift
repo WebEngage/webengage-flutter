@@ -19,9 +19,6 @@ let package = Package(
             dependencies: [
                 .product(name: "WebEngageCore", package: "webengage-ios-sdk")
             ],
-            resources: [
-                .process("Resources")
-            ],
             cSettings: [
                 .headerSearchPath("include/webengage_flutter_ios")
             ]

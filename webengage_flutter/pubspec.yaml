@@ -11,8 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  webengage_flutter_platform_interface:
-    path: ../webengage_flutter_platform_interface
+  webengage_flutter_platform_interface: ^2.0.0
   webengage_flutter_android:
     path: ../webengage_flutter_android
   webengage_flutter_web:

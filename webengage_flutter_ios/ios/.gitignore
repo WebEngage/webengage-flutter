@@ -39,6 +39,8 @@ Icon?
 
 # Swift Package Manager
 .build/
+.swiftpm/
 Package.resolved
 webengage_flutter_ios/.build/
+webengage_flutter_ios/.swiftpm/
 webengage_flutter_ios/Package.resolved

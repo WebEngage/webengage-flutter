@@ -19,5 +19,4 @@ Pod::Spec.new do |s|
   end
   s.platform = :ios, '13.0'
 
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 end
