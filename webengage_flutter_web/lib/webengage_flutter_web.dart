@@ -1,7 +1,7 @@
-import 'dart:html';
-import 'dart:js_util' as js_util;
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
-import 'package:flutter/src/services/message_codec.dart';
+import 'package:flutter/services.dart' hide MessageHandler;
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 import 'package:webengage_flutter_web/src/extension/we_extension.dart';
 import 'package:webengage_flutter_web/src/model/we_web.dart';
@@ -21,7 +21,7 @@ class WEFlutterWeb extends WEMethodChannel {
   }
 
   void webEngageInitialize() {
-    WEWebUtils().init(window);
+    WEWebUtils().init();
     WEWebUtils().getWebEngageInstance();
   }
 
@@ -60,7 +60,7 @@ class WEFlutterWeb extends WEMethodChannel {
 
   @override
   Future<void> setUserAttributes(Map userAttributeValue) {
-    performUserAttributeAction(js_util.jsify(userAttributeValue));
+    performUserAttributeAction((userAttributeValue as Object).jsify());
     return Future.value();
   }
 
@@ -172,14 +172,12 @@ class WEFlutterWeb extends WEMethodChannel {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var options = js_util.getProperty(instance, 'options');
-    if (options != null) {
-      js_util.callMethod(options, 'auth.tokenInvalidatedCallback', [
-        js_util.allowInterop(() {
-          onTokenInvalidated(null);
-        })
-      ]);
-    }
+    instance!.callMethodVarArgs(WEB_METHOD_NAME_OPTIONS.toJS, [
+      'auth.tokenInvalidatedCallback'.toJS,
+      (() {
+        onTokenInvalidated(null);
+      }).toJS
+    ]);
   }
 
   @override
@@ -198,7 +196,11 @@ class WEFlutterWeb extends WEMethodChannel {
 
   @override
   Future<void> userLogin(String userId, [String? secureToken]) {
-    performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
+    if (secureToken != null) {
+      performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
+    } else {
+      performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId]);
+    }
     return Future.value();
   }
 

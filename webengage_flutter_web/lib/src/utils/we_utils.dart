@@ -1,23 +1,27 @@
-import 'dart:js_util' as js_util;
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
+import 'package:web/web.dart' as web;
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 
 import 'we_constants.dart';
 
-Map<String, dynamic> convertJsObjectToMap(object) {
+Map<String, dynamic> convertJsObjectToMap(JSAny? object) {
   if (object == null) {
     return {};
   }
-  var dartObject = js_util.dartify(object);
-
-  return (dartObject as Map).map((key, value) {
-    return MapEntry(key.toString(), value as dynamic);
-  }).cast<String, dynamic>();
+  final dartObject = object.dartify();
+  if (dartObject is Map) {
+    return dartObject.map((key, value) {
+      return MapEntry(key.toString(), value as dynamic);
+    }).cast<String, dynamic>();
+  }
+  return {};
 }
 
 class WEWebUtils {
-  dynamic _webEngageInstance;
-  Object? _window;
+  JSObject? _webEngageInstance;
+  bool _initialized = false;
   bool _isLogPrintedFirstTime = false;
 
   // Private constructor
@@ -29,15 +33,19 @@ class WEWebUtils {
   // Factory constructor to return the singleton instance
   factory WEWebUtils() => _instance;
 
-  /// Initializes the utility with the window object
-  void init(Object window) {
-    _window = window;
+  /// Initializes the utility
+  void init() {
+    _initialized = true;
   }
 
   /// Retrieves or initializes the WebEngage instance
-  dynamic getWebEngageInstance() {
-    if (_webEngageInstance == null && _window != null) {
-      _webEngageInstance = js_util.getProperty(_window!, WEB_WEBENGAGE);
+  JSObject? getWebEngageInstance() {
+    if (_webEngageInstance == null && _initialized) {
+      final jsWindow = web.window as JSObject;
+      final instance = jsWindow[WEB_WEBENGAGE];
+      if (instance != null) {
+        _webEngageInstance = instance as JSObject;
+      }
     }
     return _webEngageInstance;
   }

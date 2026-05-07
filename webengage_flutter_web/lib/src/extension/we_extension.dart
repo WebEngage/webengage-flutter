@@ -1,4 +1,5 @@
-import 'dart:js_util' as js_util;
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 import 'package:webengage_flutter_web/src/utils/we_constants.dart';
@@ -7,92 +8,83 @@ import '../../webengage_flutter_web.dart';
 import '../utils/we_utils.dart';
 
 extension WEWebExtension on WEFlutterWeb {
-  Future<void> performUserAction(String action, dynamic args) async {
+  Future<void> performUserAction(String action, List args) async {
     var instance = WEWebUtils().getWebEngageInstance();
     if (!WEWebUtils().isWebEngageAdded()) {
-      return Future.value();
+      return;
     }
-    dynamic user = js_util.getProperty(instance, WEB_METHOD_NAME_USER);
+    JSObject? user = instance![WEB_METHOD_NAME_USER] as JSObject?;
     if (user != null) {
       try {
-        if (args is! List) {
-          args = [args]; // Wrap it in a list if it's not a list
-        }
-        js_util.callMethod(user, action, args);
+        final jsArgs = args.map((e) => (e as Object?)?.jsify()).toList();
+        user.callMethodVarArgs(action.toJS, jsArgs);
       } catch (e) {
         WELogger.e("Error calling $action: $e");
       }
     } else {
       WELogger.e("User object is null.");
     }
-    return Future.value();
   }
 
   Future<void> performUserAttributeAction(dynamic args) async {
     var instance = WEWebUtils().getWebEngageInstance();
     if (!WEWebUtils().isWebEngageAdded()) {
-      return Future.value();
+      return;
     }
     var action = WEB_METHOD_NAME_SET_ATTRIBUTE;
-    dynamic user = js_util.getProperty(instance, WEB_METHOD_NAME_USER);
+    JSObject? user = instance![WEB_METHOD_NAME_USER] as JSObject?;
     if (user != null) {
       try {
-        if (args is! List) {
-          args = [args];
+        List argsList;
+        if (args is List) {
+          argsList = args;
+        } else {
+          argsList = [args];
         }
-        js_util.callMethod(user, action, args);
+        final jsArgs = argsList.map((e) => (e as Object?)?.jsify()).toList();
+        user.callMethodVarArgs(action.toJS, jsArgs);
       } catch (e) {
         WELogger.e("Error calling $action: $e");
       }
     } else {
       WELogger.e("User object is null.");
     }
-    return Future.value();
   }
 
   Future<void> performTrackEvent(String eventName, dynamic eventData) async {
     var instance = WEWebUtils().getWebEngageInstance();
     if (!WEWebUtils().isWebEngageAdded()) {
-      return Future.value();
+      return;
     }
     var action = WEB_METHOD_NAME_TRACK;
-    if (instance != null) {
-      try {
-        if (eventData != null) {
-          var jsEventData = js_util.jsify(eventData);
-          js_util.callMethod(instance, action, [eventName, jsEventData]);
-        } else {
-          js_util.callMethod(instance, action, [eventName]);
-        }
-      } catch (e) {
-        WELogger.e("Error calling $action: $e");
+    try {
+      if (eventData != null) {
+        final jsEventData = (eventData as Object).jsify();
+        instance!.callMethodVarArgs(action.toJS, [eventName.toJS, jsEventData]);
+      } else {
+        instance!.callMethodVarArgs(action.toJS, [eventName.toJS]);
       }
-    } else {
-      WELogger.e("User object is null.");
+    } catch (e) {
+      WELogger.e("Error calling $action: $e");
     }
-    return Future.value();
   }
 
   Future<void> performTrackScreen(String screenName, dynamic screenData) async {
     var instance = WEWebUtils().getWebEngageInstance();
     if (!WEWebUtils().isWebEngageAdded()) {
-      return Future.value();
+      return;
     }
     var action = WEB_METHOD_NAME_SCREEN;
-    if (instance != null) {
-      try {
-        if (screenData != null) {
-          var jsEventData = js_util.jsify(screenData);
-          js_util.callMethod(instance, action, [screenName, jsEventData]);
-        } else {
-          js_util.callMethod(instance, action, [screenName]);
-        }
-      } catch (e) {
-        WELogger.e("Error calling $action: $e");
+    try {
+      if (screenData != null) {
+        final jsEventData = (screenData as Object).jsify();
+        instance!
+            .callMethodVarArgs(action.toJS, [screenName.toJS, jsEventData]);
+      } else {
+        instance!.callMethodVarArgs(action.toJS, [screenName.toJS]);
       }
-    } else {
-      WELogger.e("User object is null.");
+    } catch (e) {
+      WELogger.e("Error calling $action: $e");
     }
-    return Future.value();
   }
 }

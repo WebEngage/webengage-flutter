@@ -1,4 +1,5 @@
-import 'dart:js_util' as js_util;
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:webengage_flutter_platform_interface/webengage_flutter_platform_interface.dart';
 
@@ -16,7 +17,7 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var survey = js_util.getProperty(instance, WEB_METHOD_NAME_SURVEY);
+    JSObject? survey = instance![WEB_METHOD_NAME_SURVEY] as JSObject?;
     if (survey != null) {
       _addCallback(survey, eventType.name, callback);
     }
@@ -29,16 +30,16 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var onReady = js_util.getProperty(instance, 'onReady');
+    JSAny? onReady = instance!['onReady'];
 
     if (onReady != null && _onReadyCallbacks.length == 1) {
-      js_util.callMethod(instance, 'onReady', [
-        js_util.allowInterop(() {
+      instance.callMethodVarArgs('onReady'.toJS, [
+        (() {
           WELogger.w("onWebEngageReady");
           for (var cb in _onReadyCallbacks) {
-            cb(); // Trigger all registered callbacks
+            cb();
           }
-        })
+        }).toJS
       ]);
     }
   }
@@ -49,7 +50,12 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    js_util.callMethod(instance, 'notification.options', [optionKey, value]);
+    JSObject? notification =
+        instance![WEB_METHOD_NAME_NOTIFICATION] as JSObject?;
+    if (notification != null) {
+      notification.callMethodVarArgs(WEB_METHOD_NAME_OPTIONS.toJS,
+          [(optionKey as Object).jsify(), (value as Object).jsify()]);
+    }
   }
 
   @override
@@ -58,7 +64,8 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    js_util.callMethod(instance, WEB_METHOD_NAME_OPTIONS, [optionKey, value]);
+    instance!.callMethodVarArgs(WEB_METHOD_NAME_OPTIONS.toJS,
+        [(optionKey as Object).jsify(), (value as Object).jsify()]);
   }
 
   @override
@@ -70,20 +77,20 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var notification =
-        js_util.getProperty(instance, WEB_METHOD_NAME_NOTIFICATION);
+    JSObject? notification =
+        instance![WEB_METHOD_NAME_NOTIFICATION] as JSObject?;
     if (notification != null) {
       _addCallback(notification, eventType.name, callback);
     }
   }
 
   void _addCallback(
-      dynamic type, String methodName, Function(dynamic) callback) {
-    js_util.callMethod(type, methodName, [
-      js_util.allowInterop((data) {
+      JSObject type, String methodName, Function(dynamic) callback) {
+    type.callMethodVarArgs(methodName.toJS, [
+      ((JSAny? data) {
         var object = convertJsObjectToMap(data);
         callback(object);
-      })
+      }).toJS
     ]);
   }
 
@@ -93,11 +100,13 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var sessionStarted =
-        js_util.getProperty(instance, WEB_METHOD_NAME_ON_SESSION_STARTED);
+    JSAny? sessionStarted =
+        instance![WEB_METHOD_NAME_ON_SESSION_STARTED];
     if (sessionStarted != null) {
-      js_util.callMethod(instance, WEB_METHOD_NAME_ON_SESSION_STARTED,
-          [js_util.allowInterop(callback)]);
+      instance.callMethodVarArgs(
+          WEB_METHOD_NAME_ON_SESSION_STARTED.toJS, [(() {
+            callback();
+          }).toJS]);
     } else {
       WELogger.w(
           "WebEngage object is null or onSessionStarted method not available.");
@@ -120,8 +129,10 @@ class WEWebImplementation extends WEWeb {
 
     var eventName = eventMap[eventType];
     if (eventName != null) {
-      js_util.callMethod(instance, WEB_METHOD_NAME_OPTIONS,
-          [eventName, js_util.allowInterop(callback)]);
+      instance!.callMethodVarArgs(
+          WEB_METHOD_NAME_OPTIONS.toJS, [eventName.toJS, (() {
+            callback();
+          }).toJS]);
     } else {
       WELogger.w("WebEngage object is null or options method not available.");
     }
@@ -133,9 +144,9 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var webpush = js_util.getProperty(instance, 'webpush');
+    JSObject? webpush = instance!['webpush'] as JSObject?;
     if (webpush != null) {
-      js_util.callMethod(webpush, 'prompt', []);
+      webpush.callMethodVarArgs('prompt'.toJS, []);
     }
   }
 
@@ -145,10 +156,11 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var webpush = js_util.getProperty(instance, 'webpush');
+    JSObject? webpush = instance!['webpush'] as JSObject?;
     if (webpush != null) {
-      js_util
-          .callMethod(webpush, 'onSubscribe', [js_util.allowInterop(callback)]);
+      webpush.callMethodVarArgs('onSubscribe'.toJS, [(() {
+        callback();
+      }).toJS]);
     }
   }
 
@@ -158,11 +170,15 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var webpush = js_util.getProperty(instance, 'webpush');
+    JSObject? webpush = instance!['webpush'] as JSObject?;
     if (webpush != null) {
-      var subscribed = js_util.callMethod(webpush, 'isSubscribed', []);
+      JSAny? subscribed = webpush.callMethodVarArgs('isSubscribed'.toJS, []);
       WELogger.e("Checking... $subscribed");
-      callback(subscribed);
+      if (subscribed != null) {
+        callback((subscribed as JSBoolean).toDart);
+      } else {
+        callback(false);
+      }
     }
   }
 
@@ -172,10 +188,13 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    var webpush = js_util.getProperty(instance, 'webpush');
+    JSObject? webpush = instance!['webpush'] as JSObject?;
     if (webpush != null) {
-      js_util.callMethod(webpush, 'isPushNotificationsSupported',
-          [js_util.allowInterop(callback)]);
+      webpush.callMethodVarArgs('isPushNotificationsSupported'.toJS, [
+        ((JSBoolean result) {
+          callback(result.toDart);
+        }).toJS
+      ]);
     }
   }
 }
