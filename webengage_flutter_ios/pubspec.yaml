@@ -24,5 +24,8 @@ flutter:
       ios:
         pluginClass: WebEngagePlugin
         dartPluginClass: WEFlutterIos
+        supportedVariants:
+          - swiftPackageManager
+          - cocoapods
 
 

@@ -12,11 +12,7 @@ Pod::Spec.new do |s|
   s.source_files = 'webengage_flutter_ios/Sources/webengage_flutter_ios/**/*.{h,m}'
   s.public_header_files = 'webengage_flutter_ios/Sources/webengage_flutter_ios/include/**/*.h'
   s.dependency 'Flutter'
-  if ENV['WEBENGAGE_USE_CORE'] == 'true'
-       s.dependency 'WebEngage/Core','>= 6.10.0'
-  else
-       s.dependency 'WebEngage','>= 6.10.0'
-  end
+  s.dependency 'WebEngage/Core','>= 6.10.0'
   s.platform = :ios, '13.0'
 
 end
