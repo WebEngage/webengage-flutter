@@ -100,13 +100,13 @@ class WEWebImplementation extends WEWeb {
     if (!WEWebUtils().isWebEngageAdded()) {
       return;
     }
-    JSAny? sessionStarted =
-        instance![WEB_METHOD_NAME_ON_SESSION_STARTED];
+    JSAny? sessionStarted = instance![WEB_METHOD_NAME_ON_SESSION_STARTED];
     if (sessionStarted != null) {
-      instance.callMethodVarArgs(
-          WEB_METHOD_NAME_ON_SESSION_STARTED.toJS, [(() {
-            callback();
-          }).toJS]);
+      instance.callMethodVarArgs(WEB_METHOD_NAME_ON_SESSION_STARTED.toJS, [
+        (() {
+          callback();
+        }).toJS
+      ]);
     } else {
       WELogger.w(
           "WebEngage object is null or onSessionStarted method not available.");
@@ -129,10 +129,12 @@ class WEWebImplementation extends WEWeb {
 
     var eventName = eventMap[eventType];
     if (eventName != null) {
-      instance!.callMethodVarArgs(
-          WEB_METHOD_NAME_OPTIONS.toJS, [eventName.toJS, (() {
-            callback();
-          }).toJS]);
+      instance!.callMethodVarArgs(WEB_METHOD_NAME_OPTIONS.toJS, [
+        eventName.toJS,
+        (() {
+          callback();
+        }).toJS
+      ]);
     } else {
       WELogger.w("WebEngage object is null or options method not available.");
     }
@@ -158,9 +160,11 @@ class WEWebImplementation extends WEWeb {
     }
     JSObject? webpush = instance!['webpush'] as JSObject?;
     if (webpush != null) {
-      webpush.callMethodVarArgs('onSubscribe'.toJS, [(() {
-        callback();
-      }).toJS]);
+      webpush.callMethodVarArgs('onSubscribe'.toJS, [
+        (() {
+          callback();
+        }).toJS
+      ]);
     }
   }
 
