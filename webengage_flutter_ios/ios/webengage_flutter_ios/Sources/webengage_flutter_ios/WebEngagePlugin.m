@@ -467,7 +467,7 @@ static WebEngagePlugin *_shared = nil;
 
  - (void) initialiseWEGVersions {
     WegVersionKey key = WegVersionKeyFL;
-    [[WebEngage sharedInstance] setVersionForChildSDK:WEGPluginVersion forKey:key];;
+    [[WebEngage sharedInstance] setVersionForChildSDK:WEGPluginVersion forKey:key];
  }
 
 @end
