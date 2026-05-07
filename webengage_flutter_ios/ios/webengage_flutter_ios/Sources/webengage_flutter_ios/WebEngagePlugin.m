@@ -9,7 +9,7 @@
 #import "WebEngageConstants.h"
 
 static FlutterMethodChannel* channel = nil;
-NSString * const WEGPluginVersion = @"2.0.0-beta.2";
+NSString * const WEGPluginVersion = @"2.0.0";
 NSString * const DATE_FORMAT = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 int const DATE_FORMAT_LENGTH = 24;
 
@@ -107,11 +107,17 @@ static WebEngagePlugin *_shared = nil;
             NSDictionary *data = @{
                 @"errorResponse" : @"401"
             };
-            [channel invokeMethod:METHOD_NAME_ON_TOKEN_INVALIDATED arguments:data];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [channel invokeMethod:METHOD_NAME_ON_TOKEN_INVALIDATED arguments:data];
+            });
         };
 }
 
 - (void) userLogin:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"userLogin: invalid arguments" details:nil]);
+        return;
+    }
     NSString * userId = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser login:userId];
@@ -119,6 +125,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) userLoginWithSecureToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSDictionary class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"userLoginWithSecureToken: invalid arguments" details:nil]);
+        return;
+    }
     NSString * userId = call.arguments[USERID];
     NSString * jwtToken = call.arguments[JWTTOKEN];
     WEGUser * weUser = [WebEngage sharedInstance].user;
@@ -127,6 +137,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setSecureToken:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSDictionary class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setSecureToken: invalid arguments" details:nil]);
+        return;
+    }
     NSString * userId = call.arguments[USERID];
     NSString * jwtToken = call.arguments[JWTTOKEN];
     WEGUser * weUser = [WebEngage sharedInstance].user;
@@ -141,6 +155,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserFirstName:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserFirstName: invalid arguments" details:nil]);
+        return;
+    }
     NSString * firstName = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setFirstName:firstName];
@@ -148,6 +166,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserLastName:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserLastName: invalid arguments" details:nil]);
+        return;
+    }
     NSString * lastName = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setLastName:lastName];
@@ -155,6 +177,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserEmail:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserEmail: invalid arguments" details:nil]);
+        return;
+    }
     NSString * email = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setEmail:email];
@@ -162,6 +188,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserHashedEmail:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserHashedEmail: invalid arguments" details:nil]);
+        return;
+    }
     NSString * hashedEmail = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setHashedEmail:hashedEmail];
@@ -169,6 +199,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserPhone:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserPhone: invalid arguments" details:nil]);
+        return;
+    }
     NSString * phone = call.arguments;
     WEGUser* weUser = [WebEngage sharedInstance].user;
     [weUser setPhone:phone];
@@ -176,6 +210,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserHashedPhone:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserHashedPhone: invalid arguments" details:nil]);
+        return;
+    }
     NSString * hashedPhone = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setHashedPhone:hashedPhone];
@@ -183,6 +221,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserCompany:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserCompany: invalid arguments" details:nil]);
+        return;
+    }
     NSString * company = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setCompany:company];
@@ -190,6 +232,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserBirthDate:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserBirthDate: invalid arguments" details:nil]);
+        return;
+    }
     NSString * birthDate = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setBirthDateString:birthDate];
@@ -197,6 +243,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserGender:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSString class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserGender: invalid arguments" details:nil]);
+        return;
+    }
     NSString * gender = call.arguments;
     WEGUser * weUser = [WebEngage sharedInstance].user;
     [weUser setGender:gender];
@@ -204,6 +254,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserOptIn:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSDictionary class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserOptIn: invalid arguments" details:nil]);
+        return;
+    }
     NSString * channel = call.arguments[CHANNEL];
     NSLocale* locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
     NSString* ch = [channel lowercaseStringWithLocale:locale];
@@ -223,7 +277,7 @@ static WebEngagePlugin *_shared = nil;
     }else if ([ch isEqualToString:VIBER]) {
              [[WebEngage sharedInstance].user setOptInStatusForChannel:WEGEngagementChannelViber status:status];
     } else {
-        NSString * msg = [NSString stringWithFormat:@"Invalid channel: %@. Must be one of [push, sms, email, in_app, whatsapp].", ch];
+        NSString * msg = [NSString stringWithFormat:@"Invalid channel: %@. Must be one of [push, sms, email, in_app, whatsapp, viber].", ch];
         result([FlutterError errorWithCode:@"WebEngagePlugin" message:msg details:nil]);
         return;
     }
@@ -231,6 +285,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserLocation:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSDictionary class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserLocation: invalid arguments" details:nil]);
+        return;
+    }
     NSNumber * lat = call.arguments[LAT];
     NSNumber * lng = call.arguments[LNG];
     WEGUser * weUser = [WebEngage sharedInstance].user;
@@ -239,6 +297,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) trackEvent:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSDictionary class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"trackEvent: invalid arguments" details:nil]);
+        return;
+    }
     NSString * eventName = call.arguments[EVENT_NAME];
     NSDictionary * attributes = call.arguments[ATTRIBUTES];
     id<WEGAnalytics> weAnalytics = [WebEngage sharedInstance].analytics;
@@ -252,6 +314,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) trackScreen:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSDictionary class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"trackScreen: invalid arguments" details:nil]);
+        return;
+    }
     NSString * screenName = call.arguments[SCREEN_NAME];
     NSDictionary * screenData = call.arguments[SCREEN_DATA];
     id<WEGAnalytics> weAnalytics = [WebEngage sharedInstance].analytics;
@@ -265,6 +331,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserAttribute:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSDictionary class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserAttribute: invalid arguments" details:nil]);
+        return;
+    }
     NSString* attributeName = call.arguments[ATTRIBUTE_NAME];
     id value = call.arguments[ATTRIBUTES];
     [self setUserAttribute:attributeName withValue:value];
@@ -272,6 +342,10 @@ static WebEngagePlugin *_shared = nil;
 }
 
 - (void) setUserAttributes:(FlutterMethodCall *)call withResult:(FlutterResult)result {
+    if (![call.arguments isKindOfClass:[NSDictionary class]]) {
+        result([FlutterError errorWithCode:@"WebEngagePlugin" message:@"setUserAttributes: invalid arguments" details:nil]);
+        return;
+    }
     id _dictionary = call.arguments[ATTRIBUTES];
     if ([_dictionary isKindOfClass:[NSDictionary class]]) {
         NSDictionary *dictionary = (NSDictionary *)_dictionary;
@@ -315,23 +389,21 @@ static WebEngagePlugin *_shared = nil;
 }
 
 -(void)WEGHandleDeeplink:(NSString *)deeplink userData:(NSDictionary *)data{
-    //Support for backward compatibility -start
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //Support for backward compatibility
+        NSDictionary *payload = @{@"deeplink":deeplink,@"data":data};
+        [channel invokeMethod:METHOD_NAME_ON_PUSH_CLICK arguments:payload];
 
-    NSDictionary *payload = @{@"deeplink":deeplink,@"data":data};
-    [channel invokeMethod:METHOD_NAME_ON_PUSH_CLICK arguments:payload];
-    // -end
-
-    if (data && [data isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *splitCustomData = [self splitCustomDataFromArray:data[@"customData"]];
-        NSDictionary *advancePayload = @{PARAM_PLATFORM:@"iOS",PARAM_PAYLOAD:@{@"data": splitCustomData ?: [NSNull null],@"deeplink": deeplink ?: [NSNull null]}};
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [channel invokeMethod:METHOD_NAME_OPTIMIZED_ON_PUSH_CLICK arguments:advancePayload];
-        });
-
-       // [channel invokeMethod:METHOD_NAME_OPTIMIZED_ON_PUSH_CLICK arguments:advancePayload];
-    } else {
-        NSLog(@"Error: userData is nil or not a dictionary");
-    }
+        if (data && [data isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *splitCustomData = [self splitCustomDataFromArray:data[@"customData"]];
+            NSDictionary *advancePayload = @{PARAM_PLATFORM:@"iOS",PARAM_PAYLOAD:@{@"data": splitCustomData ?: [NSNull null],@"deeplink": deeplink ?: [NSNull null]}};
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [channel invokeMethod:METHOD_NAME_OPTIMIZED_ON_PUSH_CLICK arguments:advancePayload];
+            });
+        } else {
+            NSLog(@"Error: userData is nil or not a dictionary");
+        }
+    });
 }
 
 - (NSDictionary *)splitCustomDataFromArray:(NSArray *)customData {
@@ -354,32 +426,43 @@ static WebEngagePlugin *_shared = nil;
 
 
 -(NSDictionary *)notificationPrepared:(NSDictionary<NSString *,id> *)inAppNotificationData shouldStop:(BOOL *)stopRendering{
-    [channel invokeMethod:METHOD_NAME_ON_INAPP_PREPARED arguments:inAppNotificationData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [channel invokeMethod:METHOD_NAME_ON_INAPP_PREPARED arguments:inAppNotificationData];
+    });
     return inAppNotificationData;
 }
 
 -(void)notificationShown:(NSDictionary<NSString *,id> *)inAppNotificationData{
-    [channel invokeMethod:METHOD_NAME_ON_INAPP_SHOWN arguments:inAppNotificationData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [channel invokeMethod:METHOD_NAME_ON_INAPP_SHOWN arguments:inAppNotificationData];
+    });
 }
 
 -(void)notificationDismissed:(NSDictionary<NSString *,id> *)inAppNotificationData{
-    [channel invokeMethod:METHOD_NAME_ON_INAPP_DISMISS arguments:inAppNotificationData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [channel invokeMethod:METHOD_NAME_ON_INAPP_DISMISS arguments:inAppNotificationData];
+    });
 }
 
 -(void)notification:(NSMutableDictionary<NSString *,id> *)inAppNotificationData clickedWithAction:(NSString *)actionId{
     [inAppNotificationData setObject:actionId forKey:@"selectedActionId"];
-    [channel invokeMethod:METHOD_NAME_ON_INAPP_CLICKED arguments:inAppNotificationData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [channel invokeMethod:METHOD_NAME_ON_INAPP_CLICKED arguments:inAppNotificationData];
+    });
 }
 
 - (void)trackDeeplinkURLCallback:(NSString *)redirectLocationURL {
-   // NSLog(@"trackDeeplinkURLCallback %@", redirectLocationURL);
-    [channel invokeMethod:METHOD_TRACK_DEEPLINK_URL arguments:redirectLocationURL];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [channel invokeMethod:METHOD_TRACK_DEEPLINK_URL arguments:redirectLocationURL];
+    });
 }
 
 - (void)didReceiveAnonymousID:(NSString *)anonymousID forReason:(WEGReason)reason {
         _anonymousId = anonymousID;
         NSDictionary *payload = @{@"anonymousUserID":anonymousID};
-        [channel invokeMethod:METHOD_NAME_ON_ANONYMOUS_ID_CHANGED arguments:payload];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [channel invokeMethod:METHOD_NAME_ON_ANONYMOUS_ID_CHANGED arguments:payload];
+        });
 }
 
  - (void) initialiseWEGVersions {
