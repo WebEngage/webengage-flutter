@@ -32,7 +32,6 @@ class WEFlutterWeb extends WEMethodChannel {
   }
 
   @override
-  @override
   Future<void> setSecureToken(String userId, String secureToken) {
     performUserAction(WEB_METHOD_NAME_USER_LOGIN, [userId, secureToken]);
     return Future.value();

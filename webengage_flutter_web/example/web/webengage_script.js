@@ -34,4 +34,4 @@
     }
   }(window, document, "webengage");
 
-  webengage.init('~2024bb40');
+  webengage.init('LICENSE_CODE');
