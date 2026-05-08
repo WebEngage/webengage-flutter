@@ -1,11 +1,7 @@
-//
-//  NotificationService.swift
-//  NotificationService
-//
-//  Created by Shubham Naidu on 22/03/24.
-//
 import UserNotifications
-import WebEngageBannerPush
+// Step 1 : Importing WEServiceExtension
+import WEServiceExtension
 
+// Step 2 : Subclassing service Extension
 class NotificationService: WEXPushNotificationService {
 }

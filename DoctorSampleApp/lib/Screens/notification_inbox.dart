@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 import 'package:we_notificationinbox_flutter/we_notificationinbox_flutter.dart';
 import 'package:dev_sample_app/WEUtils/WEConstants.dart';
 import 'package:we_notificationinbox_flutter/src/we_notification_response.dart';
@@ -175,15 +175,15 @@ class _NotificationInboxState extends State<NotificationInbox> {
   }
 
   void showToastMessage() {
-    Fluttertoast.showToast(
-      msg: "You have reached the end of the message list!",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.grey,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
+    // Fluttertoast.showToast(
+    //   msg: "You have reached the end of the message list!",
+    //   toastLength: Toast.LENGTH_SHORT,
+    //   gravity: ToastGravity.BOTTOM,
+    //   timeInSecForIosWeb: 1,
+    //   backgroundColor: Colors.grey,
+    //   textColor: Colors.white,
+    //   fontSize: 16.0,
+    // );
   }
 
   void handleMenuItemSelected(BuildContext context, String value) {

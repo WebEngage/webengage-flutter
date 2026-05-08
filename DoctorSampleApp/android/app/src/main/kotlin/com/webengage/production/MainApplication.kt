@@ -13,7 +13,7 @@ class MainApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         val webEngageConfig = WebEngageConfig.Builder()
-            .setWebEngageKey("~2024bb40")
+            .setWebEngageKey("LC")
             .setDebugMode(true) // only in development mode
             .build()
         WebengageInitializer.initialize(this, webEngageConfig);

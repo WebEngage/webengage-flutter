@@ -12,15 +12,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  webengage_flutter:
-    path: ../webengage_flutter
-  shared_preferences: ^2.0.8
-  we_notificationinbox_flutter: ^1.0.0
+  
+  shared_preferences: 2.5.5
 
   cupertino_icons: ^1.0.2
-  we_personalization_flutter: ^1.0.3
-  fluttertoast: ^8.2.4
+
   permission_handler:
+  
+  webengage_flutter:
+    path: ../webengage_flutter
+  webengage_flutter_location: ^1.0.0
+  we_personalization_flutter: ^2.0.0
+  we_notificationinbox_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -32,6 +35,7 @@ dependency_overrides:
   win32: ^5.5.3
 
 flutter:
-
+  config:
+    enable-swift-package-manager: true
   uses-material-design: true
 

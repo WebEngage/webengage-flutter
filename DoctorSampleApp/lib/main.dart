@@ -46,8 +46,8 @@ class _MyHomePageState extends State<MyHomePage> with WECampaignCallback {
     super.initState();
     WebEngagePlugin _webenagePlugin = WebEngagePlugin();
     WELogger.configureLogs(LogLevel.VERBOSE, true);
-    //  WEPersonalization().init(enableLogs: true);
-    //  WEPersonalization().registerWECampaignCallback(this);
+      WEPersonalization().init(enableLogs: true);
+      WEPersonalization().registerWECampaignCallback(this);
     initSharedPref();
     pushPermission();
   }

@@ -38,14 +38,12 @@ end
 
 target 'NotificationService' do
   use_frameworks!
-  use_modular_headers!
-  pod 'WebEngageBannerPush'
+  pod 'WEServiceExtension'
 end
 
 target 'NotificationViewController' do
   use_frameworks!
-  use_modular_headers!
-  pod 'WebEngageAppEx/ContentExtension'
+  pod 'WEContentExtension'
 end
 
 
