@@ -188,7 +188,6 @@ class WebEngagePlugin {
   }
 
   /// Starts tracking Google Advertising ID (GAID) on Android devices using platform channels.
-  /// Returns a Future<void> indicating completion, or does nothing if the platform is not Android.
   static Future<void> startGAIDTracking() async {
     return await _manager.startGAIDTracking();
   }

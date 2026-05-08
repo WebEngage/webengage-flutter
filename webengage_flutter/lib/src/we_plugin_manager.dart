@@ -209,7 +209,6 @@ class WePluginManager {
   }
 
   /// Starts tracking Google Advertising ID (GAID) on Android devices using platform channels.
-  /// Returns a Future<void> indicating completion, or does nothing if the platform is not Android.
 
   Future<void> startGAIDTracking() async {
     return await _platform.startGAIDTracking();
