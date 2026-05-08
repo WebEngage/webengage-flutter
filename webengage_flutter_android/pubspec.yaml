@@ -1,0 +1,29 @@
+name: webengage_flutter_android
+description: "The WebEngage Flutter SDK offers solutions for mobile customer engagement, analytics, and retention."
+version: 2.0.0
+homepage: https://webengage.com/
+repository: https://github.com/WebEngage/webengage-flutter/tree/master/webengage_flutter_android
+
+environment:
+  sdk: ">2.12.0 <4.0.0"
+  flutter: ">=1.20.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  webengage_flutter_platform_interface: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.0
+
+flutter:
+  plugin:
+    implements: webengage_flutter
+    platforms:
+      android:
+        package: com.webengage.webengage_plugin
+        pluginClass: WebEngagePlugin
+        dartPluginClass: WEFlutterAndroid
+
