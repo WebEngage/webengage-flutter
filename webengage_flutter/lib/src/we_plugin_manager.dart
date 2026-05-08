@@ -115,7 +115,6 @@ class WePluginManager {
   /// Initiates user logout.
 
   Future<void> userLogout() async {
-    print("Manager");
     return await _platform.userLogout();
   }
 

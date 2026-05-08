@@ -1,5 +1,36 @@
 ## CHANGE LOG
 
+### Version 2.0.0 (May 7, 2026)
+
+- Migrated to **Flutter federated plugin architecture** for improved modularity and platform separation.
+- Added **Swift Package Manager (SPM) support** for iOS integration.
+- Added **Web platform support** with full WebEngage JS SDK integration.
+- Added thread safety for iOS platform channel callbacks.
+
+#### ⚠️ Breaking Changes
+
+##### iOS Import Change
+- Swift import statement updated:
+    - **Old:**
+      ```swift
+      import webengage_flutter
+      ```
+    - **New:**
+      ```swift
+      import webengage_flutter_ios
+      ```
+
+##### Location Plugin Separation
+- Location-related functionality has been moved to a separate plugin.
+- If you are upgrading from a version below 2.0.0 and using location features, add:
+  ```yaml
+  dependencies:
+    webengage_flutter_location: ^1.0.0
+  ```
+
+##### Web Platform
+- Web support is now available.
+
 ### Version 1.5.0 (July 18, 2024)
 
 - Separated the location module from the core for iOS.

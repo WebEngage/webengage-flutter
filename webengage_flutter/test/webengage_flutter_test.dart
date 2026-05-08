@@ -1,20 +1,25 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('webengage_flutter');
-
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
+  test('WebEngagePlugin is a singleton', () {
+    final instance1 = WebEngagePlugin();
+    final instance2 = WebEngagePlugin();
+    expect(identical(instance1, instance2), isTrue);
   });
 
-  tearDown(() {
-    channel.setMockMethodCallHandler(null);
+  test('WebEngagePlugin exposes push stream', () {
+    final plugin = WebEngagePlugin();
+    expect(plugin.pushStream, isNotNull);
   });
 
-  test('getPlatformVersion', () async {});
+  test('WebEngagePlugin exposes anonymous action stream', () {
+    final plugin = WebEngagePlugin();
+    expect(plugin.anonymousActionStream, isNotNull);
+  });
+
+  test('WebEngagePlugin exposes track deeplink stream', () {
+    final plugin = WebEngagePlugin();
+    expect(plugin.trackDeeplinkStream, isNotNull);
+  });
 }
