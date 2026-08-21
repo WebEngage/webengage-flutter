@@ -1,5 +1,9 @@
 ## CHANGE LOG
 
+### Version 2.0.1 (Aug 21, 2026)
+
+- Added internal attribute handling in WebEngageJSBridge — we_ prefixed keys (e.g., we_first_name, we_email) are now routed to their dedicated SDK methods.
+
 ### Version 2.0.0 (May 7, 2026)
 
 - Migrated to **Flutter federated plugin architecture** for improved modularity and platform separation.
