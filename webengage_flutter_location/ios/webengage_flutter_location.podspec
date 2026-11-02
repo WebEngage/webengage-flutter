@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'webengage_flutter_location'
-  s.version          = '1.0.0'
+  s.version          = '1.1.0'
   s.summary          = 'The plugin to add WebEngagae Location module in project.'
   s.description      = <<-DESC
 The plugin to add WebEngagae Location module in project.
@@ -17,5 +17,5 @@ The plugin to add WebEngagae Location module in project.
   s.dependency 'Flutter'
   s.platform = :ios, '13.0'
   s.swift_version = '5.0'
-  s.dependency 'WebEngage','>= 6.10.0'
+  s.dependency 'WebEngage/Location','>= 6.10.0'
 end
