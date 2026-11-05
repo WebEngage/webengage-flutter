@@ -1,16 +1,5 @@
-group 'com.webengage.webengage_plugin'
-version '2.0.0-beta.2'
-
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
-    }
-}
+group = 'com.webengage.webengage_plugin'
+version = '2.1.0'
 
 rootProject.allprojects {
     repositories {
@@ -22,16 +11,11 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 33
-    namespace 'com.webengage.webengage_plugin'
+    compileSdk = 34
+    namespace = 'com.webengage.webengage_plugin'
     defaultConfig {
-        minSdkVersion 21
+        minSdk = 21
         manifestPlaceholders = [we_fl_version: readVersion()]
-        versionCode 1
-        versionName "1.0"
-    }
-    lintOptions {
-        disable 'InvalidPackage'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -57,5 +41,5 @@ String readVersion() {
 }
 
 dependencies {
-    api 'com.webengage:android-sdk:[4,)'
+    api 'com.webengage:android-sdk:[5,)'
 }

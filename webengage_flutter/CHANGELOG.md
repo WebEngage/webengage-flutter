@@ -1,10 +1,13 @@
 ## CHANGE LOG
 
-### Version 2.1.0 (Nov 2, 2026)
+### Version 2.1.0 (Nov 4, 2026)
 
 - **iOS:** now uses `webengage_flutter_ios` **2.1.0**, which adds WebEngage iOS SDK **7.x** support through Swift Package Manager (supported range `1.0.0 ..< 3.0.0`). See its changelog for details.
 - **Location:** `webengage_flutter_location` **1.1.0** adds the same support. SPM apps that use it must update to 1.1.0, or SPM stays on iOS SDK 6.x.
-- Android and Web are unchanged. No Dart API changes.
+- **Android and platform packages:** now uses `webengage_flutter_platform_interface`, `webengage_flutter_android` and `webengage_flutter_web` **2.1.0**. Together they add WebEngage Android SDK **5.x** and Android Gradle Plugin **9** support. See each package's changelog for details.
+- **Android SDK:** apps that pinned WebEngage Android SDK 4.x must move to 5.x.
+- **Requires Flutter 3.27 or later** (Dart SDK constraint `>=2.18.6 <4.0.0`). Apps on older Flutter versions keep using 2.0.1.
+- No Dart API changes.
 
 ### Version 2.0.1 (Aug 21, 2026)
 
