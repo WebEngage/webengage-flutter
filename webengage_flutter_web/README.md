@@ -77,8 +77,8 @@ The following methods are not supported on the web platform and will log a messa
 
 ## Requirements
 
-- Flutter 3.22.0+
-- Dart SDK 3.4.0+
+- Flutter 3.27.0+
+- Dart SDK 3.6.0+
 - WebEngage JS SDK (loaded via script tag)
 
 ## License

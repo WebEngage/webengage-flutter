@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "webengage-flutter-location", targets: ["webengage_flutter_location"])
     ],
     dependencies: [
-        .package(url: "https://github.com/WebEngage/webengage-ios-sdk.git", from: "1.0.0")
+        .package(url: "https://github.com/WebEngage/webengage-ios-sdk.git", "1.0.0"..<"3.0.0")
     ],
     targets: [
         .target(

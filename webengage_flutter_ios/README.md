@@ -11,7 +11,7 @@ You should not need to add this package directly — it is automatically include
 ## Requirements
 
 - iOS 13.0+
-- WebEngage iOS SDK 6.10.0+
+- WebEngage iOS SDK 6.10.0+ (7.x supported)
 - Flutter 3.0.0+
 
 ## Integration
@@ -32,7 +32,7 @@ Location functionality has been moved to a separate plugin. If you need location
 
 ```yaml
 dependencies:
-  webengage_flutter_location: ^1.0.0
+  webengage_flutter_location: ^1.1.0
 ```
 
 ## License

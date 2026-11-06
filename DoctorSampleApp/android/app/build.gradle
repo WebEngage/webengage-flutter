@@ -1,6 +1,5 @@
 plugins {
     id "com.android.application"
-    id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
     id "com.google.gms.google-services"
 }
@@ -33,10 +32,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
     sourceSets {
         main.java.srcDirs += "src/main/kotlin"
     }
@@ -63,7 +58,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22"
     implementation "com.webengage:android-sdk:4.+"
-    implementation platform("com.google.firebase:firebase-bom:25.12.0")
+    implementation platform("com.google.firebase:firebase-bom:33.7.0")
     implementation "com.google.firebase:firebase-analytics"
-    implementation "com.google.firebase:firebase-messaging:20.2.1"
+    implementation "com.google.firebase:firebase-messaging"
 }
