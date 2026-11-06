@@ -12,7 +12,7 @@ Add the plugin to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  webengage_flutter_location: ^1.0.0
+  webengage_flutter_location: ^1.1.0
 ```
 
 Then run:
@@ -24,7 +24,7 @@ flutter pub get
 ## Requirements
 
 - iOS 13.0+
-- WebEngage iOS SDK 6.10.0+
+- WebEngage iOS SDK 6.10.0+ (7.x supported)
 
 ## License
 
